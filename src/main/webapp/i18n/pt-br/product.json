@@ -15,21 +15,21 @@
         "question": "Tem certeza de que deseja excluir Product {{ id }}?"
       },
       "detail": {
-        "title": "Product"
+        "title": "Produto"
       },
       "id": "ID",
-      "name": "Name",
+      "name": "Nome",
       "sku": "Sku",
-      "unitOfMeasure": "Unit Of Measure",
-      "unitDecimalPlaces": "Unit Decimal Places",
-      "salePrice": "Sale Price",
-      "costPrice": "Cost Price",
-      "minStock": "Min Stock",
-      "active": "Active",
-      "deletedAt": "Deleted At",
-      "saleItems": "Sale Items",
-      "stockMovements": "Stock Movements",
-      "tenant": "Tenant"
+      "unitOfMeasure": "Unidade de Medida",
+      "unitDecimalPlaces": "Casas Decimais da Unidade",
+      "salePrice": "Preço de Venda",
+      "costPrice": "Preço de Custo",
+      "minStock": "Estoque Mínimo",
+      "active": "Ativo",
+      "deletedAt": "Excluído em",
+      "saleItems": "Itens de Venda",
+      "stockMovements": "Movimentos de Estoque",
+      "tenant": "Conta"
     }
   }
 }

@@ -2,7 +2,7 @@
   "health": {
     "title": "Control de salud",
     "refresh.button": "Refrescar",
-    "stacktrace": "Stacktrace",
+    "stacktrace": "Seguimiento de pila",
     "details": {
       "details": "Detalles",
       "properties": "Propiedades",
@@ -14,8 +14,8 @@
       "diskSpace": "Espacio en disco",
       "ssl": "SSL",
       "mail": "Correo Electrónico",
-      "livenessState": "Liveness state",
-      "readinessState": "Readiness state",
+      "livenessState": "Estado de actividad",
+      "readinessState": "Estado de preparación",
       "ping": "Aplicación",
       "db": "Base de Datos"
     },

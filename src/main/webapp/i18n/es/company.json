@@ -2,34 +2,34 @@
   "superErpApp": {
     "company": {
       "home": {
-        "title": "Companies",
+        "title": "Empresas",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Company",
-        "createOrEditLabel": "Crear o editar Company",
-        "notFound": "Ningún Companies encontrado"
+        "createLabel": "Crear nueva Empresa",
+        "createOrEditLabel": "Crear o editar Empresa",
+        "notFound": "Ninguna Empresa encontrada"
       },
-      "created": "Un nuevo Company ha sido creado con el identificador {{ param }}",
-      "updated": "Un Company ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Company ha sido eliminado con el identificador {{ param }}",
+      "created": "Una nueva Empresa ha sido creada con el identificador {{ param }}",
+      "updated": "Una Empresa ha sido actualizada con el identificador {{ param }}",
+      "deleted": "Una Empresa ha sido eliminada con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Company {{ id }}?"
+        "question": "¿Seguro que quiere eliminar la Empresa {{ id }}?"
       },
       "detail": {
-        "title": "Company"
+        "title": "Empresa"
       },
       "id": "ID",
-      "legalName": "Legal Name",
-      "tradeName": "Trade Name",
-      "cnpj": "Cnpj",
-      "stateRegistration": "State Registration",
-      "email": "Email",
-      "phone": "Phone",
-      "active": "Active",
-      "deletedAt": "Deleted At",
-      "customer": "Customer",
-      "supplier": "Supplier",
-      "tenant": "Tenant",
-      "city": "City"
+      "legalName": "Razón Social",
+      "tradeName": "Nombre Comercial",
+      "cnpj": "CNPJ",
+      "stateRegistration": "Registro Estatal",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "active": "Activo",
+      "deletedAt": "Eliminado en",
+      "customer": "Cliente",
+      "supplier": "Proveedor",
+      "tenant": "Cuenta",
+      "city": "Ciudad"
     }
   }
 }

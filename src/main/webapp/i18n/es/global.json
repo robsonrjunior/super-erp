@@ -8,20 +8,20 @@
       "entities": {
         "main": "Entidades",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
-        "tenant": "Tenant",
-        "country": "Country",
-        "state": "State",
-        "city": "City",
-        "supplier": "Supplier",
-        "customer": "Customer",
-        "person": "Person",
-        "company": "Company",
-        "product": "Product",
-        "rawMaterial": "Raw Material",
-        "warehouse": "Warehouse",
-        "stockMovement": "Stock Movement",
-        "sale": "Sale",
-        "saleItem": "Sale Item"
+        "tenant": "Cuenta",
+        "country": "País",
+        "state": "Estado",
+        "city": "Ciudad",
+        "supplier": "Proveedor",
+        "customer": "Cliente",
+        "person": "Persona",
+        "company": "Empresa",
+        "product": "Producto",
+        "rawMaterial": "Materia Prima",
+        "warehouse": "Almacén",
+        "stockMovement": "Movimiento de Stock",
+        "sale": "Venta",
+        "saleItem": "Ítem de Venta"
       },
       "account": {
         "main": "Cuenta",
@@ -97,7 +97,7 @@
       "id": "ID"
     },
     "ribbon": {
-      "dev": "Development"
+      "dev": "Desarrollo"
     },
     "item-count": "Mostrando {{first}} - {{second}} de {{total}} elementos."
   },
@@ -112,7 +112,7 @@
       "open": "Abrir",
       "save": "Guardar",
       "view": "Vista",
-      "show": "Show {{otherEntity}}"
+      "show": "Mostrar {{otherEntity}}"
     },
     "detail": {
       "field": "Campo",
@@ -132,12 +132,12 @@
       "pattern": "Este campo debe seguir el patrón {{pattern}}.",
       "number": "Este campo debe ser un número.",
       "datetimelocal": "Este campo debe ser una fecha y hora.",
-      "patternLogin": "This field can only contain letters, digits and e-mail addresses."
+      "patternLogin": "Este campo solo puede contener letras, dígitos y direcciones de correo electrónico."
     },
     "filters": {
-      "set": "Following filters are set",
-      "clear": "Clear filter",
-      "clearAll": "Clear all filters"
+      "set": "Los siguientes filtros están activos",
+      "clear": "Limpiar filtro",
+      "clearAll": "Limpiar todos los filtros"
     }
   },
   "error": {

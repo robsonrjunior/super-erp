@@ -2,30 +2,30 @@
   "superErpApp": {
     "saleItem": {
       "home": {
-        "title": "Sale Items",
+        "title": "Ítems de Venta",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Sale Item",
-        "createOrEditLabel": "Crear o editar Sale Item",
-        "notFound": "Ningún Sale Items encontrado"
+        "createLabel": "Crear nuevo Ítem de Venta",
+        "createOrEditLabel": "Crear o editar Ítem de Venta",
+        "notFound": "Ningún Ítem de Venta encontrado"
       },
-      "created": "Un nuevo Sale Item ha sido creado con el identificador {{ param }}",
-      "updated": "Un Sale Item ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Sale Item ha sido eliminado con el identificador {{ param }}",
+      "created": "Un nuevo Ítem de Venta ha sido creado con el identificador {{ param }}",
+      "updated": "Un Ítem de Venta ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Ítem de Venta ha sido eliminado con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Sale Item {{ id }}?"
+        "question": "¿Seguro que quiere eliminar el Ítem de Venta {{ id }}?"
       },
       "detail": {
-        "title": "Sale Item"
+        "title": "Ítem de Venta"
       },
       "id": "ID",
-      "quantity": "Quantity",
-      "unitPrice": "Unit Price",
-      "discountAmount": "Discount Amount",
-      "lineTotal": "Line Total",
-      "deletedAt": "Deleted At",
-      "tenant": "Tenant",
-      "sale": "Sale",
-      "product": "Product"
+      "quantity": "Cantidad",
+      "unitPrice": "Precio Unitario",
+      "discountAmount": "Monto de Descuento",
+      "lineTotal": "Total de Línea",
+      "deletedAt": "Eliminado en",
+      "tenant": "Cuenta",
+      "sale": "Venta",
+      "product": "Producto"
     }
   }
 }

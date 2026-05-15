@@ -8,20 +8,20 @@
       "entities": {
         "main": "Entidades",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
-        "tenant": "Tenant",
-        "country": "Country",
-        "state": "State",
-        "city": "City",
-        "supplier": "Supplier",
-        "customer": "Customer",
-        "person": "Person",
-        "company": "Company",
-        "product": "Product",
-        "rawMaterial": "Raw Material",
-        "warehouse": "Warehouse",
-        "stockMovement": "Stock Movement",
-        "sale": "Sale",
-        "saleItem": "Sale Item"
+        "tenant": "Conta",
+        "country": "País",
+        "state": "Estado",
+        "city": "Cidade",
+        "supplier": "Fornecedor",
+        "customer": "Cliente",
+        "person": "Pessoa",
+        "company": "Empresa",
+        "product": "Produto",
+        "rawMaterial": "Matéria-Prima",
+        "warehouse": "Armazém",
+        "stockMovement": "Movimentação de Estoque",
+        "sale": "Venda",
+        "saleItem": "Item de Venda"
       },
       "account": {
         "main": "Conta",
@@ -150,11 +150,11 @@
     "emailexists": "E-mail já está cadastrado!",
     "idexists": "Novo(a) {{entityName}} não pode ter um identificador",
     "idnull": "Identificador inválido",
-    "idinvalid": "Invalid Id",
-    "idnotfound": "ID cannot be found",
+    "idinvalid": "Identificador inválido",
+    "idnotfound": "Identificador não encontrado",
     "file": {
-      "could.not.extract": "Could not extract file",
-      "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
+      "could.not.extract": "Não foi possível extrair o arquivo",
+      "not.image": "Esperava-se que o arquivo fosse uma imagem, mas foi encontrado \"{{ fileType }}\""
     }
   },
   "footer": "Este é o rodapé da página"

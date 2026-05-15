@@ -2,33 +2,33 @@
   "superErpApp": {
     "stockMovement": {
       "home": {
-        "title": "Stock Movements",
+        "title": "Movimentações de Estoque",
         "refreshListLabel": "Atualizar lista",
-        "createLabel": "Criar novo Stock Movement",
-        "createOrEditLabel": "Criar ou editar Stock Movement",
-        "notFound": "Nenhum Stock Movement encontrado"
+        "createLabel": "Criar nova Movimentação de Estoque",
+        "createOrEditLabel": "Criar ou editar Movimentação de Estoque",
+        "notFound": "Nenhuma Movimentação de Estoque encontrada"
       },
-      "created": "Um novo Stock Movement foi criado com o identificador {{ param }}",
-      "updated": "Um Stock Movement foi atualizado com o identificador {{ param }}",
-      "deleted": "Um Stock Movement foi excluído com o identificador {{ param }}",
+      "created": "Uma nova Movimentação de Estoque foi criada com o identificador {{ param }}",
+      "updated": "Uma Movimentação de Estoque foi atualizada com o identificador {{ param }}",
+      "deleted": "Uma Movimentação de Estoque foi excluída com o identificador {{ param }}",
       "delete": {
-        "question": "Tem certeza de que deseja excluir Stock Movement {{ id }}?"
+        "question": "Tem certeza de que deseja excluir a Movimentação de Estoque {{ id }}?"
       },
       "detail": {
-        "title": "Stock Movement"
+        "title": "Movimentação de Estoque"
       },
       "id": "ID",
-      "movementDate": "Movement Date",
-      "movementType": "Movement Type",
-      "quantity": "Quantity",
-      "unitCost": "Unit Cost",
-      "referenceNumber": "Reference Number",
-      "notes": "Notes",
-      "deletedAt": "Deleted At",
-      "tenant": "Tenant",
-      "warehouse": "Warehouse",
-      "product": "Product",
-      "rawMaterial": "Raw Material"
+      "movementDate": "Data da Movimentação",
+      "movementType": "Tipo de Movimentação",
+      "quantity": "Quantidade",
+      "unitCost": "Custo Unitário",
+      "referenceNumber": "Número de Referência",
+      "notes": "Observações",
+      "deletedAt": "Excluído em",
+      "tenant": "Conta",
+      "warehouse": "Armazém",
+      "product": "Produto",
+      "rawMaterial": "Matéria-Prima"
     }
   }
 }

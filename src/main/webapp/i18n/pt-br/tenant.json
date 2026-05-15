@@ -2,36 +2,36 @@
   "superErpApp": {
     "tenant": {
       "home": {
-        "title": "Tenants",
+        "title": "Contas",
         "refreshListLabel": "Atualizar lista",
-        "createLabel": "Criar novo Tenant",
-        "createOrEditLabel": "Criar ou editar Tenant",
-        "notFound": "Nenhum Tenant encontrado"
+        "createLabel": "Criar nova Conta",
+        "createOrEditLabel": "Criar ou editar Conta",
+        "notFound": "Nenhuma Conta encontrada"
       },
-      "created": "Um novo Tenant foi criado com o identificador {{ param }}",
-      "updated": "Um Tenant foi atualizado com o identificador {{ param }}",
-      "deleted": "Um Tenant foi excluído com o identificador {{ param }}",
+      "created": "Uma nova Conta foi criada com o identificador {{ param }}",
+      "updated": "Uma Conta foi atualizada com o identificador {{ param }}",
+      "deleted": "Uma Conta foi excluída com o identificador {{ param }}",
       "delete": {
-        "question": "Tem certeza de que deseja excluir Tenant {{ id }}?"
+        "question": "Tem certeza de que deseja excluir a Conta {{ id }}?"
       },
       "detail": {
-        "title": "Tenant"
+        "title": "Conta"
       },
       "id": "ID",
-      "name": "Name",
-      "code": "Code",
-      "active": "Active",
-      "deletedAt": "Deleted At",
-      "customers": "Customers",
-      "suppliers": "Suppliers",
-      "people": "People",
-      "companies": "Companies",
-      "products": "Products",
-      "rawMaterials": "Raw Materials",
-      "warehouses": "Warehouses",
-      "sales": "Sales",
-      "saleItems": "Sale Items",
-      "stockMovements": "Stock Movements"
+      "name": "Nome",
+      "code": "Código",
+      "active": "Ativo",
+      "deletedAt": "Excluído em",
+      "customers": "Clientes",
+      "suppliers": "Fornecedores",
+      "people": "Pessoas",
+      "companies": "Empresas",
+      "products": "Produtos",
+      "rawMaterials": "Matérias-Primas",
+      "warehouses": "Armazéns",
+      "sales": "Vendas",
+      "saleItems": "Itens de Venda",
+      "stockMovements": "Movimentações de Estoque"
     }
   }
 }

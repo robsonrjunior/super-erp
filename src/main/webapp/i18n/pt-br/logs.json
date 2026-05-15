@@ -2,7 +2,7 @@
   "logs": {
     "title": "Logs",
     "nbloggers": "Existem {{ total }} loggers.",
-    "filter": "Filtro",
+    "filter": "Filtrar",
     "table": {
       "name": "Nome",
       "level": "Nível"
