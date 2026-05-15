@@ -1,0 +1,9 @@
+{
+  "superErpApp": {
+    "PartyType": {
+      "null": "",
+      "PERSON": "PERSON",
+      "COMPANY": "COMPANY"
+    }
+  }
+}
