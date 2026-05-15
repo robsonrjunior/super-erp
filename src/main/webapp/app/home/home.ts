@@ -5,12 +5,13 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { TranslateDirective } from 'app/shared/language';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'jhi-home',
   templateUrl: './home.html',
   styleUrl: './home.scss',
-  imports: [TranslateDirective, TranslateModule, RouterLink],
+  imports: [TranslateDirective, TranslateModule, RouterLink, ButtonModule],
 })
 export default class Home {
   public readonly account = inject(AccountService).account;

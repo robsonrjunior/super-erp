@@ -21,9 +21,11 @@ import { authInterceptor } from 'app/core/interceptor/auth.interceptor';
 import { errorHandlerInterceptor } from 'app/core/interceptor/error-handler.interceptor';
 import { notificationInterceptor } from 'app/core/interceptor/notification.interceptor';
 
-import './config/dayjs';
 import { TranslationModule } from 'app/shared/language/translation.module';
+import './config/dayjs';
 
+import Aura from '@primeuix/themes/aura';
+import { providePrimeNG } from 'primeng/config';
 import { AppPageTitleStrategy } from './app-page-title-strategy';
 import routes from './app.routes';
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
@@ -58,5 +60,10 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'pt' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     { provide: TitleStrategy, useClass: AppPageTitleStrategy },
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+      },
+    }),
   ],
 };
