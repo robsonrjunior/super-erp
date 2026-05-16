@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "jhipster.cors.allowed-origin-patterns",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Allowed origin patterns for JHipster CORS configuration."
+    }
+  ]
+}

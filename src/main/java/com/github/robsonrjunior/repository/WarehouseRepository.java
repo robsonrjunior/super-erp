@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data JPA repository for the Warehouse entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long>, JpaSpecificationExecutor<Warehouse> {}

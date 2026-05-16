@@ -16,8 +16,8 @@
 logging:
   level:
     ROOT: INFO
-    tech.jhipster: INFO
-    com.github.robsonrjunior: INFO
+    '[tech.jhipster]': INFO
+    '[com.github.robsonrjunior]': INFO
 
 management:
   prometheus:

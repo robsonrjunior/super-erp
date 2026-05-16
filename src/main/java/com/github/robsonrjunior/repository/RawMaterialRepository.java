@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data JPA repository for the RawMaterial entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface RawMaterialRepository extends JpaRepository<RawMaterial, Long>, JpaSpecificationExecutor<RawMaterial> {}

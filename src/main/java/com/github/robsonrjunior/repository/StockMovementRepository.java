@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data JPA repository for the StockMovement entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface StockMovementRepository extends JpaRepository<StockMovement, Long>, JpaSpecificationExecutor<StockMovement> {}

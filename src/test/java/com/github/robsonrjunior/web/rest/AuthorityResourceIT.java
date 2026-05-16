@@ -1,16 +1,21 @@
 package com.github.robsonrjunior.web.rest;
 
-import static com.github.robsonrjunior.domain.AuthorityAsserts.*;
+import static com.github.robsonrjunior.domain.AuthorityAsserts.assertAuthorityAllPropertiesEquals;
+import static com.github.robsonrjunior.domain.AuthorityAsserts.assertAuthorityAllUpdatablePropertiesEquals;
+import static com.github.robsonrjunior.domain.AuthorityAsserts.assertAuthorityUpdatableFieldsEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.robsonrjunior.IntegrationTest;
 import com.github.robsonrjunior.domain.Authority;
 import com.github.robsonrjunior.repository.AuthorityRepository;
-import jakarta.persistence.EntityManager;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,9 +43,6 @@ class AuthorityResourceIT {
 
     @Autowired
     private AuthorityRepository authorityRepository;
-
-    @Autowired
-    private EntityManager em;
 
     @Autowired
     private MockMvc restAuthorityMockMvc;

@@ -2,8 +2,13 @@ package com.github.robsonrjunior.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.robsonrjunior.IntegrationTest;
@@ -13,8 +18,8 @@ import com.github.robsonrjunior.security.AuthoritiesConstants;
 import com.github.robsonrjunior.service.UserService;
 import com.github.robsonrjunior.service.dto.AdminUserDTO;
 import com.github.robsonrjunior.service.mapper.UserMapper;
-import jakarta.persistence.EntityManager;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -66,9 +71,6 @@ class UserResourceIT {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private EntityManager em;
 
     @Autowired
     private MockMvc restUserMockMvc;

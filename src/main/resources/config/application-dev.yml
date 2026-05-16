@@ -16,10 +16,10 @@
 logging:
   level:
     ROOT: DEBUG
-    tech.jhipster: DEBUG
-    org.hibernate.SQL: DEBUG
-    com.github.robsonrjunior: DEBUG
-    java.lang.ProcessBuilder: INFO
+    '[tech.jhipster]': DEBUG
+    '[org.hibernate.SQL]': DEBUG
+    '[com.github.robsonrjunior]': DEBUG
+    '[java.lang.ProcessBuilder]': INFO
 
 spring:
   devtools:
@@ -28,7 +28,7 @@ spring:
       additional-exclude: static/**
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
-  jackson2:
+  jackson:
     serialization:
       indent-output: true
   datasource:

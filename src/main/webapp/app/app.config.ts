@@ -14,20 +14,20 @@ import {
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker';
-import { environment } from '../environments/environment';
+import { environment } from 'environments/environment';
 
-import { authExpiredInterceptor } from './core/interceptor/auth-expired.interceptor';
-import { authInterceptor } from './core/interceptor/auth.interceptor';
-import { errorHandlerInterceptor } from './core/interceptor/error-handler.interceptor';
-import { notificationInterceptor } from './core/interceptor/notification.interceptor';
+import { authExpiredInterceptor } from 'app/core/interceptor/auth-expired.interceptor';
+import { authInterceptor } from 'app/core/interceptor/auth.interceptor';
+import { errorHandlerInterceptor } from 'app/core/interceptor/error-handler.interceptor';
+import { notificationInterceptor } from 'app/core/interceptor/notification.interceptor';
 
-import './config/dayjs';
-import { TranslationModule } from './shared/language/translation.module';
+import 'app/config/dayjs';
+import { TranslationModule } from 'app/shared/language/translation.module';
 
 import Aura from '@primeuix/themes/aura';
+import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
+import routes from 'app/app.routes';
 import { providePrimeNG } from 'primeng/config';
-import { AppPageTitleStrategy } from './app-page-title-strategy';
-import routes from './app.routes';
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 
 const routerFeatures: RouterFeatures[] = [
