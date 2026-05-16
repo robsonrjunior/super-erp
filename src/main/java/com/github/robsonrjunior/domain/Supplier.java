@@ -1,6 +1,7 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.github.robsonrjunior.domain.enumeration.PartyType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -9,6 +10,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A Supplier.
@@ -16,7 +19,13 @@ import java.util.Set;
 @Entity
 @Table(name = "supplier")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class Supplier implements Serializable {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -25,55 +34,67 @@ public class Supplier implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
+    @JsonView({ Multiple.class, Single.class })
     private Long id;
 
     @NotNull
     @Size(min = 2, max = 120)
     @Column(name = "legal_name", length = 120, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String legalName;
 
     @Size(max = 120)
     @Column(name = "trade_name", length = 120)
+    @JsonView({ Multiple.class, Single.class })
     private String tradeName;
 
     @NotNull
     @Size(min = 11, max = 20)
     @Column(name = "tax_id", length = 20, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String taxId;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "party_type", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private PartyType partyType;
 
     @Size(max = 120)
     @Pattern(regexp = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")
     @Column(name = "email", length = 120)
+    @JsonView({ Multiple.class, Single.class })
     private String email;
 
     @Size(max = 30)
     @Column(name = "phone", length = 30)
+    @JsonView({ Multiple.class, Single.class })
     private String phone;
 
     @NotNull
     @Column(name = "active", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private Boolean active;
 
     @Column(name = "deleted_at")
+    @JsonView({ Multiple.class, Single.class })
     private Instant deletedAt;
 
     @JsonIgnoreProperties(value = { "customer", "supplier", "tenants", "cities" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
+    @JsonView({ Multiple.class, Single.class })
     private Person person;
 
     @JsonIgnoreProperties(value = { "customer", "supplier", "tenants", "cities" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
+    @JsonView({ Multiple.class, Single.class })
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "stockMovements", "tenants", "primarySuppliers" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private RawMaterial rawMaterials;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "suppliers")
@@ -92,29 +113,19 @@ public class Supplier implements Serializable {
         },
         allowSetters = true
     )
+    @JsonView({ Multiple.class, Single.class })
     private Set<Tenant> tenants = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "suppliers")
     @JsonIgnoreProperties(value = { "suppliers", "customers", "people", "companies", "warehouses", "state" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<City> cities = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public Supplier id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLegalName() {
-        return this.legalName;
     }
 
     public Supplier legalName(String legalName) {
@@ -122,25 +133,9 @@ public class Supplier implements Serializable {
         return this;
     }
 
-    public void setLegalName(String legalName) {
-        this.legalName = legalName;
-    }
-
-    public String getTradeName() {
-        return this.tradeName;
-    }
-
     public Supplier tradeName(String tradeName) {
         this.setTradeName(tradeName);
         return this;
-    }
-
-    public void setTradeName(String tradeName) {
-        this.tradeName = tradeName;
-    }
-
-    public String getTaxId() {
-        return this.taxId;
     }
 
     public Supplier taxId(String taxId) {
@@ -148,25 +143,9 @@ public class Supplier implements Serializable {
         return this;
     }
 
-    public void setTaxId(String taxId) {
-        this.taxId = taxId;
-    }
-
-    public PartyType getPartyType() {
-        return this.partyType;
-    }
-
     public Supplier partyType(PartyType partyType) {
         this.setPartyType(partyType);
         return this;
-    }
-
-    public void setPartyType(PartyType partyType) {
-        this.partyType = partyType;
-    }
-
-    public String getEmail() {
-        return this.email;
     }
 
     public Supplier email(String email) {
@@ -174,25 +153,9 @@ public class Supplier implements Serializable {
         return this;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return this.phone;
-    }
-
     public Supplier phone(String phone) {
         this.setPhone(phone);
         return this;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Boolean getActive() {
-        return this.active;
     }
 
     public Supplier active(Boolean active) {
@@ -200,29 +163,9 @@ public class Supplier implements Serializable {
         return this;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Instant getDeletedAt() {
-        return this.deletedAt;
-    }
-
     public Supplier deletedAt(Instant deletedAt) {
         this.setDeletedAt(deletedAt);
         return this;
-    }
-
-    public void setDeletedAt(Instant deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public Person getPerson() {
-        return this.person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 
     public Supplier person(Person person) {
@@ -230,34 +173,14 @@ public class Supplier implements Serializable {
         return this;
     }
 
-    public Company getCompany() {
-        return this.company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
     public Supplier company(Company company) {
         this.setCompany(company);
         return this;
     }
 
-    public RawMaterial getRawMaterials() {
-        return this.rawMaterials;
-    }
-
-    public void setRawMaterials(RawMaterial rawMaterial) {
-        this.rawMaterials = rawMaterial;
-    }
-
     public Supplier rawMaterials(RawMaterial rawMaterial) {
         this.setRawMaterials(rawMaterial);
         return this;
-    }
-
-    public Set<Tenant> getTenants() {
-        return this.tenants;
     }
 
     public void setTenants(Set<Tenant> tenants) {
@@ -285,10 +208,6 @@ public class Supplier implements Serializable {
         this.tenants.remove(tenant);
         tenant.setSuppliers(null);
         return this;
-    }
-
-    public Set<City> getCities() {
-        return this.cities;
     }
 
     public void setCities(Set<City> cities) {

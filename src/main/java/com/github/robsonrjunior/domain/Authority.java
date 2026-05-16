@@ -1,11 +1,14 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -15,7 +18,13 @@ import org.springframework.data.domain.Persistable;
 @Table(name = "jhi_authority")
 @JsonIgnoreProperties(value = { "new", "id" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class Authority implements Serializable, Persistable<String> {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -24,25 +33,19 @@ public class Authority implements Serializable, Persistable<String> {
     @Size(max = 50)
     @Id
     @Column(name = "name", length = 50, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String name;
 
     @org.springframework.data.annotation.Transient
     @Transient
+    @JsonView({ Multiple.class, Single.class })
     private boolean isPersisted;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getName() {
-        return this.name;
-    }
-
     public Authority name(String name) {
         this.setName(name);
         return this;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @PostLoad

@@ -1,6 +1,7 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.github.robsonrjunior.domain.enumeration.MovementType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,6 +11,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A StockMovement.
@@ -17,7 +20,13 @@ import java.util.Set;
 @Entity
 @Table(name = "stock_movement")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class StockMovement implements Serializable {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,35 +35,43 @@ public class StockMovement implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
+    @JsonView({ Multiple.class, Single.class })
     private Long id;
 
     @NotNull
     @Column(name = "movement_date", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private Instant movementDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "movement_type", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private MovementType movementType;
 
     @NotNull
     @DecimalMin(value = "0.000001")
     @Column(name = "quantity", precision = 21, scale = 2, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private BigDecimal quantity;
 
     @DecimalMin(value = "0")
     @Column(name = "unit_cost", precision = 21, scale = 2)
+    @JsonView({ Multiple.class, Single.class })
     private BigDecimal unitCost;
 
     @Size(max = 60)
     @Column(name = "reference_number", length = 60)
+    @JsonView({ Multiple.class, Single.class })
     private String referenceNumber;
 
     @Size(max = 500)
     @Column(name = "notes", length = 500)
+    @JsonView({ Multiple.class, Single.class })
     private String notes;
 
     @Column(name = "deleted_at")
+    @JsonView({ Multiple.class, Single.class })
     private Instant deletedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stockMovements")
@@ -73,37 +90,29 @@ public class StockMovement implements Serializable {
         },
         allowSetters = true
     )
+    @JsonView({ Multiple.class, Single.class })
     private Set<Tenant> tenants = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stockMovements")
     @JsonIgnoreProperties(value = { "stockMovements", "sales", "tenants", "cities" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<Warehouse> warehouses = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stockMovements")
     @JsonIgnoreProperties(value = { "saleItems", "stockMovements", "tenants" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<Product> products = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stockMovements")
     @JsonIgnoreProperties(value = { "stockMovements", "tenants", "primarySuppliers" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<RawMaterial> rawMaterials = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public StockMovement id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Instant getMovementDate() {
-        return this.movementDate;
     }
 
     public StockMovement movementDate(Instant movementDate) {
@@ -111,25 +120,9 @@ public class StockMovement implements Serializable {
         return this;
     }
 
-    public void setMovementDate(Instant movementDate) {
-        this.movementDate = movementDate;
-    }
-
-    public MovementType getMovementType() {
-        return this.movementType;
-    }
-
     public StockMovement movementType(MovementType movementType) {
         this.setMovementType(movementType);
         return this;
-    }
-
-    public void setMovementType(MovementType movementType) {
-        this.movementType = movementType;
-    }
-
-    public BigDecimal getQuantity() {
-        return this.quantity;
     }
 
     public StockMovement quantity(BigDecimal quantity) {
@@ -137,25 +130,9 @@ public class StockMovement implements Serializable {
         return this;
     }
 
-    public void setQuantity(BigDecimal quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getUnitCost() {
-        return this.unitCost;
-    }
-
     public StockMovement unitCost(BigDecimal unitCost) {
         this.setUnitCost(unitCost);
         return this;
-    }
-
-    public void setUnitCost(BigDecimal unitCost) {
-        this.unitCost = unitCost;
-    }
-
-    public String getReferenceNumber() {
-        return this.referenceNumber;
     }
 
     public StockMovement referenceNumber(String referenceNumber) {
@@ -163,38 +140,14 @@ public class StockMovement implements Serializable {
         return this;
     }
 
-    public void setReferenceNumber(String referenceNumber) {
-        this.referenceNumber = referenceNumber;
-    }
-
-    public String getNotes() {
-        return this.notes;
-    }
-
     public StockMovement notes(String notes) {
         this.setNotes(notes);
         return this;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public Instant getDeletedAt() {
-        return this.deletedAt;
-    }
-
     public StockMovement deletedAt(Instant deletedAt) {
         this.setDeletedAt(deletedAt);
         return this;
-    }
-
-    public void setDeletedAt(Instant deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public Set<Tenant> getTenants() {
-        return this.tenants;
     }
 
     public void setTenants(Set<Tenant> tenants) {
@@ -224,10 +177,6 @@ public class StockMovement implements Serializable {
         return this;
     }
 
-    public Set<Warehouse> getWarehouses() {
-        return this.warehouses;
-    }
-
     public void setWarehouses(Set<Warehouse> warehouses) {
         if (this.warehouses != null) {
             this.warehouses.forEach(i -> i.setStockMovements(null));
@@ -255,10 +204,6 @@ public class StockMovement implements Serializable {
         return this;
     }
 
-    public Set<Product> getProducts() {
-        return this.products;
-    }
-
     public void setProducts(Set<Product> products) {
         if (this.products != null) {
             this.products.forEach(i -> i.setStockMovements(null));
@@ -284,10 +229,6 @@ public class StockMovement implements Serializable {
         this.products.remove(product);
         product.setStockMovements(null);
         return this;
-    }
-
-    public Set<RawMaterial> getRawMaterials() {
-        return this.rawMaterials;
     }
 
     public void setRawMaterials(Set<RawMaterial> rawMaterials) {

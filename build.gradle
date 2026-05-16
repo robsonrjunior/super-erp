@@ -94,9 +94,13 @@ dependencies {
     testImplementation "org.testcontainers:testcontainers-jdbc"
     testImplementation "org.testcontainers:testcontainers-junit-jupiter"
     testImplementation "org.testcontainers:testcontainers-postgresql"
+    compileOnly libs.lombok
+    testCompileOnly libs.lombok
     testRuntimeOnly(libs.archunit.junit5.engine) {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
+    annotationProcessor libs.lombok
+    testAnnotationProcessor libs.lombok
     annotationProcessor libs.mapstruct.processor
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.glassfish.jaxb:jaxb-runtime"

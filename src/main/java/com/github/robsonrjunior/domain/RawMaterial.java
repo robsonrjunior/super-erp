@@ -1,6 +1,7 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.github.robsonrjunior.domain.enumeration.UnitOfMeasure;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,6 +11,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A RawMaterial.
@@ -17,7 +20,13 @@ import java.util.Set;
 @Entity
 @Table(name = "raw_material")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class RawMaterial implements Serializable {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,46 +35,56 @@ public class RawMaterial implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
+    @JsonView({ Multiple.class, Single.class })
     private Long id;
 
     @NotNull
     @Size(min = 2, max = 120)
     @Column(name = "name", length = 120, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String name;
 
     @NotNull
     @Size(min = 2, max = 40)
     @Column(name = "sku", length = 40, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String sku;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "unit_of_measure", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private UnitOfMeasure unitOfMeasure;
 
     @NotNull
     @Min(value = 0)
     @Max(value = 6)
     @Column(name = "unit_decimal_places", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private Integer unitDecimalPlaces;
 
     @DecimalMin(value = "0")
     @Column(name = "unit_cost", precision = 21, scale = 2)
+    @JsonView({ Multiple.class, Single.class })
     private BigDecimal unitCost;
 
     @DecimalMin(value = "0")
     @Column(name = "min_stock", precision = 21, scale = 2)
+    @JsonView({ Multiple.class, Single.class })
     private BigDecimal minStock;
 
     @NotNull
     @Column(name = "active", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private Boolean active;
 
     @Column(name = "deleted_at")
+    @JsonView({ Multiple.class, Single.class })
     private Instant deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "tenants", "warehouses", "products", "rawMaterials" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private StockMovement stockMovements;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "rawMaterials")
@@ -84,29 +103,19 @@ public class RawMaterial implements Serializable {
         },
         allowSetters = true
     )
+    @JsonView({ Multiple.class, Single.class })
     private Set<Tenant> tenants = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "rawMaterials")
     @JsonIgnoreProperties(value = { "person", "company", "rawMaterials", "tenants", "cities" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<Supplier> primarySuppliers = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public RawMaterial id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public RawMaterial name(String name) {
@@ -114,25 +123,9 @@ public class RawMaterial implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSku() {
-        return this.sku;
-    }
-
     public RawMaterial sku(String sku) {
         this.setSku(sku);
         return this;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public UnitOfMeasure getUnitOfMeasure() {
-        return this.unitOfMeasure;
     }
 
     public RawMaterial unitOfMeasure(UnitOfMeasure unitOfMeasure) {
@@ -140,25 +133,9 @@ public class RawMaterial implements Serializable {
         return this;
     }
 
-    public void setUnitOfMeasure(UnitOfMeasure unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
-    }
-
-    public Integer getUnitDecimalPlaces() {
-        return this.unitDecimalPlaces;
-    }
-
     public RawMaterial unitDecimalPlaces(Integer unitDecimalPlaces) {
         this.setUnitDecimalPlaces(unitDecimalPlaces);
         return this;
-    }
-
-    public void setUnitDecimalPlaces(Integer unitDecimalPlaces) {
-        this.unitDecimalPlaces = unitDecimalPlaces;
-    }
-
-    public BigDecimal getUnitCost() {
-        return this.unitCost;
     }
 
     public RawMaterial unitCost(BigDecimal unitCost) {
@@ -166,25 +143,9 @@ public class RawMaterial implements Serializable {
         return this;
     }
 
-    public void setUnitCost(BigDecimal unitCost) {
-        this.unitCost = unitCost;
-    }
-
-    public BigDecimal getMinStock() {
-        return this.minStock;
-    }
-
     public RawMaterial minStock(BigDecimal minStock) {
         this.setMinStock(minStock);
         return this;
-    }
-
-    public void setMinStock(BigDecimal minStock) {
-        this.minStock = minStock;
-    }
-
-    public Boolean getActive() {
-        return this.active;
     }
 
     public RawMaterial active(Boolean active) {
@@ -192,38 +153,14 @@ public class RawMaterial implements Serializable {
         return this;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Instant getDeletedAt() {
-        return this.deletedAt;
-    }
-
     public RawMaterial deletedAt(Instant deletedAt) {
         this.setDeletedAt(deletedAt);
         return this;
     }
 
-    public void setDeletedAt(Instant deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public StockMovement getStockMovements() {
-        return this.stockMovements;
-    }
-
-    public void setStockMovements(StockMovement stockMovement) {
-        this.stockMovements = stockMovement;
-    }
-
     public RawMaterial stockMovements(StockMovement stockMovement) {
         this.setStockMovements(stockMovement);
         return this;
-    }
-
-    public Set<Tenant> getTenants() {
-        return this.tenants;
     }
 
     public void setTenants(Set<Tenant> tenants) {
@@ -251,10 +188,6 @@ public class RawMaterial implements Serializable {
         this.tenants.remove(tenant);
         tenant.setRawMaterials(null);
         return this;
-    }
-
-    public Set<Supplier> getPrimarySuppliers() {
-        return this.primarySuppliers;
     }
 
     public void setPrimarySuppliers(Set<Supplier> suppliers) {

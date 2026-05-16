@@ -1,6 +1,7 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
@@ -8,6 +9,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A Warehouse.
@@ -15,7 +18,13 @@ import java.util.Set;
 @Entity
 @Table(name = "warehouse")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class Warehouse implements Serializable {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -24,31 +33,38 @@ public class Warehouse implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
+    @JsonView({ Multiple.class, Single.class })
     private Long id;
 
     @NotNull
     @Size(min = 2, max = 120)
     @Column(name = "name", length = 120, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String name;
 
     @NotNull
     @Size(min = 2, max = 30)
     @Column(name = "code", length = 30, nullable = false, unique = true)
+    @JsonView({ Multiple.class, Single.class })
     private String code;
 
     @NotNull
     @Column(name = "active", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private Boolean active;
 
     @Column(name = "deleted_at")
+    @JsonView({ Multiple.class, Single.class })
     private Instant deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "tenants", "warehouses", "products", "rawMaterials" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private StockMovement stockMovements;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "items", "tenants", "warehouses", "customers" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Sale sales;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouses")
@@ -67,29 +83,19 @@ public class Warehouse implements Serializable {
         },
         allowSetters = true
     )
+    @JsonView({ Multiple.class, Single.class })
     private Set<Tenant> tenants = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouses")
     @JsonIgnoreProperties(value = { "suppliers", "customers", "people", "companies", "warehouses", "state" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<City> cities = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public Warehouse id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public Warehouse name(String name) {
@@ -97,25 +103,9 @@ public class Warehouse implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
     public Warehouse code(String code) {
         this.setCode(code);
         return this;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Boolean getActive() {
-        return this.active;
     }
 
     public Warehouse active(Boolean active) {
@@ -123,29 +113,9 @@ public class Warehouse implements Serializable {
         return this;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Instant getDeletedAt() {
-        return this.deletedAt;
-    }
-
     public Warehouse deletedAt(Instant deletedAt) {
         this.setDeletedAt(deletedAt);
         return this;
-    }
-
-    public void setDeletedAt(Instant deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public StockMovement getStockMovements() {
-        return this.stockMovements;
-    }
-
-    public void setStockMovements(StockMovement stockMovement) {
-        this.stockMovements = stockMovement;
     }
 
     public Warehouse stockMovements(StockMovement stockMovement) {
@@ -153,21 +123,9 @@ public class Warehouse implements Serializable {
         return this;
     }
 
-    public Sale getSales() {
-        return this.sales;
-    }
-
-    public void setSales(Sale sale) {
-        this.sales = sale;
-    }
-
     public Warehouse sales(Sale sale) {
         this.setSales(sale);
         return this;
-    }
-
-    public Set<Tenant> getTenants() {
-        return this.tenants;
     }
 
     public void setTenants(Set<Tenant> tenants) {
@@ -195,10 +153,6 @@ public class Warehouse implements Serializable {
         this.tenants.remove(tenant);
         tenant.setWarehouses(null);
         return this;
-    }
-
-    public Set<City> getCities() {
-        return this.cities;
     }
 
     public void setCities(Set<City> cities) {

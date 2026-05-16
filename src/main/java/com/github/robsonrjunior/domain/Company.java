@@ -1,6 +1,7 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
@@ -8,6 +9,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A Company.
@@ -15,7 +18,13 @@ import java.util.Set;
 @Entity
 @Table(name = "company")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class Company implements Serializable {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -24,48 +33,59 @@ public class Company implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
+    @JsonView({ Multiple.class, Single.class })
     private Long id;
 
     @NotNull
     @Size(min = 2, max = 120)
     @Column(name = "legal_name", length = 120, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String legalName;
 
     @Size(max = 120)
     @Column(name = "trade_name", length = 120)
+    @JsonView({ Multiple.class, Single.class })
     private String tradeName;
 
     @NotNull
     @Size(min = 14, max = 18)
     @Column(name = "cnpj", length = 18, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String cnpj;
 
     @Size(max = 30)
     @Column(name = "state_registration", length = 30)
+    @JsonView({ Multiple.class, Single.class })
     private String stateRegistration;
 
     @Size(max = 120)
     @Pattern(regexp = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")
     @Column(name = "email", length = 120)
+    @JsonView({ Multiple.class, Single.class })
     private String email;
 
     @Size(max = 30)
     @Column(name = "phone", length = 30)
+    @JsonView({ Multiple.class, Single.class })
     private String phone;
 
     @NotNull
     @Column(name = "active", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private Boolean active;
 
     @Column(name = "deleted_at")
+    @JsonView({ Multiple.class, Single.class })
     private Instant deletedAt;
 
     @JsonIgnoreProperties(value = { "person", "company", "sales", "tenants", "cities" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "company")
+    @JsonView({ Multiple.class, Single.class })
     private Customer customer;
 
     @JsonIgnoreProperties(value = { "person", "company", "rawMaterials", "tenants", "cities" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "company")
+    @JsonView({ Multiple.class, Single.class })
     private Supplier supplier;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "companies")
@@ -84,29 +104,19 @@ public class Company implements Serializable {
         },
         allowSetters = true
     )
+    @JsonView({ Multiple.class, Single.class })
     private Set<Tenant> tenants = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "companies")
     @JsonIgnoreProperties(value = { "suppliers", "customers", "people", "companies", "warehouses", "state" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<City> cities = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public Company id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLegalName() {
-        return this.legalName;
     }
 
     public Company legalName(String legalName) {
@@ -114,25 +124,9 @@ public class Company implements Serializable {
         return this;
     }
 
-    public void setLegalName(String legalName) {
-        this.legalName = legalName;
-    }
-
-    public String getTradeName() {
-        return this.tradeName;
-    }
-
     public Company tradeName(String tradeName) {
         this.setTradeName(tradeName);
         return this;
-    }
-
-    public void setTradeName(String tradeName) {
-        this.tradeName = tradeName;
-    }
-
-    public String getCnpj() {
-        return this.cnpj;
     }
 
     public Company cnpj(String cnpj) {
@@ -140,25 +134,9 @@ public class Company implements Serializable {
         return this;
     }
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public String getStateRegistration() {
-        return this.stateRegistration;
-    }
-
     public Company stateRegistration(String stateRegistration) {
         this.setStateRegistration(stateRegistration);
         return this;
-    }
-
-    public void setStateRegistration(String stateRegistration) {
-        this.stateRegistration = stateRegistration;
-    }
-
-    public String getEmail() {
-        return this.email;
     }
 
     public Company email(String email) {
@@ -166,25 +144,9 @@ public class Company implements Serializable {
         return this;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return this.phone;
-    }
-
     public Company phone(String phone) {
         this.setPhone(phone);
         return this;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Boolean getActive() {
-        return this.active;
     }
 
     public Company active(Boolean active) {
@@ -192,25 +154,9 @@ public class Company implements Serializable {
         return this;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Instant getDeletedAt() {
-        return this.deletedAt;
-    }
-
     public Company deletedAt(Instant deletedAt) {
         this.setDeletedAt(deletedAt);
         return this;
-    }
-
-    public void setDeletedAt(Instant deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public Customer getCustomer() {
-        return this.customer;
     }
 
     public void setCustomer(Customer customer) {
@@ -228,10 +174,6 @@ public class Company implements Serializable {
         return this;
     }
 
-    public Supplier getSupplier() {
-        return this.supplier;
-    }
-
     public void setSupplier(Supplier supplier) {
         if (this.supplier != null) {
             this.supplier.setCompany(null);
@@ -245,10 +187,6 @@ public class Company implements Serializable {
     public Company supplier(Supplier supplier) {
         this.setSupplier(supplier);
         return this;
-    }
-
-    public Set<Tenant> getTenants() {
-        return this.tenants;
     }
 
     public void setTenants(Set<Tenant> tenants) {
@@ -276,10 +214,6 @@ public class Company implements Serializable {
         this.tenants.remove(tenant);
         tenant.setCompanies(null);
         return this;
-    }
-
-    public Set<City> getCities() {
-        return this.cities;
     }
 
     public void setCities(Set<City> cities) {

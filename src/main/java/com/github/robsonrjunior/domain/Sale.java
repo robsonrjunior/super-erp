@@ -1,6 +1,7 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.github.robsonrjunior.domain.enumeration.SaleStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,6 +11,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A Sale.
@@ -17,7 +20,13 @@ import java.util.Set;
 @Entity
 @Table(name = "sale")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class Sale implements Serializable {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,45 +35,55 @@ public class Sale implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
+    @JsonView({ Multiple.class, Single.class })
     private Long id;
 
     @NotNull
     @Column(name = "sale_date", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private Instant saleDate;
 
     @NotNull
     @Size(min = 2, max = 40)
     @Column(name = "sale_number", length = 40, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String saleNumber;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private SaleStatus status;
 
     @NotNull
     @DecimalMin(value = "0")
     @Column(name = "gross_amount", precision = 21, scale = 2, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private BigDecimal grossAmount;
 
     @DecimalMin(value = "0")
     @Column(name = "discount_amount", precision = 21, scale = 2)
+    @JsonView({ Multiple.class, Single.class })
     private BigDecimal discountAmount;
 
     @NotNull
     @DecimalMin(value = "0")
     @Column(name = "net_amount", precision = 21, scale = 2, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private BigDecimal netAmount;
 
     @Size(max = 500)
     @Column(name = "notes", length = 500)
+    @JsonView({ Multiple.class, Single.class })
     private String notes;
 
     @Column(name = "deleted_at")
+    @JsonView({ Multiple.class, Single.class })
     private Instant deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "tenants", "sales", "products" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private SaleItem items;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sales")
@@ -83,33 +102,24 @@ public class Sale implements Serializable {
         },
         allowSetters = true
     )
+    @JsonView({ Multiple.class, Single.class })
     private Set<Tenant> tenants = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sales")
     @JsonIgnoreProperties(value = { "stockMovements", "sales", "tenants", "cities" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<Warehouse> warehouses = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sales")
     @JsonIgnoreProperties(value = { "person", "company", "sales", "tenants", "cities" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<Customer> customers = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public Sale id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Instant getSaleDate() {
-        return this.saleDate;
     }
 
     public Sale saleDate(Instant saleDate) {
@@ -117,25 +127,9 @@ public class Sale implements Serializable {
         return this;
     }
 
-    public void setSaleDate(Instant saleDate) {
-        this.saleDate = saleDate;
-    }
-
-    public String getSaleNumber() {
-        return this.saleNumber;
-    }
-
     public Sale saleNumber(String saleNumber) {
         this.setSaleNumber(saleNumber);
         return this;
-    }
-
-    public void setSaleNumber(String saleNumber) {
-        this.saleNumber = saleNumber;
-    }
-
-    public SaleStatus getStatus() {
-        return this.status;
     }
 
     public Sale status(SaleStatus status) {
@@ -143,25 +137,9 @@ public class Sale implements Serializable {
         return this;
     }
 
-    public void setStatus(SaleStatus status) {
-        this.status = status;
-    }
-
-    public BigDecimal getGrossAmount() {
-        return this.grossAmount;
-    }
-
     public Sale grossAmount(BigDecimal grossAmount) {
         this.setGrossAmount(grossAmount);
         return this;
-    }
-
-    public void setGrossAmount(BigDecimal grossAmount) {
-        this.grossAmount = grossAmount;
-    }
-
-    public BigDecimal getDiscountAmount() {
-        return this.discountAmount;
     }
 
     public Sale discountAmount(BigDecimal discountAmount) {
@@ -169,25 +147,9 @@ public class Sale implements Serializable {
         return this;
     }
 
-    public void setDiscountAmount(BigDecimal discountAmount) {
-        this.discountAmount = discountAmount;
-    }
-
-    public BigDecimal getNetAmount() {
-        return this.netAmount;
-    }
-
     public Sale netAmount(BigDecimal netAmount) {
         this.setNetAmount(netAmount);
         return this;
-    }
-
-    public void setNetAmount(BigDecimal netAmount) {
-        this.netAmount = netAmount;
-    }
-
-    public String getNotes() {
-        return this.notes;
     }
 
     public Sale notes(String notes) {
@@ -195,38 +157,14 @@ public class Sale implements Serializable {
         return this;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public Instant getDeletedAt() {
-        return this.deletedAt;
-    }
-
     public Sale deletedAt(Instant deletedAt) {
         this.setDeletedAt(deletedAt);
         return this;
     }
 
-    public void setDeletedAt(Instant deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public SaleItem getItems() {
-        return this.items;
-    }
-
-    public void setItems(SaleItem saleItem) {
-        this.items = saleItem;
-    }
-
     public Sale items(SaleItem saleItem) {
         this.setItems(saleItem);
         return this;
-    }
-
-    public Set<Tenant> getTenants() {
-        return this.tenants;
     }
 
     public void setTenants(Set<Tenant> tenants) {
@@ -256,10 +194,6 @@ public class Sale implements Serializable {
         return this;
     }
 
-    public Set<Warehouse> getWarehouses() {
-        return this.warehouses;
-    }
-
     public void setWarehouses(Set<Warehouse> warehouses) {
         if (this.warehouses != null) {
             this.warehouses.forEach(i -> i.setSales(null));
@@ -285,10 +219,6 @@ public class Sale implements Serializable {
         this.warehouses.remove(warehouse);
         warehouse.setSales(null);
         return this;
-    }
-
-    public Set<Customer> getCustomers() {
-        return this.customers;
     }
 
     public void setCustomers(Set<Customer> customers) {

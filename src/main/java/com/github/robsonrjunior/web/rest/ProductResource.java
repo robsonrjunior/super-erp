@@ -1,5 +1,6 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.github.robsonrjunior.domain.Product;
 import com.github.robsonrjunior.repository.ProductRepository;
 import com.github.robsonrjunior.service.ProductQueryService;
@@ -20,7 +21,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -56,10 +65,13 @@ public class ProductResource {
      * {@code POST  /products} : Create a new product.
      *
      * @param product the product to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new product, or with status {@code 400 (Bad Request)} if the product has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new product, or with status {@code 400 (Bad Request)} if the
+     *         product has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @JsonView(Product.Single.class)
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) throws URISyntaxException {
         LOG.debug("REST request to save Product : {}", product);
         if (product.getId() != null) {
@@ -74,14 +86,17 @@ public class ProductResource {
     /**
      * {@code PUT  /products/:id} : Updates an existing product.
      *
-     * @param id the id of the product to save.
+     * @param id      the id of the product to save.
      * @param product the product to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated product,
-     * or with status {@code 400 (Bad Request)} if the product is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the product couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated product,
+     *         or with status {@code 400 (Bad Request)} if the product is not valid,
+     *         or with status {@code 500 (Internal Server Error)} if the product
+     *         couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @JsonView(Product.Single.class)
     public ResponseEntity<Product> updateProduct(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody Product product
@@ -105,17 +120,21 @@ public class ProductResource {
     }
 
     /**
-     * {@code PATCH  /products/:id} : Partial updates given fields of an existing product, field will ignore if it is null
+     * {@code PATCH  /products/:id} : Partial updates given fields of an existing
+     * product, field will ignore if it is null
      *
-     * @param id the id of the product to save.
+     * @param id      the id of the product to save.
      * @param product the product to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated product,
-     * or with status {@code 400 (Bad Request)} if the product is not valid,
-     * or with status {@code 404 (Not Found)} if the product is not found,
-     * or with status {@code 500 (Internal Server Error)} if the product couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated product,
+     *         or with status {@code 400 (Bad Request)} if the product is not valid,
+     *         or with status {@code 404 (Not Found)} if the product is not found,
+     *         or with status {@code 500 (Internal Server Error)} if the product
+     *         couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @JsonView(Product.Single.class)
     public ResponseEntity<Product> partialUpdateProduct(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Product product
@@ -145,9 +164,11 @@ public class ProductResource {
      *
      * @param pageable the pagination information.
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Products in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of Products in body.
      */
     @GetMapping("")
+    @JsonView(Product.Multiple.class)
     public ResponseEntity<List<Product>> getAllProducts(
         ProductCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
@@ -163,7 +184,8 @@ public class ProductResource {
      * {@code GET  /products/count} : count all the products.
      *
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count
+     *         in body.
      */
     @GetMapping("/count")
     public ResponseEntity<Long> countProducts(ProductCriteria criteria) {
@@ -175,9 +197,11 @@ public class ProductResource {
      * {@code GET  /products/:id} : get the "id" product.
      *
      * @param id the id of the product to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the product, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the product, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @JsonView(Product.Single.class)
     public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Product : {}", id);
         Optional<Product> product = productService.findOne(id);

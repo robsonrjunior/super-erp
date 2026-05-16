@@ -3,6 +3,7 @@ mapstruct = "1.6.3"
 archunit-junit5 = "1.4.1"
 checkstyle = "13.3.0"
 jacoco = "0.8.14"
+lombok = "1.18.38"
 # jhipster-needle-gradle-dependency-catalog-version - JHipster will add additional versions for convention plugins heref
 
 [libraries]
@@ -12,6 +13,7 @@ archunit-junit5-api = { module = "com.tngtech.archunit:archunit-junit5-api", ver
 archunit-junit5-engine = { module = "com.tngtech.archunit:archunit-junit5-engine", version.ref = "archunit-junit5" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 # jhipster-needle-gradle-dependency-catalog-libraries - JHipster will add additional libraries versions
 
 [plugins]

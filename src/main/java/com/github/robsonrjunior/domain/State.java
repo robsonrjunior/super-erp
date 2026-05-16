@@ -1,12 +1,15 @@
 package com.github.robsonrjunior.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A State.
@@ -14,7 +17,13 @@ import java.util.Set;
 @Entity
 @Table(name = "state")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class State implements Serializable {
+
+    public static interface Multiple {}
+
+    public static interface Single {}
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -23,44 +32,37 @@ public class State implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
+    @JsonView({ Multiple.class, Single.class })
     private Long id;
 
     @NotNull
     @Size(min = 2, max = 100)
     @Column(name = "name", length = 100, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String name;
 
     @NotNull
     @Size(min = 2, max = 10)
     @Column(name = "code", length = 10, nullable = false)
+    @JsonView({ Multiple.class, Single.class })
     private String code;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "state")
     @JsonIgnoreProperties(value = { "suppliers", "customers", "people", "companies", "warehouses", "state" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Set<City> citieses = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "stateses" }, allowSetters = true)
+    @JsonView({ Multiple.class, Single.class })
     private Country country;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public State id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public State name(String name) {
@@ -68,25 +70,9 @@ public class State implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
     public State code(String code) {
         this.setCode(code);
         return this;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Set<City> getCitieses() {
-        return this.citieses;
     }
 
     public void setCitieses(Set<City> cities) {
@@ -114,14 +100,6 @@ public class State implements Serializable {
         this.citieses.remove(city);
         city.setState(null);
         return this;
-    }
-
-    public Country getCountry() {
-        return this.country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
     }
 
     public State country(Country country) {
