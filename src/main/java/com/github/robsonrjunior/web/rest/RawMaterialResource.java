@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.RawMaterial;
 import com.github.robsonrjunior.repository.RawMaterialRepository;
 import com.github.robsonrjunior.service.RawMaterialQueryService;
 import com.github.robsonrjunior.service.RawMaterialService;
 import com.github.robsonrjunior.service.criteria.RawMaterialCriteria;
-import com.github.robsonrjunior.service.dto.RawMaterialDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -59,42 +59,42 @@ public class RawMaterialResource {
     /**
      * {@code POST  /raw-materials} : Create a new rawMaterial.
      *
-     * @param rawMaterialDTO the rawMaterialDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new rawMaterialDTO, or with status {@code 400 (Bad Request)} if the rawMaterial has already an ID.
+     * @param rawMaterial the rawMaterial to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new rawMaterial, or with status {@code 400 (Bad Request)} if the rawMaterial has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<RawMaterialDTO> createRawMaterial(@Valid @RequestBody RawMaterialDTO rawMaterialDTO) throws URISyntaxException {
-        LOG.debug("REST request to save RawMaterial : {}", rawMaterialDTO);
-        if (rawMaterialDTO.getId() != null) {
+    public ResponseEntity<RawMaterial> createRawMaterial(@Valid @RequestBody RawMaterial rawMaterial) throws URISyntaxException {
+        LOG.debug("REST request to save RawMaterial : {}", rawMaterial);
+        if (rawMaterial.getId() != null) {
             throw new BadRequestAlertException("A new rawMaterial cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        rawMaterialDTO = rawMaterialService.save(rawMaterialDTO);
-        return ResponseEntity.created(new URI("/api/raw-materials/" + rawMaterialDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, rawMaterialDTO.getId().toString()))
-            .body(rawMaterialDTO);
+        rawMaterial = rawMaterialService.save(rawMaterial);
+        return ResponseEntity.created(new URI("/api/raw-materials/" + rawMaterial.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, rawMaterial.getId().toString()))
+            .body(rawMaterial);
     }
 
     /**
      * {@code PUT  /raw-materials/:id} : Updates an existing rawMaterial.
      *
-     * @param id the id of the rawMaterialDTO to save.
-     * @param rawMaterialDTO the rawMaterialDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated rawMaterialDTO,
-     * or with status {@code 400 (Bad Request)} if the rawMaterialDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the rawMaterialDTO couldn't be updated.
+     * @param id the id of the rawMaterial to save.
+     * @param rawMaterial the rawMaterial to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated rawMaterial,
+     * or with status {@code 400 (Bad Request)} if the rawMaterial is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the rawMaterial couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<RawMaterialDTO> updateRawMaterial(
+    public ResponseEntity<RawMaterial> updateRawMaterial(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody RawMaterialDTO rawMaterialDTO
+        @Valid @RequestBody RawMaterial rawMaterial
     ) throws URISyntaxException {
-        LOG.debug("REST request to update RawMaterial : {}, {}", id, rawMaterialDTO);
-        if (rawMaterialDTO.getId() == null) {
+        LOG.debug("REST request to update RawMaterial : {}, {}", id, rawMaterial);
+        if (rawMaterial.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, rawMaterialDTO.getId())) {
+        if (!Objects.equals(id, rawMaterial.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -102,33 +102,33 @@ public class RawMaterialResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        rawMaterialDTO = rawMaterialService.update(rawMaterialDTO);
+        rawMaterial = rawMaterialService.update(rawMaterial);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, rawMaterialDTO.getId().toString()))
-            .body(rawMaterialDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, rawMaterial.getId().toString()))
+            .body(rawMaterial);
     }
 
     /**
      * {@code PATCH  /raw-materials/:id} : Partial updates given fields of an existing rawMaterial, field will ignore if it is null
      *
-     * @param id the id of the rawMaterialDTO to save.
-     * @param rawMaterialDTO the rawMaterialDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated rawMaterialDTO,
-     * or with status {@code 400 (Bad Request)} if the rawMaterialDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the rawMaterialDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the rawMaterialDTO couldn't be updated.
+     * @param id the id of the rawMaterial to save.
+     * @param rawMaterial the rawMaterial to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated rawMaterial,
+     * or with status {@code 400 (Bad Request)} if the rawMaterial is not valid,
+     * or with status {@code 404 (Not Found)} if the rawMaterial is not found,
+     * or with status {@code 500 (Internal Server Error)} if the rawMaterial couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<RawMaterialDTO> partialUpdateRawMaterial(
+    public ResponseEntity<RawMaterial> partialUpdateRawMaterial(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody RawMaterialDTO rawMaterialDTO
+        @NotNull @RequestBody RawMaterial rawMaterial
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update RawMaterial partially : {}, {}", id, rawMaterialDTO);
-        if (rawMaterialDTO.getId() == null) {
+        LOG.debug("REST request to partial update RawMaterial partially : {}, {}", id, rawMaterial);
+        if (rawMaterial.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, rawMaterialDTO.getId())) {
+        if (!Objects.equals(id, rawMaterial.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -136,11 +136,11 @@ public class RawMaterialResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<RawMaterialDTO> result = rawMaterialService.partialUpdate(rawMaterialDTO);
+        Optional<RawMaterial> result = rawMaterialService.partialUpdate(rawMaterial);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, rawMaterialDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, rawMaterial.getId().toString())
         );
     }
 
@@ -152,13 +152,13 @@ public class RawMaterialResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Raw Materials in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<RawMaterialDTO>> getAllRawMaterials(
+    public ResponseEntity<List<RawMaterial>> getAllRawMaterials(
         RawMaterialCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get RawMaterials by criteria: {}", criteria);
 
-        Page<RawMaterialDTO> page = rawMaterialQueryService.findByCriteria(criteria, pageable);
+        Page<RawMaterial> page = rawMaterialQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -178,20 +178,20 @@ public class RawMaterialResource {
     /**
      * {@code GET  /raw-materials/:id} : get the "id" rawMaterial.
      *
-     * @param id the id of the rawMaterialDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the rawMaterialDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the rawMaterial to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the rawMaterial, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<RawMaterialDTO> getRawMaterial(@PathVariable("id") Long id) {
+    public ResponseEntity<RawMaterial> getRawMaterial(@PathVariable("id") Long id) {
         LOG.debug("REST request to get RawMaterial : {}", id);
-        Optional<RawMaterialDTO> rawMaterialDTO = rawMaterialService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(rawMaterialDTO);
+        Optional<RawMaterial> rawMaterial = rawMaterialService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(rawMaterial);
     }
 
     /**
      * {@code DELETE  /raw-materials/:id} : delete the "id" rawMaterial.
      *
-     * @param id the id of the rawMaterialDTO to delete.
+     * @param id the id of the rawMaterial to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

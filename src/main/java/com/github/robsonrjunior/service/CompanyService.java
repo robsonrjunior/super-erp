@@ -2,12 +2,9 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Company;
 import com.github.robsonrjunior.repository.CompanyRepository;
-import com.github.robsonrjunior.service.dto.CompanyDTO;
-import com.github.robsonrjunior.service.mapper.CompanyMapper;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,57 +22,56 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
 
-    private final CompanyMapper companyMapper;
-
-    public CompanyService(CompanyRepository companyRepository, CompanyMapper companyMapper) {
+    public CompanyService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
-        this.companyMapper = companyMapper;
     }
 
     /**
      * Save a company.
      *
-     * @param companyDTO the entity to save.
+     * @param company the entity to save.
      * @return the persisted entity.
      */
-    public CompanyDTO save(CompanyDTO companyDTO) {
-        LOG.debug("Request to save Company : {}", companyDTO);
-        Company company = companyMapper.toEntity(companyDTO);
-        company = companyRepository.save(company);
-        return companyMapper.toDto(company);
+    public Company save(Company company) {
+        LOG.debug("Request to save Company : {}", company);
+        return companyRepository.save(company);
     }
 
     /**
      * Update a company.
      *
-     * @param companyDTO the entity to save.
+     * @param company the entity to save.
      * @return the persisted entity.
      */
-    public CompanyDTO update(CompanyDTO companyDTO) {
-        LOG.debug("Request to update Company : {}", companyDTO);
-        Company company = companyMapper.toEntity(companyDTO);
-        company = companyRepository.save(company);
-        return companyMapper.toDto(company);
+    public Company update(Company company) {
+        LOG.debug("Request to update Company : {}", company);
+        return companyRepository.save(company);
     }
 
     /**
      * Partially update a company.
      *
-     * @param companyDTO the entity to update partially.
+     * @param company the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<CompanyDTO> partialUpdate(CompanyDTO companyDTO) {
-        LOG.debug("Request to partially update Company : {}", companyDTO);
+    public Optional<Company> partialUpdate(Company company) {
+        LOG.debug("Request to partially update Company : {}", company);
 
         return companyRepository
-            .findById(companyDTO.getId())
+            .findById(company.getId())
             .map(existingCompany -> {
-                companyMapper.partialUpdate(existingCompany, companyDTO);
+                updateIfPresent(existingCompany::setLegalName, company.getLegalName());
+                updateIfPresent(existingCompany::setTradeName, company.getTradeName());
+                updateIfPresent(existingCompany::setCnpj, company.getCnpj());
+                updateIfPresent(existingCompany::setStateRegistration, company.getStateRegistration());
+                updateIfPresent(existingCompany::setEmail, company.getEmail());
+                updateIfPresent(existingCompany::setPhone, company.getPhone());
+                updateIfPresent(existingCompany::setActive, company.getActive());
+                updateIfPresent(existingCompany::setDeletedAt, company.getDeletedAt());
 
                 return existingCompany;
             })
-            .map(companyRepository::save)
-            .map(companyMapper::toDto);
+            .map(companyRepository::save);
     }
 
     /**
@@ -83,12 +79,11 @@ public class CompanyService {
      *  @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<CompanyDTO> findAllWhereCustomerIsNull() {
+    public List<Company> findAllWhereCustomerIsNull() {
         LOG.debug("Request to get all companies where Customer is null");
         return StreamSupport.stream(companyRepository.findAll().spliterator(), false)
             .filter(company -> company.getCustomer() == null)
-            .map(companyMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+            .toList();
     }
 
     /**
@@ -96,12 +91,11 @@ public class CompanyService {
      *  @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<CompanyDTO> findAllWhereSupplierIsNull() {
+    public List<Company> findAllWhereSupplierIsNull() {
         LOG.debug("Request to get all companies where Supplier is null");
         return StreamSupport.stream(companyRepository.findAll().spliterator(), false)
             .filter(company -> company.getSupplier() == null)
-            .map(companyMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+            .toList();
     }
 
     /**
@@ -111,9 +105,9 @@ public class CompanyService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<CompanyDTO> findOne(Long id) {
+    public Optional<Company> findOne(Long id) {
         LOG.debug("Request to get Company : {}", id);
-        return companyRepository.findById(id).map(companyMapper::toDto);
+        return companyRepository.findById(id);
     }
 
     /**
@@ -124,5 +118,11 @@ public class CompanyService {
     public void delete(Long id) {
         LOG.debug("Request to delete Company : {}", id);
         companyRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

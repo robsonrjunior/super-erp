@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.RawMaterial;
 import com.github.robsonrjunior.repository.RawMaterialRepository;
 import com.github.robsonrjunior.service.criteria.RawMaterialCriteria;
-import com.github.robsonrjunior.service.dto.RawMaterialDTO;
-import com.github.robsonrjunior.service.mapper.RawMaterialMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link RawMaterial} entities in the database.
  * The main input is a {@link RawMaterialCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link RawMaterialDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link RawMaterial} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class RawMaterialQueryService extends QueryService<RawMaterial> {
 
     private final RawMaterialRepository rawMaterialRepository;
 
-    private final RawMaterialMapper rawMaterialMapper;
-
-    public RawMaterialQueryService(RawMaterialRepository rawMaterialRepository, RawMaterialMapper rawMaterialMapper) {
+    public RawMaterialQueryService(RawMaterialRepository rawMaterialRepository) {
         this.rawMaterialRepository = rawMaterialRepository;
-        this.rawMaterialMapper = rawMaterialMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link RawMaterialDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link RawMaterial} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<RawMaterialDTO> findByCriteria(RawMaterialCriteria criteria, Pageable page) {
+    public Page<RawMaterial> findByCriteria(RawMaterialCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<RawMaterial> specification = createSpecification(criteria);
-        return rawMaterialRepository.findAll(specification, page).map(rawMaterialMapper::toDto);
+        return rawMaterialRepository.findAll(specification, page);
     }
 
     /**

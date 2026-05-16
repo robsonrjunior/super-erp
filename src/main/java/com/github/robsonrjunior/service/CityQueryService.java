@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.City;
 import com.github.robsonrjunior.repository.CityRepository;
 import com.github.robsonrjunior.service.criteria.CityCriteria;
-import com.github.robsonrjunior.service.dto.CityDTO;
-import com.github.robsonrjunior.service.mapper.CityMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link City} entities in the database.
  * The main input is a {@link CityCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link CityDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link City} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class CityQueryService extends QueryService<City> {
 
     private final CityRepository cityRepository;
 
-    private final CityMapper cityMapper;
-
-    public CityQueryService(CityRepository cityRepository, CityMapper cityMapper) {
+    public CityQueryService(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
-        this.cityMapper = cityMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link CityDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link City} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<CityDTO> findByCriteria(CityCriteria criteria, Pageable page) {
+    public Page<City> findByCriteria(CityCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<City> specification = createSpecification(criteria);
-        return cityRepository.findAll(specification, page).map(cityMapper::toDto);
+        return cityRepository.findAll(specification, page);
     }
 
     /**

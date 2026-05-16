@@ -15,8 +15,6 @@ import com.github.robsonrjunior.domain.SaleItem;
 import com.github.robsonrjunior.domain.StockMovement;
 import com.github.robsonrjunior.domain.enumeration.UnitOfMeasure;
 import com.github.robsonrjunior.repository.ProductRepository;
-import com.github.robsonrjunior.service.dto.ProductDTO;
-import com.github.robsonrjunior.service.mapper.ProductMapper;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -83,9 +81,6 @@ class ProductResourceIT {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private ProductMapper productMapper;
 
     @Autowired
     private EntityManager em;
@@ -155,20 +150,18 @@ class ProductResourceIT {
     void createProduct() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Product
-        ProductDTO productDTO = productMapper.toDto(product);
-        var returnedProductDTO = om.readValue(
+        var returnedProduct = om.readValue(
             restProductMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            ProductDTO.class
+            Product.class
         );
 
         // Validate the Product in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedProduct = productMapper.toEntity(returnedProductDTO);
         assertProductUpdatableFieldsEquals(returnedProduct, getPersistedProduct(returnedProduct));
 
         insertedProduct = returnedProduct;
@@ -179,13 +172,12 @@ class ProductResourceIT {
     void createProductWithExistingId() throws Exception {
         // Create the Product with an existing ID
         product.setId(1L);
-        ProductDTO productDTO = productMapper.toDto(product);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         // Validate the Product in the database
@@ -200,10 +192,9 @@ class ProductResourceIT {
         product.setName(null);
 
         // Create the Product, which fails.
-        ProductDTO productDTO = productMapper.toDto(product);
 
         restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -217,10 +208,9 @@ class ProductResourceIT {
         product.setSku(null);
 
         // Create the Product, which fails.
-        ProductDTO productDTO = productMapper.toDto(product);
 
         restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -234,10 +224,9 @@ class ProductResourceIT {
         product.setUnitOfMeasure(null);
 
         // Create the Product, which fails.
-        ProductDTO productDTO = productMapper.toDto(product);
 
         restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -251,10 +240,9 @@ class ProductResourceIT {
         product.setUnitDecimalPlaces(null);
 
         // Create the Product, which fails.
-        ProductDTO productDTO = productMapper.toDto(product);
 
         restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -268,10 +256,9 @@ class ProductResourceIT {
         product.setSalePrice(null);
 
         // Create the Product, which fails.
-        ProductDTO productDTO = productMapper.toDto(product);
 
         restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -285,10 +272,9 @@ class ProductResourceIT {
         product.setActive(null);
 
         // Create the Product, which fails.
-        ProductDTO productDTO = productMapper.toDto(product);
 
         restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -970,11 +956,12 @@ class ProductResourceIT {
             .minStock(UPDATED_MIN_STOCK)
             .active(UPDATED_ACTIVE)
             .deletedAt(UPDATED_DELETED_AT);
-        ProductDTO productDTO = productMapper.toDto(updatedProduct);
 
         restProductMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, productDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO))
+                put(ENTITY_API_URL_ID, updatedProduct.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(updatedProduct))
             )
             .andExpect(status().isOk());
 
@@ -989,14 +976,9 @@ class ProductResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         product.setId(longCount.incrementAndGet());
 
-        // Create the Product
-        ProductDTO productDTO = productMapper.toDto(product);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restProductMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, productDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO))
-            )
+            .perform(put(ENTITY_API_URL_ID, product.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isBadRequest());
 
         // Validate the Product in the database
@@ -1009,15 +991,12 @@ class ProductResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         product.setId(longCount.incrementAndGet());
 
-        // Create the Product
-        ProductDTO productDTO = productMapper.toDto(product);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restProductMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(productDTO))
+                    .content(om.writeValueAsBytes(product))
             )
             .andExpect(status().isBadRequest());
 
@@ -1031,12 +1010,9 @@ class ProductResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         product.setId(longCount.incrementAndGet());
 
-        // Create the Product
-        ProductDTO productDTO = productMapper.toDto(product);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restProductMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(product)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Product in the database
@@ -1121,15 +1097,10 @@ class ProductResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         product.setId(longCount.incrementAndGet());
 
-        // Create the Product
-        ProductDTO productDTO = productMapper.toDto(product);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restProductMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, productDTO.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(productDTO))
+                patch(ENTITY_API_URL_ID, product.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(product))
             )
             .andExpect(status().isBadRequest());
 
@@ -1143,15 +1114,12 @@ class ProductResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         product.setId(longCount.incrementAndGet());
 
-        // Create the Product
-        ProductDTO productDTO = productMapper.toDto(product);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restProductMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(productDTO))
+                    .content(om.writeValueAsBytes(product))
             )
             .andExpect(status().isBadRequest());
 
@@ -1165,12 +1133,9 @@ class ProductResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         product.setId(longCount.incrementAndGet());
 
-        // Create the Product
-        ProductDTO productDTO = productMapper.toDto(product);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restProductMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(productDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(product)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Product in the database

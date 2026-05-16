@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.Tenant;
 import com.github.robsonrjunior.repository.TenantRepository;
 import com.github.robsonrjunior.service.criteria.TenantCriteria;
-import com.github.robsonrjunior.service.dto.TenantDTO;
-import com.github.robsonrjunior.service.mapper.TenantMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Tenant} entities in the database.
  * The main input is a {@link TenantCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link TenantDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Tenant} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class TenantQueryService extends QueryService<Tenant> {
 
     private final TenantRepository tenantRepository;
 
-    private final TenantMapper tenantMapper;
-
-    public TenantQueryService(TenantRepository tenantRepository, TenantMapper tenantMapper) {
+    public TenantQueryService(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
-        this.tenantMapper = tenantMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link TenantDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Tenant} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<TenantDTO> findByCriteria(TenantCriteria criteria, Pageable page) {
+    public Page<Tenant> findByCriteria(TenantCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Tenant> specification = createSpecification(criteria);
-        return tenantRepository.findAll(specification, page).map(tenantMapper::toDto);
+        return tenantRepository.findAll(specification, page);
     }
 
     /**

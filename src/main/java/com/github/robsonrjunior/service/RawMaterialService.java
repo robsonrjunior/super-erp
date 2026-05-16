@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.RawMaterial;
 import com.github.robsonrjunior.repository.RawMaterialRepository;
-import com.github.robsonrjunior.service.dto.RawMaterialDTO;
-import com.github.robsonrjunior.service.mapper.RawMaterialMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,56 @@ public class RawMaterialService {
 
     private final RawMaterialRepository rawMaterialRepository;
 
-    private final RawMaterialMapper rawMaterialMapper;
-
-    public RawMaterialService(RawMaterialRepository rawMaterialRepository, RawMaterialMapper rawMaterialMapper) {
+    public RawMaterialService(RawMaterialRepository rawMaterialRepository) {
         this.rawMaterialRepository = rawMaterialRepository;
-        this.rawMaterialMapper = rawMaterialMapper;
     }
 
     /**
      * Save a rawMaterial.
      *
-     * @param rawMaterialDTO the entity to save.
+     * @param rawMaterial the entity to save.
      * @return the persisted entity.
      */
-    public RawMaterialDTO save(RawMaterialDTO rawMaterialDTO) {
-        LOG.debug("Request to save RawMaterial : {}", rawMaterialDTO);
-        RawMaterial rawMaterial = rawMaterialMapper.toEntity(rawMaterialDTO);
-        rawMaterial = rawMaterialRepository.save(rawMaterial);
-        return rawMaterialMapper.toDto(rawMaterial);
+    public RawMaterial save(RawMaterial rawMaterial) {
+        LOG.debug("Request to save RawMaterial : {}", rawMaterial);
+        return rawMaterialRepository.save(rawMaterial);
     }
 
     /**
      * Update a rawMaterial.
      *
-     * @param rawMaterialDTO the entity to save.
+     * @param rawMaterial the entity to save.
      * @return the persisted entity.
      */
-    public RawMaterialDTO update(RawMaterialDTO rawMaterialDTO) {
-        LOG.debug("Request to update RawMaterial : {}", rawMaterialDTO);
-        RawMaterial rawMaterial = rawMaterialMapper.toEntity(rawMaterialDTO);
-        rawMaterial = rawMaterialRepository.save(rawMaterial);
-        return rawMaterialMapper.toDto(rawMaterial);
+    public RawMaterial update(RawMaterial rawMaterial) {
+        LOG.debug("Request to update RawMaterial : {}", rawMaterial);
+        return rawMaterialRepository.save(rawMaterial);
     }
 
     /**
      * Partially update a rawMaterial.
      *
-     * @param rawMaterialDTO the entity to update partially.
+     * @param rawMaterial the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<RawMaterialDTO> partialUpdate(RawMaterialDTO rawMaterialDTO) {
-        LOG.debug("Request to partially update RawMaterial : {}", rawMaterialDTO);
+    public Optional<RawMaterial> partialUpdate(RawMaterial rawMaterial) {
+        LOG.debug("Request to partially update RawMaterial : {}", rawMaterial);
 
         return rawMaterialRepository
-            .findById(rawMaterialDTO.getId())
+            .findById(rawMaterial.getId())
             .map(existingRawMaterial -> {
-                rawMaterialMapper.partialUpdate(existingRawMaterial, rawMaterialDTO);
+                updateIfPresent(existingRawMaterial::setName, rawMaterial.getName());
+                updateIfPresent(existingRawMaterial::setSku, rawMaterial.getSku());
+                updateIfPresent(existingRawMaterial::setUnitOfMeasure, rawMaterial.getUnitOfMeasure());
+                updateIfPresent(existingRawMaterial::setUnitDecimalPlaces, rawMaterial.getUnitDecimalPlaces());
+                updateIfPresent(existingRawMaterial::setUnitCost, rawMaterial.getUnitCost());
+                updateIfPresent(existingRawMaterial::setMinStock, rawMaterial.getMinStock());
+                updateIfPresent(existingRawMaterial::setActive, rawMaterial.getActive());
+                updateIfPresent(existingRawMaterial::setDeletedAt, rawMaterial.getDeletedAt());
 
                 return existingRawMaterial;
             })
-            .map(rawMaterialRepository::save)
-            .map(rawMaterialMapper::toDto);
+            .map(rawMaterialRepository::save);
     }
 
     /**
@@ -81,9 +79,9 @@ public class RawMaterialService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<RawMaterialDTO> findOne(Long id) {
+    public Optional<RawMaterial> findOne(Long id) {
         LOG.debug("Request to get RawMaterial : {}", id);
-        return rawMaterialRepository.findById(id).map(rawMaterialMapper::toDto);
+        return rawMaterialRepository.findById(id);
     }
 
     /**
@@ -94,5 +92,11 @@ public class RawMaterialService {
     public void delete(Long id) {
         LOG.debug("Request to delete RawMaterial : {}", id);
         rawMaterialRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

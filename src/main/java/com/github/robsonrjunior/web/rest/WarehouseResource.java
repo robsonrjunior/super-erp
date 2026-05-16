@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.Warehouse;
 import com.github.robsonrjunior.repository.WarehouseRepository;
 import com.github.robsonrjunior.service.WarehouseQueryService;
 import com.github.robsonrjunior.service.WarehouseService;
 import com.github.robsonrjunior.service.criteria.WarehouseCriteria;
-import com.github.robsonrjunior.service.dto.WarehouseDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -59,42 +59,42 @@ public class WarehouseResource {
     /**
      * {@code POST  /warehouses} : Create a new warehouse.
      *
-     * @param warehouseDTO the warehouseDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new warehouseDTO, or with status {@code 400 (Bad Request)} if the warehouse has already an ID.
+     * @param warehouse the warehouse to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new warehouse, or with status {@code 400 (Bad Request)} if the warehouse has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<WarehouseDTO> createWarehouse(@Valid @RequestBody WarehouseDTO warehouseDTO) throws URISyntaxException {
-        LOG.debug("REST request to save Warehouse : {}", warehouseDTO);
-        if (warehouseDTO.getId() != null) {
+    public ResponseEntity<Warehouse> createWarehouse(@Valid @RequestBody Warehouse warehouse) throws URISyntaxException {
+        LOG.debug("REST request to save Warehouse : {}", warehouse);
+        if (warehouse.getId() != null) {
             throw new BadRequestAlertException("A new warehouse cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        warehouseDTO = warehouseService.save(warehouseDTO);
-        return ResponseEntity.created(new URI("/api/warehouses/" + warehouseDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, warehouseDTO.getId().toString()))
-            .body(warehouseDTO);
+        warehouse = warehouseService.save(warehouse);
+        return ResponseEntity.created(new URI("/api/warehouses/" + warehouse.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, warehouse.getId().toString()))
+            .body(warehouse);
     }
 
     /**
      * {@code PUT  /warehouses/:id} : Updates an existing warehouse.
      *
-     * @param id the id of the warehouseDTO to save.
-     * @param warehouseDTO the warehouseDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated warehouseDTO,
-     * or with status {@code 400 (Bad Request)} if the warehouseDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the warehouseDTO couldn't be updated.
+     * @param id the id of the warehouse to save.
+     * @param warehouse the warehouse to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated warehouse,
+     * or with status {@code 400 (Bad Request)} if the warehouse is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the warehouse couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<WarehouseDTO> updateWarehouse(
+    public ResponseEntity<Warehouse> updateWarehouse(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody WarehouseDTO warehouseDTO
+        @Valid @RequestBody Warehouse warehouse
     ) throws URISyntaxException {
-        LOG.debug("REST request to update Warehouse : {}, {}", id, warehouseDTO);
-        if (warehouseDTO.getId() == null) {
+        LOG.debug("REST request to update Warehouse : {}, {}", id, warehouse);
+        if (warehouse.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, warehouseDTO.getId())) {
+        if (!Objects.equals(id, warehouse.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -102,33 +102,33 @@ public class WarehouseResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        warehouseDTO = warehouseService.update(warehouseDTO);
+        warehouse = warehouseService.update(warehouse);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, warehouseDTO.getId().toString()))
-            .body(warehouseDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, warehouse.getId().toString()))
+            .body(warehouse);
     }
 
     /**
      * {@code PATCH  /warehouses/:id} : Partial updates given fields of an existing warehouse, field will ignore if it is null
      *
-     * @param id the id of the warehouseDTO to save.
-     * @param warehouseDTO the warehouseDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated warehouseDTO,
-     * or with status {@code 400 (Bad Request)} if the warehouseDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the warehouseDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the warehouseDTO couldn't be updated.
+     * @param id the id of the warehouse to save.
+     * @param warehouse the warehouse to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated warehouse,
+     * or with status {@code 400 (Bad Request)} if the warehouse is not valid,
+     * or with status {@code 404 (Not Found)} if the warehouse is not found,
+     * or with status {@code 500 (Internal Server Error)} if the warehouse couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<WarehouseDTO> partialUpdateWarehouse(
+    public ResponseEntity<Warehouse> partialUpdateWarehouse(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody WarehouseDTO warehouseDTO
+        @NotNull @RequestBody Warehouse warehouse
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update Warehouse partially : {}, {}", id, warehouseDTO);
-        if (warehouseDTO.getId() == null) {
+        LOG.debug("REST request to partial update Warehouse partially : {}, {}", id, warehouse);
+        if (warehouse.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, warehouseDTO.getId())) {
+        if (!Objects.equals(id, warehouse.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -136,11 +136,11 @@ public class WarehouseResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<WarehouseDTO> result = warehouseService.partialUpdate(warehouseDTO);
+        Optional<Warehouse> result = warehouseService.partialUpdate(warehouse);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, warehouseDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, warehouse.getId().toString())
         );
     }
 
@@ -152,13 +152,13 @@ public class WarehouseResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Warehouses in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<WarehouseDTO>> getAllWarehouses(
+    public ResponseEntity<List<Warehouse>> getAllWarehouses(
         WarehouseCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get Warehouses by criteria: {}", criteria);
 
-        Page<WarehouseDTO> page = warehouseQueryService.findByCriteria(criteria, pageable);
+        Page<Warehouse> page = warehouseQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -178,20 +178,20 @@ public class WarehouseResource {
     /**
      * {@code GET  /warehouses/:id} : get the "id" warehouse.
      *
-     * @param id the id of the warehouseDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the warehouseDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the warehouse to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the warehouse, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<WarehouseDTO> getWarehouse(@PathVariable("id") Long id) {
+    public ResponseEntity<Warehouse> getWarehouse(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Warehouse : {}", id);
-        Optional<WarehouseDTO> warehouseDTO = warehouseService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(warehouseDTO);
+        Optional<Warehouse> warehouse = warehouseService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(warehouse);
     }
 
     /**
      * {@code DELETE  /warehouses/:id} : delete the "id" warehouse.
      *
-     * @param id the id of the warehouseDTO to delete.
+     * @param id the id of the warehouse to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

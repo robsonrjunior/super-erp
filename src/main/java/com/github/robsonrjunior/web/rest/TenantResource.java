@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.Tenant;
 import com.github.robsonrjunior.repository.TenantRepository;
 import com.github.robsonrjunior.service.TenantQueryService;
 import com.github.robsonrjunior.service.TenantService;
 import com.github.robsonrjunior.service.criteria.TenantCriteria;
-import com.github.robsonrjunior.service.dto.TenantDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -55,42 +55,42 @@ public class TenantResource {
     /**
      * {@code POST  /tenants} : Create a new tenant.
      *
-     * @param tenantDTO the tenantDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new tenantDTO, or with status {@code 400 (Bad Request)} if the tenant has already an ID.
+     * @param tenant the tenant to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new tenant, or with status {@code 400 (Bad Request)} if the tenant has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<TenantDTO> createTenant(@Valid @RequestBody TenantDTO tenantDTO) throws URISyntaxException {
-        LOG.debug("REST request to save Tenant : {}", tenantDTO);
-        if (tenantDTO.getId() != null) {
+    public ResponseEntity<Tenant> createTenant(@Valid @RequestBody Tenant tenant) throws URISyntaxException {
+        LOG.debug("REST request to save Tenant : {}", tenant);
+        if (tenant.getId() != null) {
             throw new BadRequestAlertException("A new tenant cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        tenantDTO = tenantService.save(tenantDTO);
-        return ResponseEntity.created(new URI("/api/tenants/" + tenantDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, tenantDTO.getId().toString()))
-            .body(tenantDTO);
+        tenant = tenantService.save(tenant);
+        return ResponseEntity.created(new URI("/api/tenants/" + tenant.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, tenant.getId().toString()))
+            .body(tenant);
     }
 
     /**
      * {@code PUT  /tenants/:id} : Updates an existing tenant.
      *
-     * @param id the id of the tenantDTO to save.
-     * @param tenantDTO the tenantDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tenantDTO,
-     * or with status {@code 400 (Bad Request)} if the tenantDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the tenantDTO couldn't be updated.
+     * @param id the id of the tenant to save.
+     * @param tenant the tenant to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tenant,
+     * or with status {@code 400 (Bad Request)} if the tenant is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the tenant couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<TenantDTO> updateTenant(
+    public ResponseEntity<Tenant> updateTenant(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody TenantDTO tenantDTO
+        @Valid @RequestBody Tenant tenant
     ) throws URISyntaxException {
-        LOG.debug("REST request to update Tenant : {}, {}", id, tenantDTO);
-        if (tenantDTO.getId() == null) {
+        LOG.debug("REST request to update Tenant : {}, {}", id, tenant);
+        if (tenant.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, tenantDTO.getId())) {
+        if (!Objects.equals(id, tenant.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -98,33 +98,33 @@ public class TenantResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        tenantDTO = tenantService.update(tenantDTO);
+        tenant = tenantService.update(tenant);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenantDTO.getId().toString()))
-            .body(tenantDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenant.getId().toString()))
+            .body(tenant);
     }
 
     /**
      * {@code PATCH  /tenants/:id} : Partial updates given fields of an existing tenant, field will ignore if it is null
      *
-     * @param id the id of the tenantDTO to save.
-     * @param tenantDTO the tenantDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tenantDTO,
-     * or with status {@code 400 (Bad Request)} if the tenantDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the tenantDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the tenantDTO couldn't be updated.
+     * @param id the id of the tenant to save.
+     * @param tenant the tenant to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tenant,
+     * or with status {@code 400 (Bad Request)} if the tenant is not valid,
+     * or with status {@code 404 (Not Found)} if the tenant is not found,
+     * or with status {@code 500 (Internal Server Error)} if the tenant couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<TenantDTO> partialUpdateTenant(
+    public ResponseEntity<Tenant> partialUpdateTenant(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody TenantDTO tenantDTO
+        @NotNull @RequestBody Tenant tenant
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update Tenant partially : {}, {}", id, tenantDTO);
-        if (tenantDTO.getId() == null) {
+        LOG.debug("REST request to partial update Tenant partially : {}, {}", id, tenant);
+        if (tenant.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, tenantDTO.getId())) {
+        if (!Objects.equals(id, tenant.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -132,11 +132,11 @@ public class TenantResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<TenantDTO> result = tenantService.partialUpdate(tenantDTO);
+        Optional<Tenant> result = tenantService.partialUpdate(tenant);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenantDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenant.getId().toString())
         );
     }
 
@@ -148,13 +148,13 @@ public class TenantResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Tenants in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<TenantDTO>> getAllTenants(
+    public ResponseEntity<List<Tenant>> getAllTenants(
         TenantCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get Tenants by criteria: {}", criteria);
 
-        Page<TenantDTO> page = tenantQueryService.findByCriteria(criteria, pageable);
+        Page<Tenant> page = tenantQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -174,20 +174,20 @@ public class TenantResource {
     /**
      * {@code GET  /tenants/:id} : get the "id" tenant.
      *
-     * @param id the id of the tenantDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the tenantDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the tenant to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the tenant, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<TenantDTO> getTenant(@PathVariable("id") Long id) {
+    public ResponseEntity<Tenant> getTenant(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Tenant : {}", id);
-        Optional<TenantDTO> tenantDTO = tenantService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(tenantDTO);
+        Optional<Tenant> tenant = tenantService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(tenant);
     }
 
     /**
      * {@code DELETE  /tenants/:id} : delete the "id" tenant.
      *
-     * @param id the id of the tenantDTO to delete.
+     * @param id the id of the tenant to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

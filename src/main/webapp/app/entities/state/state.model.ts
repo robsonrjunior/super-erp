@@ -4,7 +4,7 @@ export interface IState {
   id: number;
   name?: string | null;
   code?: string | null;
-  country?: Pick<ICountry, 'id'> | null;
+  country?: ICountry | null;
 }
 
 export type NewState = Omit<IState, 'id'> & { id: null };

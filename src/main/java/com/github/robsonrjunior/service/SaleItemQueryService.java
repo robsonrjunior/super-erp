@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.SaleItem;
 import com.github.robsonrjunior.repository.SaleItemRepository;
 import com.github.robsonrjunior.service.criteria.SaleItemCriteria;
-import com.github.robsonrjunior.service.dto.SaleItemDTO;
-import com.github.robsonrjunior.service.mapper.SaleItemMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link SaleItem} entities in the database.
  * The main input is a {@link SaleItemCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link SaleItemDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link SaleItem} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class SaleItemQueryService extends QueryService<SaleItem> {
 
     private final SaleItemRepository saleItemRepository;
 
-    private final SaleItemMapper saleItemMapper;
-
-    public SaleItemQueryService(SaleItemRepository saleItemRepository, SaleItemMapper saleItemMapper) {
+    public SaleItemQueryService(SaleItemRepository saleItemRepository) {
         this.saleItemRepository = saleItemRepository;
-        this.saleItemMapper = saleItemMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link SaleItemDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link SaleItem} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<SaleItemDTO> findByCriteria(SaleItemCriteria criteria, Pageable page) {
+    public Page<SaleItem> findByCriteria(SaleItemCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<SaleItem> specification = createSpecification(criteria);
-        return saleItemRepository.findAll(specification, page).map(saleItemMapper::toDto);
+        return saleItemRepository.findAll(specification, page);
     }
 
     /**

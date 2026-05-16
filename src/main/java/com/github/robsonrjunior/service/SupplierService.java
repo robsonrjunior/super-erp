@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Supplier;
 import com.github.robsonrjunior.repository.SupplierRepository;
-import com.github.robsonrjunior.service.dto.SupplierDTO;
-import com.github.robsonrjunior.service.mapper.SupplierMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,56 @@ public class SupplierService {
 
     private final SupplierRepository supplierRepository;
 
-    private final SupplierMapper supplierMapper;
-
-    public SupplierService(SupplierRepository supplierRepository, SupplierMapper supplierMapper) {
+    public SupplierService(SupplierRepository supplierRepository) {
         this.supplierRepository = supplierRepository;
-        this.supplierMapper = supplierMapper;
     }
 
     /**
      * Save a supplier.
      *
-     * @param supplierDTO the entity to save.
+     * @param supplier the entity to save.
      * @return the persisted entity.
      */
-    public SupplierDTO save(SupplierDTO supplierDTO) {
-        LOG.debug("Request to save Supplier : {}", supplierDTO);
-        Supplier supplier = supplierMapper.toEntity(supplierDTO);
-        supplier = supplierRepository.save(supplier);
-        return supplierMapper.toDto(supplier);
+    public Supplier save(Supplier supplier) {
+        LOG.debug("Request to save Supplier : {}", supplier);
+        return supplierRepository.save(supplier);
     }
 
     /**
      * Update a supplier.
      *
-     * @param supplierDTO the entity to save.
+     * @param supplier the entity to save.
      * @return the persisted entity.
      */
-    public SupplierDTO update(SupplierDTO supplierDTO) {
-        LOG.debug("Request to update Supplier : {}", supplierDTO);
-        Supplier supplier = supplierMapper.toEntity(supplierDTO);
-        supplier = supplierRepository.save(supplier);
-        return supplierMapper.toDto(supplier);
+    public Supplier update(Supplier supplier) {
+        LOG.debug("Request to update Supplier : {}", supplier);
+        return supplierRepository.save(supplier);
     }
 
     /**
      * Partially update a supplier.
      *
-     * @param supplierDTO the entity to update partially.
+     * @param supplier the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<SupplierDTO> partialUpdate(SupplierDTO supplierDTO) {
-        LOG.debug("Request to partially update Supplier : {}", supplierDTO);
+    public Optional<Supplier> partialUpdate(Supplier supplier) {
+        LOG.debug("Request to partially update Supplier : {}", supplier);
 
         return supplierRepository
-            .findById(supplierDTO.getId())
+            .findById(supplier.getId())
             .map(existingSupplier -> {
-                supplierMapper.partialUpdate(existingSupplier, supplierDTO);
+                updateIfPresent(existingSupplier::setLegalName, supplier.getLegalName());
+                updateIfPresent(existingSupplier::setTradeName, supplier.getTradeName());
+                updateIfPresent(existingSupplier::setTaxId, supplier.getTaxId());
+                updateIfPresent(existingSupplier::setPartyType, supplier.getPartyType());
+                updateIfPresent(existingSupplier::setEmail, supplier.getEmail());
+                updateIfPresent(existingSupplier::setPhone, supplier.getPhone());
+                updateIfPresent(existingSupplier::setActive, supplier.getActive());
+                updateIfPresent(existingSupplier::setDeletedAt, supplier.getDeletedAt());
 
                 return existingSupplier;
             })
-            .map(supplierRepository::save)
-            .map(supplierMapper::toDto);
+            .map(supplierRepository::save);
     }
 
     /**
@@ -81,9 +79,9 @@ public class SupplierService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<SupplierDTO> findOne(Long id) {
+    public Optional<Supplier> findOne(Long id) {
         LOG.debug("Request to get Supplier : {}", id);
-        return supplierRepository.findById(id).map(supplierMapper::toDto);
+        return supplierRepository.findById(id);
     }
 
     /**
@@ -94,5 +92,11 @@ public class SupplierService {
     public void delete(Long id) {
         LOG.debug("Request to delete Supplier : {}", id);
         supplierRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

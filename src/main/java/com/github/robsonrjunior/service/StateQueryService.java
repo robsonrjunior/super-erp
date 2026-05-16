@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.State;
 import com.github.robsonrjunior.repository.StateRepository;
 import com.github.robsonrjunior.service.criteria.StateCriteria;
-import com.github.robsonrjunior.service.dto.StateDTO;
-import com.github.robsonrjunior.service.mapper.StateMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link State} entities in the database.
  * The main input is a {@link StateCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link StateDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link State} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class StateQueryService extends QueryService<State> {
 
     private final StateRepository stateRepository;
 
-    private final StateMapper stateMapper;
-
-    public StateQueryService(StateRepository stateRepository, StateMapper stateMapper) {
+    public StateQueryService(StateRepository stateRepository) {
         this.stateRepository = stateRepository;
-        this.stateMapper = stateMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link StateDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link State} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<StateDTO> findByCriteria(StateCriteria criteria, Pageable page) {
+    public Page<State> findByCriteria(StateCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<State> specification = createSpecification(criteria);
-        return stateRepository.findAll(specification, page).map(stateMapper::toDto);
+        return stateRepository.findAll(specification, page);
     }
 
     /**

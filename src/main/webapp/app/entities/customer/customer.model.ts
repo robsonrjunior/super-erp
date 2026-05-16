@@ -15,9 +15,9 @@ export interface ICustomer {
   phone?: string | null;
   active?: boolean | null;
   deletedAt?: dayjs.Dayjs | null;
-  person?: Pick<IPerson, 'id'> | null;
-  company?: Pick<ICompany, 'id'> | null;
-  sales?: Pick<ISale, 'id'> | null;
+  person?: IPerson | null;
+  company?: ICompany | null;
+  sales?: ISale | null;
 }
 
 export type NewCustomer = Omit<ICustomer, 'id'> & { id: null };

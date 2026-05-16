@@ -13,7 +13,7 @@ export interface IRawMaterial {
   minStock?: number | null;
   active?: boolean | null;
   deletedAt?: dayjs.Dayjs | null;
-  stockMovements?: Pick<IStockMovement, 'id'> | null;
+  stockMovements?: IStockMovement | null;
 }
 
 export type NewRawMaterial = Omit<IRawMaterial, 'id'> & { id: null };

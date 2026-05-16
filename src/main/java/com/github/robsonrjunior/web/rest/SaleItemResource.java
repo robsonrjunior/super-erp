@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.SaleItem;
 import com.github.robsonrjunior.repository.SaleItemRepository;
 import com.github.robsonrjunior.service.SaleItemQueryService;
 import com.github.robsonrjunior.service.SaleItemService;
 import com.github.robsonrjunior.service.criteria.SaleItemCriteria;
-import com.github.robsonrjunior.service.dto.SaleItemDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -59,42 +59,42 @@ public class SaleItemResource {
     /**
      * {@code POST  /sale-items} : Create a new saleItem.
      *
-     * @param saleItemDTO the saleItemDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new saleItemDTO, or with status {@code 400 (Bad Request)} if the saleItem has already an ID.
+     * @param saleItem the saleItem to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new saleItem, or with status {@code 400 (Bad Request)} if the saleItem has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<SaleItemDTO> createSaleItem(@Valid @RequestBody SaleItemDTO saleItemDTO) throws URISyntaxException {
-        LOG.debug("REST request to save SaleItem : {}", saleItemDTO);
-        if (saleItemDTO.getId() != null) {
+    public ResponseEntity<SaleItem> createSaleItem(@Valid @RequestBody SaleItem saleItem) throws URISyntaxException {
+        LOG.debug("REST request to save SaleItem : {}", saleItem);
+        if (saleItem.getId() != null) {
             throw new BadRequestAlertException("A new saleItem cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        saleItemDTO = saleItemService.save(saleItemDTO);
-        return ResponseEntity.created(new URI("/api/sale-items/" + saleItemDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, saleItemDTO.getId().toString()))
-            .body(saleItemDTO);
+        saleItem = saleItemService.save(saleItem);
+        return ResponseEntity.created(new URI("/api/sale-items/" + saleItem.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, saleItem.getId().toString()))
+            .body(saleItem);
     }
 
     /**
      * {@code PUT  /sale-items/:id} : Updates an existing saleItem.
      *
-     * @param id the id of the saleItemDTO to save.
-     * @param saleItemDTO the saleItemDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated saleItemDTO,
-     * or with status {@code 400 (Bad Request)} if the saleItemDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the saleItemDTO couldn't be updated.
+     * @param id the id of the saleItem to save.
+     * @param saleItem the saleItem to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated saleItem,
+     * or with status {@code 400 (Bad Request)} if the saleItem is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the saleItem couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<SaleItemDTO> updateSaleItem(
+    public ResponseEntity<SaleItem> updateSaleItem(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody SaleItemDTO saleItemDTO
+        @Valid @RequestBody SaleItem saleItem
     ) throws URISyntaxException {
-        LOG.debug("REST request to update SaleItem : {}, {}", id, saleItemDTO);
-        if (saleItemDTO.getId() == null) {
+        LOG.debug("REST request to update SaleItem : {}, {}", id, saleItem);
+        if (saleItem.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, saleItemDTO.getId())) {
+        if (!Objects.equals(id, saleItem.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -102,33 +102,33 @@ public class SaleItemResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        saleItemDTO = saleItemService.update(saleItemDTO);
+        saleItem = saleItemService.update(saleItem);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, saleItemDTO.getId().toString()))
-            .body(saleItemDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, saleItem.getId().toString()))
+            .body(saleItem);
     }
 
     /**
      * {@code PATCH  /sale-items/:id} : Partial updates given fields of an existing saleItem, field will ignore if it is null
      *
-     * @param id the id of the saleItemDTO to save.
-     * @param saleItemDTO the saleItemDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated saleItemDTO,
-     * or with status {@code 400 (Bad Request)} if the saleItemDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the saleItemDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the saleItemDTO couldn't be updated.
+     * @param id the id of the saleItem to save.
+     * @param saleItem the saleItem to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated saleItem,
+     * or with status {@code 400 (Bad Request)} if the saleItem is not valid,
+     * or with status {@code 404 (Not Found)} if the saleItem is not found,
+     * or with status {@code 500 (Internal Server Error)} if the saleItem couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<SaleItemDTO> partialUpdateSaleItem(
+    public ResponseEntity<SaleItem> partialUpdateSaleItem(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody SaleItemDTO saleItemDTO
+        @NotNull @RequestBody SaleItem saleItem
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update SaleItem partially : {}, {}", id, saleItemDTO);
-        if (saleItemDTO.getId() == null) {
+        LOG.debug("REST request to partial update SaleItem partially : {}, {}", id, saleItem);
+        if (saleItem.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, saleItemDTO.getId())) {
+        if (!Objects.equals(id, saleItem.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -136,11 +136,11 @@ public class SaleItemResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<SaleItemDTO> result = saleItemService.partialUpdate(saleItemDTO);
+        Optional<SaleItem> result = saleItemService.partialUpdate(saleItem);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, saleItemDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, saleItem.getId().toString())
         );
     }
 
@@ -152,13 +152,13 @@ public class SaleItemResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Sale Items in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<SaleItemDTO>> getAllSaleItems(
+    public ResponseEntity<List<SaleItem>> getAllSaleItems(
         SaleItemCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get SaleItems by criteria: {}", criteria);
 
-        Page<SaleItemDTO> page = saleItemQueryService.findByCriteria(criteria, pageable);
+        Page<SaleItem> page = saleItemQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -178,20 +178,20 @@ public class SaleItemResource {
     /**
      * {@code GET  /sale-items/:id} : get the "id" saleItem.
      *
-     * @param id the id of the saleItemDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the saleItemDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the saleItem to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the saleItem, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<SaleItemDTO> getSaleItem(@PathVariable("id") Long id) {
+    public ResponseEntity<SaleItem> getSaleItem(@PathVariable("id") Long id) {
         LOG.debug("REST request to get SaleItem : {}", id);
-        Optional<SaleItemDTO> saleItemDTO = saleItemService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(saleItemDTO);
+        Optional<SaleItem> saleItem = saleItemService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(saleItem);
     }
 
     /**
      * {@code DELETE  /sale-items/:id} : delete the "id" saleItem.
      *
-     * @param id the id of the saleItemDTO to delete.
+     * @param id the id of the saleItem to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

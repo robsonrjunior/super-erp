@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "baseUrl": "src/main/webapp/",
+    "paths": {
+      "app/*": ["app/*"],
+      "environments/*": ["environments/*"]
+    },
     "outDir": "./build/out-tsc/root",
     "forceConsistentCasingInFileNames": true,
     "strict": true,

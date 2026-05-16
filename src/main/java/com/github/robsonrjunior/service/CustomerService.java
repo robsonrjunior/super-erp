@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Customer;
 import com.github.robsonrjunior.repository.CustomerRepository;
-import com.github.robsonrjunior.service.dto.CustomerDTO;
-import com.github.robsonrjunior.service.mapper.CustomerMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,56 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    private final CustomerMapper customerMapper;
-
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-        this.customerMapper = customerMapper;
     }
 
     /**
      * Save a customer.
      *
-     * @param customerDTO the entity to save.
+     * @param customer the entity to save.
      * @return the persisted entity.
      */
-    public CustomerDTO save(CustomerDTO customerDTO) {
-        LOG.debug("Request to save Customer : {}", customerDTO);
-        Customer customer = customerMapper.toEntity(customerDTO);
-        customer = customerRepository.save(customer);
-        return customerMapper.toDto(customer);
+    public Customer save(Customer customer) {
+        LOG.debug("Request to save Customer : {}", customer);
+        return customerRepository.save(customer);
     }
 
     /**
      * Update a customer.
      *
-     * @param customerDTO the entity to save.
+     * @param customer the entity to save.
      * @return the persisted entity.
      */
-    public CustomerDTO update(CustomerDTO customerDTO) {
-        LOG.debug("Request to update Customer : {}", customerDTO);
-        Customer customer = customerMapper.toEntity(customerDTO);
-        customer = customerRepository.save(customer);
-        return customerMapper.toDto(customer);
+    public Customer update(Customer customer) {
+        LOG.debug("Request to update Customer : {}", customer);
+        return customerRepository.save(customer);
     }
 
     /**
      * Partially update a customer.
      *
-     * @param customerDTO the entity to update partially.
+     * @param customer the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<CustomerDTO> partialUpdate(CustomerDTO customerDTO) {
-        LOG.debug("Request to partially update Customer : {}", customerDTO);
+    public Optional<Customer> partialUpdate(Customer customer) {
+        LOG.debug("Request to partially update Customer : {}", customer);
 
         return customerRepository
-            .findById(customerDTO.getId())
+            .findById(customer.getId())
             .map(existingCustomer -> {
-                customerMapper.partialUpdate(existingCustomer, customerDTO);
+                updateIfPresent(existingCustomer::setLegalName, customer.getLegalName());
+                updateIfPresent(existingCustomer::setTradeName, customer.getTradeName());
+                updateIfPresent(existingCustomer::setTaxId, customer.getTaxId());
+                updateIfPresent(existingCustomer::setPartyType, customer.getPartyType());
+                updateIfPresent(existingCustomer::setEmail, customer.getEmail());
+                updateIfPresent(existingCustomer::setPhone, customer.getPhone());
+                updateIfPresent(existingCustomer::setActive, customer.getActive());
+                updateIfPresent(existingCustomer::setDeletedAt, customer.getDeletedAt());
 
                 return existingCustomer;
             })
-            .map(customerRepository::save)
-            .map(customerMapper::toDto);
+            .map(customerRepository::save);
     }
 
     /**
@@ -81,9 +79,9 @@ public class CustomerService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<CustomerDTO> findOne(Long id) {
+    public Optional<Customer> findOne(Long id) {
         LOG.debug("Request to get Customer : {}", id);
-        return customerRepository.findById(id).map(customerMapper::toDto);
+        return customerRepository.findById(id);
     }
 
     /**
@@ -94,5 +92,11 @@ public class CustomerService {
     public void delete(Long id) {
         LOG.debug("Request to delete Customer : {}", id);
         customerRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

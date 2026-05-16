@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.City;
 import com.github.robsonrjunior.repository.CityRepository;
-import com.github.robsonrjunior.service.dto.CityDTO;
-import com.github.robsonrjunior.service.mapper.CityMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,49 @@ public class CityService {
 
     private final CityRepository cityRepository;
 
-    private final CityMapper cityMapper;
-
-    public CityService(CityRepository cityRepository, CityMapper cityMapper) {
+    public CityService(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
-        this.cityMapper = cityMapper;
     }
 
     /**
      * Save a city.
      *
-     * @param cityDTO the entity to save.
+     * @param city the entity to save.
      * @return the persisted entity.
      */
-    public CityDTO save(CityDTO cityDTO) {
-        LOG.debug("Request to save City : {}", cityDTO);
-        City city = cityMapper.toEntity(cityDTO);
-        city = cityRepository.save(city);
-        return cityMapper.toDto(city);
+    public City save(City city) {
+        LOG.debug("Request to save City : {}", city);
+        return cityRepository.save(city);
     }
 
     /**
      * Update a city.
      *
-     * @param cityDTO the entity to save.
+     * @param city the entity to save.
      * @return the persisted entity.
      */
-    public CityDTO update(CityDTO cityDTO) {
-        LOG.debug("Request to update City : {}", cityDTO);
-        City city = cityMapper.toEntity(cityDTO);
-        city = cityRepository.save(city);
-        return cityMapper.toDto(city);
+    public City update(City city) {
+        LOG.debug("Request to update City : {}", city);
+        return cityRepository.save(city);
     }
 
     /**
      * Partially update a city.
      *
-     * @param cityDTO the entity to update partially.
+     * @param city the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<CityDTO> partialUpdate(CityDTO cityDTO) {
-        LOG.debug("Request to partially update City : {}", cityDTO);
+    public Optional<City> partialUpdate(City city) {
+        LOG.debug("Request to partially update City : {}", city);
 
         return cityRepository
-            .findById(cityDTO.getId())
+            .findById(city.getId())
             .map(existingCity -> {
-                cityMapper.partialUpdate(existingCity, cityDTO);
+                updateIfPresent(existingCity::setName, city.getName());
 
                 return existingCity;
             })
-            .map(cityRepository::save)
-            .map(cityMapper::toDto);
+            .map(cityRepository::save);
     }
 
     /**
@@ -81,9 +72,9 @@ public class CityService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<CityDTO> findOne(Long id) {
+    public Optional<City> findOne(Long id) {
         LOG.debug("Request to get City : {}", id);
-        return cityRepository.findById(id).map(cityMapper::toDto);
+        return cityRepository.findById(id);
     }
 
     /**
@@ -94,5 +85,11 @@ public class CityService {
     public void delete(Long id) {
         LOG.debug("Request to delete City : {}", id);
         cityRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

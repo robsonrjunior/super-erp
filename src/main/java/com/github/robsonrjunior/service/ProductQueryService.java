@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.Product;
 import com.github.robsonrjunior.repository.ProductRepository;
 import com.github.robsonrjunior.service.criteria.ProductCriteria;
-import com.github.robsonrjunior.service.dto.ProductDTO;
-import com.github.robsonrjunior.service.mapper.ProductMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Product} entities in the database.
  * The main input is a {@link ProductCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link ProductDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Product} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class ProductQueryService extends QueryService<Product> {
 
     private final ProductRepository productRepository;
 
-    private final ProductMapper productMapper;
-
-    public ProductQueryService(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductQueryService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.productMapper = productMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link ProductDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Product} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findByCriteria(ProductCriteria criteria, Pageable page) {
+    public Page<Product> findByCriteria(ProductCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Product> specification = createSpecification(criteria);
-        return productRepository.findAll(specification, page).map(productMapper::toDto);
+        return productRepository.findAll(specification, page);
     }
 
     /**

@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Tenant;
 import com.github.robsonrjunior.repository.TenantRepository;
-import com.github.robsonrjunior.service.dto.TenantDTO;
-import com.github.robsonrjunior.service.mapper.TenantMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,52 @@ public class TenantService {
 
     private final TenantRepository tenantRepository;
 
-    private final TenantMapper tenantMapper;
-
-    public TenantService(TenantRepository tenantRepository, TenantMapper tenantMapper) {
+    public TenantService(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
-        this.tenantMapper = tenantMapper;
     }
 
     /**
      * Save a tenant.
      *
-     * @param tenantDTO the entity to save.
+     * @param tenant the entity to save.
      * @return the persisted entity.
      */
-    public TenantDTO save(TenantDTO tenantDTO) {
-        LOG.debug("Request to save Tenant : {}", tenantDTO);
-        Tenant tenant = tenantMapper.toEntity(tenantDTO);
-        tenant = tenantRepository.save(tenant);
-        return tenantMapper.toDto(tenant);
+    public Tenant save(Tenant tenant) {
+        LOG.debug("Request to save Tenant : {}", tenant);
+        return tenantRepository.save(tenant);
     }
 
     /**
      * Update a tenant.
      *
-     * @param tenantDTO the entity to save.
+     * @param tenant the entity to save.
      * @return the persisted entity.
      */
-    public TenantDTO update(TenantDTO tenantDTO) {
-        LOG.debug("Request to update Tenant : {}", tenantDTO);
-        Tenant tenant = tenantMapper.toEntity(tenantDTO);
-        tenant = tenantRepository.save(tenant);
-        return tenantMapper.toDto(tenant);
+    public Tenant update(Tenant tenant) {
+        LOG.debug("Request to update Tenant : {}", tenant);
+        return tenantRepository.save(tenant);
     }
 
     /**
      * Partially update a tenant.
      *
-     * @param tenantDTO the entity to update partially.
+     * @param tenant the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<TenantDTO> partialUpdate(TenantDTO tenantDTO) {
-        LOG.debug("Request to partially update Tenant : {}", tenantDTO);
+    public Optional<Tenant> partialUpdate(Tenant tenant) {
+        LOG.debug("Request to partially update Tenant : {}", tenant);
 
         return tenantRepository
-            .findById(tenantDTO.getId())
+            .findById(tenant.getId())
             .map(existingTenant -> {
-                tenantMapper.partialUpdate(existingTenant, tenantDTO);
+                updateIfPresent(existingTenant::setName, tenant.getName());
+                updateIfPresent(existingTenant::setCode, tenant.getCode());
+                updateIfPresent(existingTenant::setActive, tenant.getActive());
+                updateIfPresent(existingTenant::setDeletedAt, tenant.getDeletedAt());
 
                 return existingTenant;
             })
-            .map(tenantRepository::save)
-            .map(tenantMapper::toDto);
+            .map(tenantRepository::save);
     }
 
     /**
@@ -81,9 +75,9 @@ public class TenantService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<TenantDTO> findOne(Long id) {
+    public Optional<Tenant> findOne(Long id) {
         LOG.debug("Request to get Tenant : {}", id);
-        return tenantRepository.findById(id).map(tenantMapper::toDto);
+        return tenantRepository.findById(id);
     }
 
     /**
@@ -94,5 +88,11 @@ public class TenantService {
     public void delete(Long id) {
         LOG.debug("Request to delete Tenant : {}", id);
         tenantRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

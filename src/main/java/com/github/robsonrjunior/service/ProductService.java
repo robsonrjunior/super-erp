@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Product;
 import com.github.robsonrjunior.repository.ProductRepository;
-import com.github.robsonrjunior.service.dto.ProductDTO;
-import com.github.robsonrjunior.service.mapper.ProductMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,57 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    private final ProductMapper productMapper;
-
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.productMapper = productMapper;
     }
 
     /**
      * Save a product.
      *
-     * @param productDTO the entity to save.
+     * @param product the entity to save.
      * @return the persisted entity.
      */
-    public ProductDTO save(ProductDTO productDTO) {
-        LOG.debug("Request to save Product : {}", productDTO);
-        Product product = productMapper.toEntity(productDTO);
-        product = productRepository.save(product);
-        return productMapper.toDto(product);
+    public Product save(Product product) {
+        LOG.debug("Request to save Product : {}", product);
+        return productRepository.save(product);
     }
 
     /**
      * Update a product.
      *
-     * @param productDTO the entity to save.
+     * @param product the entity to save.
      * @return the persisted entity.
      */
-    public ProductDTO update(ProductDTO productDTO) {
-        LOG.debug("Request to update Product : {}", productDTO);
-        Product product = productMapper.toEntity(productDTO);
-        product = productRepository.save(product);
-        return productMapper.toDto(product);
+    public Product update(Product product) {
+        LOG.debug("Request to update Product : {}", product);
+        return productRepository.save(product);
     }
 
     /**
      * Partially update a product.
      *
-     * @param productDTO the entity to update partially.
+     * @param product the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<ProductDTO> partialUpdate(ProductDTO productDTO) {
-        LOG.debug("Request to partially update Product : {}", productDTO);
+    public Optional<Product> partialUpdate(Product product) {
+        LOG.debug("Request to partially update Product : {}", product);
 
         return productRepository
-            .findById(productDTO.getId())
+            .findById(product.getId())
             .map(existingProduct -> {
-                productMapper.partialUpdate(existingProduct, productDTO);
+                updateIfPresent(existingProduct::setName, product.getName());
+                updateIfPresent(existingProduct::setSku, product.getSku());
+                updateIfPresent(existingProduct::setUnitOfMeasure, product.getUnitOfMeasure());
+                updateIfPresent(existingProduct::setUnitDecimalPlaces, product.getUnitDecimalPlaces());
+                updateIfPresent(existingProduct::setSalePrice, product.getSalePrice());
+                updateIfPresent(existingProduct::setCostPrice, product.getCostPrice());
+                updateIfPresent(existingProduct::setMinStock, product.getMinStock());
+                updateIfPresent(existingProduct::setActive, product.getActive());
+                updateIfPresent(existingProduct::setDeletedAt, product.getDeletedAt());
 
                 return existingProduct;
             })
-            .map(productRepository::save)
-            .map(productMapper::toDto);
+            .map(productRepository::save);
     }
 
     /**
@@ -81,9 +80,9 @@ public class ProductService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<ProductDTO> findOne(Long id) {
+    public Optional<Product> findOne(Long id) {
         LOG.debug("Request to get Product : {}", id);
-        return productRepository.findById(id).map(productMapper::toDto);
+        return productRepository.findById(id);
     }
 
     /**
@@ -94,5 +93,11 @@ public class ProductService {
     public void delete(Long id) {
         LOG.debug("Request to delete Product : {}", id);
         productRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.SaleItem;
 import com.github.robsonrjunior.repository.SaleItemRepository;
-import com.github.robsonrjunior.service.dto.SaleItemDTO;
-import com.github.robsonrjunior.service.mapper.SaleItemMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,53 @@ public class SaleItemService {
 
     private final SaleItemRepository saleItemRepository;
 
-    private final SaleItemMapper saleItemMapper;
-
-    public SaleItemService(SaleItemRepository saleItemRepository, SaleItemMapper saleItemMapper) {
+    public SaleItemService(SaleItemRepository saleItemRepository) {
         this.saleItemRepository = saleItemRepository;
-        this.saleItemMapper = saleItemMapper;
     }
 
     /**
      * Save a saleItem.
      *
-     * @param saleItemDTO the entity to save.
+     * @param saleItem the entity to save.
      * @return the persisted entity.
      */
-    public SaleItemDTO save(SaleItemDTO saleItemDTO) {
-        LOG.debug("Request to save SaleItem : {}", saleItemDTO);
-        SaleItem saleItem = saleItemMapper.toEntity(saleItemDTO);
-        saleItem = saleItemRepository.save(saleItem);
-        return saleItemMapper.toDto(saleItem);
+    public SaleItem save(SaleItem saleItem) {
+        LOG.debug("Request to save SaleItem : {}", saleItem);
+        return saleItemRepository.save(saleItem);
     }
 
     /**
      * Update a saleItem.
      *
-     * @param saleItemDTO the entity to save.
+     * @param saleItem the entity to save.
      * @return the persisted entity.
      */
-    public SaleItemDTO update(SaleItemDTO saleItemDTO) {
-        LOG.debug("Request to update SaleItem : {}", saleItemDTO);
-        SaleItem saleItem = saleItemMapper.toEntity(saleItemDTO);
-        saleItem = saleItemRepository.save(saleItem);
-        return saleItemMapper.toDto(saleItem);
+    public SaleItem update(SaleItem saleItem) {
+        LOG.debug("Request to update SaleItem : {}", saleItem);
+        return saleItemRepository.save(saleItem);
     }
 
     /**
      * Partially update a saleItem.
      *
-     * @param saleItemDTO the entity to update partially.
+     * @param saleItem the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<SaleItemDTO> partialUpdate(SaleItemDTO saleItemDTO) {
-        LOG.debug("Request to partially update SaleItem : {}", saleItemDTO);
+    public Optional<SaleItem> partialUpdate(SaleItem saleItem) {
+        LOG.debug("Request to partially update SaleItem : {}", saleItem);
 
         return saleItemRepository
-            .findById(saleItemDTO.getId())
+            .findById(saleItem.getId())
             .map(existingSaleItem -> {
-                saleItemMapper.partialUpdate(existingSaleItem, saleItemDTO);
+                updateIfPresent(existingSaleItem::setQuantity, saleItem.getQuantity());
+                updateIfPresent(existingSaleItem::setUnitPrice, saleItem.getUnitPrice());
+                updateIfPresent(existingSaleItem::setDiscountAmount, saleItem.getDiscountAmount());
+                updateIfPresent(existingSaleItem::setLineTotal, saleItem.getLineTotal());
+                updateIfPresent(existingSaleItem::setDeletedAt, saleItem.getDeletedAt());
 
                 return existingSaleItem;
             })
-            .map(saleItemRepository::save)
-            .map(saleItemMapper::toDto);
+            .map(saleItemRepository::save);
     }
 
     /**
@@ -81,9 +76,9 @@ public class SaleItemService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<SaleItemDTO> findOne(Long id) {
+    public Optional<SaleItem> findOne(Long id) {
         LOG.debug("Request to get SaleItem : {}", id);
-        return saleItemRepository.findById(id).map(saleItemMapper::toDto);
+        return saleItemRepository.findById(id);
     }
 
     /**
@@ -94,5 +89,11 @@ public class SaleItemService {
     public void delete(Long id) {
         LOG.debug("Request to delete SaleItem : {}", id);
         saleItemRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

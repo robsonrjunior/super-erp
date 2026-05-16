@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.State;
 import com.github.robsonrjunior.repository.StateRepository;
-import com.github.robsonrjunior.service.dto.StateDTO;
-import com.github.robsonrjunior.service.mapper.StateMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,50 @@ public class StateService {
 
     private final StateRepository stateRepository;
 
-    private final StateMapper stateMapper;
-
-    public StateService(StateRepository stateRepository, StateMapper stateMapper) {
+    public StateService(StateRepository stateRepository) {
         this.stateRepository = stateRepository;
-        this.stateMapper = stateMapper;
     }
 
     /**
      * Save a state.
      *
-     * @param stateDTO the entity to save.
+     * @param state the entity to save.
      * @return the persisted entity.
      */
-    public StateDTO save(StateDTO stateDTO) {
-        LOG.debug("Request to save State : {}", stateDTO);
-        State state = stateMapper.toEntity(stateDTO);
-        state = stateRepository.save(state);
-        return stateMapper.toDto(state);
+    public State save(State state) {
+        LOG.debug("Request to save State : {}", state);
+        return stateRepository.save(state);
     }
 
     /**
      * Update a state.
      *
-     * @param stateDTO the entity to save.
+     * @param state the entity to save.
      * @return the persisted entity.
      */
-    public StateDTO update(StateDTO stateDTO) {
-        LOG.debug("Request to update State : {}", stateDTO);
-        State state = stateMapper.toEntity(stateDTO);
-        state = stateRepository.save(state);
-        return stateMapper.toDto(state);
+    public State update(State state) {
+        LOG.debug("Request to update State : {}", state);
+        return stateRepository.save(state);
     }
 
     /**
      * Partially update a state.
      *
-     * @param stateDTO the entity to update partially.
+     * @param state the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<StateDTO> partialUpdate(StateDTO stateDTO) {
-        LOG.debug("Request to partially update State : {}", stateDTO);
+    public Optional<State> partialUpdate(State state) {
+        LOG.debug("Request to partially update State : {}", state);
 
         return stateRepository
-            .findById(stateDTO.getId())
+            .findById(state.getId())
             .map(existingState -> {
-                stateMapper.partialUpdate(existingState, stateDTO);
+                updateIfPresent(existingState::setName, state.getName());
+                updateIfPresent(existingState::setCode, state.getCode());
 
                 return existingState;
             })
-            .map(stateRepository::save)
-            .map(stateMapper::toDto);
+            .map(stateRepository::save);
     }
 
     /**
@@ -81,9 +73,9 @@ public class StateService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<StateDTO> findOne(Long id) {
+    public Optional<State> findOne(Long id) {
         LOG.debug("Request to get State : {}", id);
-        return stateRepository.findById(id).map(stateMapper::toDto);
+        return stateRepository.findById(id);
     }
 
     /**
@@ -94,5 +86,11 @@ public class StateService {
     public void delete(Long id) {
         LOG.debug("Request to delete State : {}", id);
         stateRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

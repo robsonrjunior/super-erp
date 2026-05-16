@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.State;
 import com.github.robsonrjunior.repository.StateRepository;
 import com.github.robsonrjunior.service.StateQueryService;
 import com.github.robsonrjunior.service.StateService;
 import com.github.robsonrjunior.service.criteria.StateCriteria;
-import com.github.robsonrjunior.service.dto.StateDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -55,42 +55,40 @@ public class StateResource {
     /**
      * {@code POST  /states} : Create a new state.
      *
-     * @param stateDTO the stateDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new stateDTO, or with status {@code 400 (Bad Request)} if the state has already an ID.
+     * @param state the state to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new state, or with status {@code 400 (Bad Request)} if the state has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<StateDTO> createState(@Valid @RequestBody StateDTO stateDTO) throws URISyntaxException {
-        LOG.debug("REST request to save State : {}", stateDTO);
-        if (stateDTO.getId() != null) {
+    public ResponseEntity<State> createState(@Valid @RequestBody State state) throws URISyntaxException {
+        LOG.debug("REST request to save State : {}", state);
+        if (state.getId() != null) {
             throw new BadRequestAlertException("A new state cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        stateDTO = stateService.save(stateDTO);
-        return ResponseEntity.created(new URI("/api/states/" + stateDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, stateDTO.getId().toString()))
-            .body(stateDTO);
+        state = stateService.save(state);
+        return ResponseEntity.created(new URI("/api/states/" + state.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, state.getId().toString()))
+            .body(state);
     }
 
     /**
      * {@code PUT  /states/:id} : Updates an existing state.
      *
-     * @param id the id of the stateDTO to save.
-     * @param stateDTO the stateDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stateDTO,
-     * or with status {@code 400 (Bad Request)} if the stateDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the stateDTO couldn't be updated.
+     * @param id the id of the state to save.
+     * @param state the state to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated state,
+     * or with status {@code 400 (Bad Request)} if the state is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the state couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<StateDTO> updateState(
-        @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody StateDTO stateDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to update State : {}, {}", id, stateDTO);
-        if (stateDTO.getId() == null) {
+    public ResponseEntity<State> updateState(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody State state)
+        throws URISyntaxException {
+        LOG.debug("REST request to update State : {}, {}", id, state);
+        if (state.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, stateDTO.getId())) {
+        if (!Objects.equals(id, state.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -98,33 +96,33 @@ public class StateResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        stateDTO = stateService.update(stateDTO);
+        state = stateService.update(state);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, stateDTO.getId().toString()))
-            .body(stateDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, state.getId().toString()))
+            .body(state);
     }
 
     /**
      * {@code PATCH  /states/:id} : Partial updates given fields of an existing state, field will ignore if it is null
      *
-     * @param id the id of the stateDTO to save.
-     * @param stateDTO the stateDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stateDTO,
-     * or with status {@code 400 (Bad Request)} if the stateDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the stateDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the stateDTO couldn't be updated.
+     * @param id the id of the state to save.
+     * @param state the state to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated state,
+     * or with status {@code 400 (Bad Request)} if the state is not valid,
+     * or with status {@code 404 (Not Found)} if the state is not found,
+     * or with status {@code 500 (Internal Server Error)} if the state couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<StateDTO> partialUpdateState(
+    public ResponseEntity<State> partialUpdateState(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody StateDTO stateDTO
+        @NotNull @RequestBody State state
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update State partially : {}, {}", id, stateDTO);
-        if (stateDTO.getId() == null) {
+        LOG.debug("REST request to partial update State partially : {}, {}", id, state);
+        if (state.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, stateDTO.getId())) {
+        if (!Objects.equals(id, state.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -132,11 +130,11 @@ public class StateResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<StateDTO> result = stateService.partialUpdate(stateDTO);
+        Optional<State> result = stateService.partialUpdate(state);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, stateDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, state.getId().toString())
         );
     }
 
@@ -148,13 +146,13 @@ public class StateResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of States in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<StateDTO>> getAllStates(
+    public ResponseEntity<List<State>> getAllStates(
         StateCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get States by criteria: {}", criteria);
 
-        Page<StateDTO> page = stateQueryService.findByCriteria(criteria, pageable);
+        Page<State> page = stateQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -174,20 +172,20 @@ public class StateResource {
     /**
      * {@code GET  /states/:id} : get the "id" state.
      *
-     * @param id the id of the stateDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the stateDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the state to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the state, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<StateDTO> getState(@PathVariable("id") Long id) {
+    public ResponseEntity<State> getState(@PathVariable("id") Long id) {
         LOG.debug("REST request to get State : {}", id);
-        Optional<StateDTO> stateDTO = stateService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(stateDTO);
+        Optional<State> state = stateService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(state);
     }
 
     /**
      * {@code DELETE  /states/:id} : delete the "id" state.
      *
-     * @param id the id of the stateDTO to delete.
+     * @param id the id of the state to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

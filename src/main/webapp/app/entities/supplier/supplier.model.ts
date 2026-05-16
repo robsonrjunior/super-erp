@@ -15,9 +15,9 @@ export interface ISupplier {
   phone?: string | null;
   active?: boolean | null;
   deletedAt?: dayjs.Dayjs | null;
-  person?: Pick<IPerson, 'id'> | null;
-  company?: Pick<ICompany, 'id'> | null;
-  rawMaterials?: Pick<IRawMaterial, 'id'> | null;
+  person?: IPerson | null;
+  company?: ICompany | null;
+  rawMaterials?: IRawMaterial | null;
 }
 
 export type NewSupplier = Omit<ISupplier, 'id'> & { id: null };

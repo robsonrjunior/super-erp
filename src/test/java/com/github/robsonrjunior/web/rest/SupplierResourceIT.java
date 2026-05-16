@@ -15,8 +15,6 @@ import com.github.robsonrjunior.domain.RawMaterial;
 import com.github.robsonrjunior.domain.Supplier;
 import com.github.robsonrjunior.domain.enumeration.PartyType;
 import com.github.robsonrjunior.repository.SupplierRepository;
-import com.github.robsonrjunior.service.dto.SupplierDTO;
-import com.github.robsonrjunior.service.mapper.SupplierMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -75,9 +73,6 @@ class SupplierResourceIT {
 
     @Autowired
     private SupplierRepository supplierRepository;
-
-    @Autowired
-    private SupplierMapper supplierMapper;
 
     @Autowired
     private EntityManager em;
@@ -145,20 +140,18 @@ class SupplierResourceIT {
     void createSupplier() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Supplier
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
-        var returnedSupplierDTO = om.readValue(
+        var returnedSupplier = om.readValue(
             restSupplierMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplierDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            SupplierDTO.class
+            Supplier.class
         );
 
         // Validate the Supplier in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedSupplier = supplierMapper.toEntity(returnedSupplierDTO);
         assertSupplierUpdatableFieldsEquals(returnedSupplier, getPersistedSupplier(returnedSupplier));
 
         insertedSupplier = returnedSupplier;
@@ -169,13 +162,12 @@ class SupplierResourceIT {
     void createSupplierWithExistingId() throws Exception {
         // Create the Supplier with an existing ID
         supplier.setId(1L);
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restSupplierMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplierDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier)))
             .andExpect(status().isBadRequest());
 
         // Validate the Supplier in the database
@@ -190,10 +182,9 @@ class SupplierResourceIT {
         supplier.setLegalName(null);
 
         // Create the Supplier, which fails.
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
 
         restSupplierMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplierDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -207,10 +198,9 @@ class SupplierResourceIT {
         supplier.setTaxId(null);
 
         // Create the Supplier, which fails.
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
 
         restSupplierMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplierDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -224,10 +214,9 @@ class SupplierResourceIT {
         supplier.setPartyType(null);
 
         // Create the Supplier, which fails.
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
 
         restSupplierMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplierDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -241,10 +230,9 @@ class SupplierResourceIT {
         supplier.setActive(null);
 
         // Create the Supplier, which fails.
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
 
         restSupplierMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplierDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -793,13 +781,12 @@ class SupplierResourceIT {
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
             .deletedAt(UPDATED_DELETED_AT);
-        SupplierDTO supplierDTO = supplierMapper.toDto(updatedSupplier);
 
         restSupplierMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, supplierDTO.getId())
+                put(ENTITY_API_URL_ID, updatedSupplier.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(supplierDTO))
+                    .content(om.writeValueAsBytes(updatedSupplier))
             )
             .andExpect(status().isOk());
 
@@ -814,15 +801,10 @@ class SupplierResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         supplier.setId(longCount.incrementAndGet());
 
-        // Create the Supplier
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restSupplierMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, supplierDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(supplierDTO))
+                put(ENTITY_API_URL_ID, supplier.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier))
             )
             .andExpect(status().isBadRequest());
 
@@ -836,15 +818,12 @@ class SupplierResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         supplier.setId(longCount.incrementAndGet());
 
-        // Create the Supplier
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSupplierMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(supplierDTO))
+                    .content(om.writeValueAsBytes(supplier))
             )
             .andExpect(status().isBadRequest());
 
@@ -858,12 +837,9 @@ class SupplierResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         supplier.setId(longCount.incrementAndGet());
 
-        // Create the Supplier
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSupplierMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplierDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(supplier)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Supplier in the database
@@ -945,15 +921,12 @@ class SupplierResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         supplier.setId(longCount.incrementAndGet());
 
-        // Create the Supplier
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restSupplierMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, supplierDTO.getId())
+                patch(ENTITY_API_URL_ID, supplier.getId())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(supplierDTO))
+                    .content(om.writeValueAsBytes(supplier))
             )
             .andExpect(status().isBadRequest());
 
@@ -967,15 +940,12 @@ class SupplierResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         supplier.setId(longCount.incrementAndGet());
 
-        // Create the Supplier
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSupplierMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(supplierDTO))
+                    .content(om.writeValueAsBytes(supplier))
             )
             .andExpect(status().isBadRequest());
 
@@ -989,12 +959,9 @@ class SupplierResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         supplier.setId(longCount.incrementAndGet());
 
-        // Create the Supplier
-        SupplierDTO supplierDTO = supplierMapper.toDto(supplier);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSupplierMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(supplierDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(supplier)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Supplier in the database

@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Sale;
 import com.github.robsonrjunior.repository.SaleRepository;
-import com.github.robsonrjunior.service.dto.SaleDTO;
-import com.github.robsonrjunior.service.mapper.SaleMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,56 @@ public class SaleService {
 
     private final SaleRepository saleRepository;
 
-    private final SaleMapper saleMapper;
-
-    public SaleService(SaleRepository saleRepository, SaleMapper saleMapper) {
+    public SaleService(SaleRepository saleRepository) {
         this.saleRepository = saleRepository;
-        this.saleMapper = saleMapper;
     }
 
     /**
      * Save a sale.
      *
-     * @param saleDTO the entity to save.
+     * @param sale the entity to save.
      * @return the persisted entity.
      */
-    public SaleDTO save(SaleDTO saleDTO) {
-        LOG.debug("Request to save Sale : {}", saleDTO);
-        Sale sale = saleMapper.toEntity(saleDTO);
-        sale = saleRepository.save(sale);
-        return saleMapper.toDto(sale);
+    public Sale save(Sale sale) {
+        LOG.debug("Request to save Sale : {}", sale);
+        return saleRepository.save(sale);
     }
 
     /**
      * Update a sale.
      *
-     * @param saleDTO the entity to save.
+     * @param sale the entity to save.
      * @return the persisted entity.
      */
-    public SaleDTO update(SaleDTO saleDTO) {
-        LOG.debug("Request to update Sale : {}", saleDTO);
-        Sale sale = saleMapper.toEntity(saleDTO);
-        sale = saleRepository.save(sale);
-        return saleMapper.toDto(sale);
+    public Sale update(Sale sale) {
+        LOG.debug("Request to update Sale : {}", sale);
+        return saleRepository.save(sale);
     }
 
     /**
      * Partially update a sale.
      *
-     * @param saleDTO the entity to update partially.
+     * @param sale the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<SaleDTO> partialUpdate(SaleDTO saleDTO) {
-        LOG.debug("Request to partially update Sale : {}", saleDTO);
+    public Optional<Sale> partialUpdate(Sale sale) {
+        LOG.debug("Request to partially update Sale : {}", sale);
 
         return saleRepository
-            .findById(saleDTO.getId())
+            .findById(sale.getId())
             .map(existingSale -> {
-                saleMapper.partialUpdate(existingSale, saleDTO);
+                updateIfPresent(existingSale::setSaleDate, sale.getSaleDate());
+                updateIfPresent(existingSale::setSaleNumber, sale.getSaleNumber());
+                updateIfPresent(existingSale::setStatus, sale.getStatus());
+                updateIfPresent(existingSale::setGrossAmount, sale.getGrossAmount());
+                updateIfPresent(existingSale::setDiscountAmount, sale.getDiscountAmount());
+                updateIfPresent(existingSale::setNetAmount, sale.getNetAmount());
+                updateIfPresent(existingSale::setNotes, sale.getNotes());
+                updateIfPresent(existingSale::setDeletedAt, sale.getDeletedAt());
 
                 return existingSale;
             })
-            .map(saleRepository::save)
-            .map(saleMapper::toDto);
+            .map(saleRepository::save);
     }
 
     /**
@@ -81,9 +79,9 @@ public class SaleService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<SaleDTO> findOne(Long id) {
+    public Optional<Sale> findOne(Long id) {
         LOG.debug("Request to get Sale : {}", id);
-        return saleRepository.findById(id).map(saleMapper::toDto);
+        return saleRepository.findById(id);
     }
 
     /**
@@ -94,5 +92,11 @@ public class SaleService {
     public void delete(Long id) {
         LOG.debug("Request to delete Sale : {}", id);
         saleRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

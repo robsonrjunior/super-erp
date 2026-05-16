@@ -14,15 +14,15 @@ import {
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker';
-import { environment } from 'environments/environment';
+import { environment } from '../environments/environment';
 
-import { authExpiredInterceptor } from 'app/core/interceptor/auth-expired.interceptor';
-import { authInterceptor } from 'app/core/interceptor/auth.interceptor';
-import { errorHandlerInterceptor } from 'app/core/interceptor/error-handler.interceptor';
-import { notificationInterceptor } from 'app/core/interceptor/notification.interceptor';
+import { authExpiredInterceptor } from './core/interceptor/auth-expired.interceptor';
+import { authInterceptor } from './core/interceptor/auth.interceptor';
+import { errorHandlerInterceptor } from './core/interceptor/error-handler.interceptor';
+import { notificationInterceptor } from './core/interceptor/notification.interceptor';
 
-import { TranslationModule } from 'app/shared/language/translation.module';
 import './config/dayjs';
+import { TranslationModule } from './shared/language/translation.module';
 
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';

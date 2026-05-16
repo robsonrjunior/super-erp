@@ -12,8 +12,6 @@ import com.github.robsonrjunior.IntegrationTest;
 import com.github.robsonrjunior.domain.Country;
 import com.github.robsonrjunior.domain.State;
 import com.github.robsonrjunior.repository.StateRepository;
-import com.github.robsonrjunior.service.dto.StateDTO;
-import com.github.robsonrjunior.service.mapper.StateMapper;
 import jakarta.persistence.EntityManager;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -52,9 +50,6 @@ class StateResourceIT {
 
     @Autowired
     private StateRepository stateRepository;
-
-    @Autowired
-    private StateMapper stateMapper;
 
     @Autowired
     private EntityManager em;
@@ -126,20 +121,18 @@ class StateResourceIT {
     void createState() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the State
-        StateDTO stateDTO = stateMapper.toDto(state);
-        var returnedStateDTO = om.readValue(
+        var returnedState = om.readValue(
             restStateMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stateDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(state)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            StateDTO.class
+            State.class
         );
 
         // Validate the State in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedState = stateMapper.toEntity(returnedStateDTO);
         assertStateUpdatableFieldsEquals(returnedState, getPersistedState(returnedState));
 
         insertedState = returnedState;
@@ -150,13 +143,12 @@ class StateResourceIT {
     void createStateWithExistingId() throws Exception {
         // Create the State with an existing ID
         state.setId(1L);
-        StateDTO stateDTO = stateMapper.toDto(state);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStateMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stateDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(state)))
             .andExpect(status().isBadRequest());
 
         // Validate the State in the database
@@ -171,10 +163,9 @@ class StateResourceIT {
         state.setName(null);
 
         // Create the State, which fails.
-        StateDTO stateDTO = stateMapper.toDto(state);
 
         restStateMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stateDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(state)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -188,10 +179,9 @@ class StateResourceIT {
         state.setCode(null);
 
         // Create the State, which fails.
-        StateDTO stateDTO = stateMapper.toDto(state);
 
         restStateMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stateDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(state)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -430,11 +420,12 @@ class StateResourceIT {
         // Disconnect from session so that the updates on updatedState are not directly saved in db
         em.detach(updatedState);
         updatedState.name(UPDATED_NAME).code(UPDATED_CODE);
-        StateDTO stateDTO = stateMapper.toDto(updatedState);
 
         restStateMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, stateDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stateDTO))
+                put(ENTITY_API_URL_ID, updatedState.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(updatedState))
             )
             .andExpect(status().isOk());
 
@@ -449,14 +440,9 @@ class StateResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         state.setId(longCount.incrementAndGet());
 
-        // Create the State
-        StateDTO stateDTO = stateMapper.toDto(state);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStateMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, stateDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stateDTO))
-            )
+            .perform(put(ENTITY_API_URL_ID, state.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(state)))
             .andExpect(status().isBadRequest());
 
         // Validate the State in the database
@@ -469,15 +455,12 @@ class StateResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         state.setId(longCount.incrementAndGet());
 
-        // Create the State
-        StateDTO stateDTO = stateMapper.toDto(state);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStateMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(stateDTO))
+                    .content(om.writeValueAsBytes(state))
             )
             .andExpect(status().isBadRequest());
 
@@ -491,12 +474,9 @@ class StateResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         state.setId(longCount.incrementAndGet());
 
-        // Create the State
-        StateDTO stateDTO = stateMapper.toDto(state);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStateMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stateDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(state)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the State in the database
@@ -565,15 +545,10 @@ class StateResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         state.setId(longCount.incrementAndGet());
 
-        // Create the State
-        StateDTO stateDTO = stateMapper.toDto(state);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStateMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, stateDTO.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(stateDTO))
+                patch(ENTITY_API_URL_ID, state.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(state))
             )
             .andExpect(status().isBadRequest());
 
@@ -587,15 +562,12 @@ class StateResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         state.setId(longCount.incrementAndGet());
 
-        // Create the State
-        StateDTO stateDTO = stateMapper.toDto(state);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStateMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(stateDTO))
+                    .content(om.writeValueAsBytes(state))
             )
             .andExpect(status().isBadRequest());
 
@@ -609,12 +581,9 @@ class StateResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         state.setId(longCount.incrementAndGet());
 
-        // Create the State
-        StateDTO stateDTO = stateMapper.toDto(state);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStateMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(stateDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(state)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the State in the database

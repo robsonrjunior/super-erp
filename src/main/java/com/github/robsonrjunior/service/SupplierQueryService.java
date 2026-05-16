@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.Supplier;
 import com.github.robsonrjunior.repository.SupplierRepository;
 import com.github.robsonrjunior.service.criteria.SupplierCriteria;
-import com.github.robsonrjunior.service.dto.SupplierDTO;
-import com.github.robsonrjunior.service.mapper.SupplierMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Supplier} entities in the database.
  * The main input is a {@link SupplierCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link SupplierDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Supplier} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class SupplierQueryService extends QueryService<Supplier> {
 
     private final SupplierRepository supplierRepository;
 
-    private final SupplierMapper supplierMapper;
-
-    public SupplierQueryService(SupplierRepository supplierRepository, SupplierMapper supplierMapper) {
+    public SupplierQueryService(SupplierRepository supplierRepository) {
         this.supplierRepository = supplierRepository;
-        this.supplierMapper = supplierMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link SupplierDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Supplier} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<SupplierDTO> findByCriteria(SupplierCriteria criteria, Pageable page) {
+    public Page<Supplier> findByCriteria(SupplierCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Supplier> specification = createSpecification(criteria);
-        return supplierRepository.findAll(specification, page).map(supplierMapper::toDto);
+        return supplierRepository.findAll(specification, page);
     }
 
     /**

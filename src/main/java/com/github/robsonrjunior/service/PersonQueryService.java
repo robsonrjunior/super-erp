@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.Person;
 import com.github.robsonrjunior.repository.PersonRepository;
 import com.github.robsonrjunior.service.criteria.PersonCriteria;
-import com.github.robsonrjunior.service.dto.PersonDTO;
-import com.github.robsonrjunior.service.mapper.PersonMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Person} entities in the database.
  * The main input is a {@link PersonCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link PersonDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Person} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class PersonQueryService extends QueryService<Person> {
 
     private final PersonRepository personRepository;
 
-    private final PersonMapper personMapper;
-
-    public PersonQueryService(PersonRepository personRepository, PersonMapper personMapper) {
+    public PersonQueryService(PersonRepository personRepository) {
         this.personRepository = personRepository;
-        this.personMapper = personMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link PersonDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Person} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<PersonDTO> findByCriteria(PersonCriteria criteria, Pageable page) {
+    public Page<Person> findByCriteria(PersonCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Person> specification = createSpecification(criteria);
-        return personRepository.findAll(specification, page).map(personMapper::toDto);
+        return personRepository.findAll(specification, page);
     }
 
     /**

@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.Sale;
 import com.github.robsonrjunior.repository.SaleRepository;
 import com.github.robsonrjunior.service.criteria.SaleCriteria;
-import com.github.robsonrjunior.service.dto.SaleDTO;
-import com.github.robsonrjunior.service.mapper.SaleMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Sale} entities in the database.
  * The main input is a {@link SaleCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link SaleDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Sale} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class SaleQueryService extends QueryService<Sale> {
 
     private final SaleRepository saleRepository;
 
-    private final SaleMapper saleMapper;
-
-    public SaleQueryService(SaleRepository saleRepository, SaleMapper saleMapper) {
+    public SaleQueryService(SaleRepository saleRepository) {
         this.saleRepository = saleRepository;
-        this.saleMapper = saleMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link SaleDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Sale} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<SaleDTO> findByCriteria(SaleCriteria criteria, Pageable page) {
+    public Page<Sale> findByCriteria(SaleCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Sale> specification = createSpecification(criteria);
-        return saleRepository.findAll(specification, page).map(saleMapper::toDto);
+        return saleRepository.findAll(specification, page);
     }
 
     /**

@@ -14,8 +14,6 @@ import com.github.robsonrjunior.domain.RawMaterial;
 import com.github.robsonrjunior.domain.StockMovement;
 import com.github.robsonrjunior.domain.enumeration.UnitOfMeasure;
 import com.github.robsonrjunior.repository.RawMaterialRepository;
-import com.github.robsonrjunior.service.dto.RawMaterialDTO;
-import com.github.robsonrjunior.service.mapper.RawMaterialMapper;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -78,9 +76,6 @@ class RawMaterialResourceIT {
 
     @Autowired
     private RawMaterialRepository rawMaterialRepository;
-
-    @Autowired
-    private RawMaterialMapper rawMaterialMapper;
 
     @Autowired
     private EntityManager em;
@@ -148,20 +143,18 @@ class RawMaterialResourceIT {
     void createRawMaterial() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the RawMaterial
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
-        var returnedRawMaterialDTO = om.readValue(
+        var returnedRawMaterial = om.readValue(
             restRawMaterialMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            RawMaterialDTO.class
+            RawMaterial.class
         );
 
         // Validate the RawMaterial in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedRawMaterial = rawMaterialMapper.toEntity(returnedRawMaterialDTO);
         assertRawMaterialUpdatableFieldsEquals(returnedRawMaterial, getPersistedRawMaterial(returnedRawMaterial));
 
         insertedRawMaterial = returnedRawMaterial;
@@ -172,13 +165,12 @@ class RawMaterialResourceIT {
     void createRawMaterialWithExistingId() throws Exception {
         // Create the RawMaterial with an existing ID
         rawMaterial.setId(1L);
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restRawMaterialMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isBadRequest());
 
         // Validate the RawMaterial in the database
@@ -193,10 +185,9 @@ class RawMaterialResourceIT {
         rawMaterial.setName(null);
 
         // Create the RawMaterial, which fails.
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
 
         restRawMaterialMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -210,10 +201,9 @@ class RawMaterialResourceIT {
         rawMaterial.setSku(null);
 
         // Create the RawMaterial, which fails.
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
 
         restRawMaterialMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -227,10 +217,9 @@ class RawMaterialResourceIT {
         rawMaterial.setUnitOfMeasure(null);
 
         // Create the RawMaterial, which fails.
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
 
         restRawMaterialMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -244,10 +233,9 @@ class RawMaterialResourceIT {
         rawMaterial.setUnitDecimalPlaces(null);
 
         // Create the RawMaterial, which fails.
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
 
         restRawMaterialMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -261,10 +249,9 @@ class RawMaterialResourceIT {
         rawMaterial.setActive(null);
 
         // Create the RawMaterial, which fails.
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
 
         restRawMaterialMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -850,13 +837,12 @@ class RawMaterialResourceIT {
             .minStock(UPDATED_MIN_STOCK)
             .active(UPDATED_ACTIVE)
             .deletedAt(UPDATED_DELETED_AT);
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(updatedRawMaterial);
 
         restRawMaterialMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, rawMaterialDTO.getId())
+                put(ENTITY_API_URL_ID, updatedRawMaterial.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(rawMaterialDTO))
+                    .content(om.writeValueAsBytes(updatedRawMaterial))
             )
             .andExpect(status().isOk());
 
@@ -871,15 +857,12 @@ class RawMaterialResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         rawMaterial.setId(longCount.incrementAndGet());
 
-        // Create the RawMaterial
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restRawMaterialMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, rawMaterialDTO.getId())
+                put(ENTITY_API_URL_ID, rawMaterial.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(rawMaterialDTO))
+                    .content(om.writeValueAsBytes(rawMaterial))
             )
             .andExpect(status().isBadRequest());
 
@@ -893,15 +876,12 @@ class RawMaterialResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         rawMaterial.setId(longCount.incrementAndGet());
 
-        // Create the RawMaterial
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRawMaterialMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(rawMaterialDTO))
+                    .content(om.writeValueAsBytes(rawMaterial))
             )
             .andExpect(status().isBadRequest());
 
@@ -915,12 +895,9 @@ class RawMaterialResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         rawMaterial.setId(longCount.incrementAndGet());
 
-        // Create the RawMaterial
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRawMaterialMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the RawMaterial in the database
@@ -1005,15 +982,12 @@ class RawMaterialResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         rawMaterial.setId(longCount.incrementAndGet());
 
-        // Create the RawMaterial
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restRawMaterialMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, rawMaterialDTO.getId())
+                patch(ENTITY_API_URL_ID, rawMaterial.getId())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(rawMaterialDTO))
+                    .content(om.writeValueAsBytes(rawMaterial))
             )
             .andExpect(status().isBadRequest());
 
@@ -1027,15 +1001,12 @@ class RawMaterialResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         rawMaterial.setId(longCount.incrementAndGet());
 
-        // Create the RawMaterial
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRawMaterialMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(rawMaterialDTO))
+                    .content(om.writeValueAsBytes(rawMaterial))
             )
             .andExpect(status().isBadRequest());
 
@@ -1049,12 +1020,9 @@ class RawMaterialResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         rawMaterial.setId(longCount.incrementAndGet());
 
-        // Create the RawMaterial
-        RawMaterialDTO rawMaterialDTO = rawMaterialMapper.toDto(rawMaterial);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRawMaterialMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(rawMaterialDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(rawMaterial)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the RawMaterial in the database

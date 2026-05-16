@@ -17,16 +17,16 @@ export interface ITenant {
   code?: string | null;
   active?: boolean | null;
   deletedAt?: dayjs.Dayjs | null;
-  customers?: Pick<ICustomer, 'id'> | null;
-  suppliers?: Pick<ISupplier, 'id'> | null;
-  people?: Pick<IPerson, 'id'> | null;
-  companies?: Pick<ICompany, 'id'> | null;
-  products?: Pick<IProduct, 'id'> | null;
-  rawMaterials?: Pick<IRawMaterial, 'id'> | null;
-  warehouses?: Pick<IWarehouse, 'id'> | null;
-  sales?: Pick<ISale, 'id'> | null;
-  saleItems?: Pick<ISaleItem, 'id'> | null;
-  stockMovements?: Pick<IStockMovement, 'id'> | null;
+  customers?: ICustomer | null;
+  suppliers?: ISupplier | null;
+  people?: IPerson | null;
+  companies?: ICompany | null;
+  products?: IProduct | null;
+  rawMaterials?: IRawMaterial | null;
+  warehouses?: IWarehouse | null;
+  sales?: ISale | null;
+  saleItems?: ISaleItem | null;
+  stockMovements?: IStockMovement | null;
 }
 
 export type NewTenant = Omit<ITenant, 'id'> & { id: null };

@@ -13,8 +13,6 @@ import com.github.robsonrjunior.IntegrationTest;
 import com.github.robsonrjunior.domain.StockMovement;
 import com.github.robsonrjunior.domain.enumeration.MovementType;
 import com.github.robsonrjunior.repository.StockMovementRepository;
-import com.github.robsonrjunior.service.dto.StockMovementDTO;
-import com.github.robsonrjunior.service.mapper.StockMovementMapper;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -73,9 +71,6 @@ class StockMovementResourceIT {
 
     @Autowired
     private StockMovementRepository stockMovementRepository;
-
-    @Autowired
-    private StockMovementMapper stockMovementMapper;
 
     @Autowired
     private EntityManager em;
@@ -141,20 +136,18 @@ class StockMovementResourceIT {
     void createStockMovement() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the StockMovement
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
-        var returnedStockMovementDTO = om.readValue(
+        var returnedStockMovement = om.readValue(
             restStockMovementMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovementDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovement)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            StockMovementDTO.class
+            StockMovement.class
         );
 
         // Validate the StockMovement in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedStockMovement = stockMovementMapper.toEntity(returnedStockMovementDTO);
         assertStockMovementUpdatableFieldsEquals(returnedStockMovement, getPersistedStockMovement(returnedStockMovement));
 
         insertedStockMovement = returnedStockMovement;
@@ -165,13 +158,12 @@ class StockMovementResourceIT {
     void createStockMovementWithExistingId() throws Exception {
         // Create the StockMovement with an existing ID
         stockMovement.setId(1L);
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStockMovementMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovementDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovement)))
             .andExpect(status().isBadRequest());
 
         // Validate the StockMovement in the database
@@ -186,10 +178,9 @@ class StockMovementResourceIT {
         stockMovement.setMovementDate(null);
 
         // Create the StockMovement, which fails.
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
 
         restStockMovementMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovementDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovement)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -203,10 +194,9 @@ class StockMovementResourceIT {
         stockMovement.setMovementType(null);
 
         // Create the StockMovement, which fails.
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
 
         restStockMovementMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovementDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovement)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -220,10 +210,9 @@ class StockMovementResourceIT {
         stockMovement.setQuantity(null);
 
         // Create the StockMovement, which fails.
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
 
         restStockMovementMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovementDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovement)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -716,13 +705,12 @@ class StockMovementResourceIT {
             .referenceNumber(UPDATED_REFERENCE_NUMBER)
             .notes(UPDATED_NOTES)
             .deletedAt(UPDATED_DELETED_AT);
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(updatedStockMovement);
 
         restStockMovementMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, stockMovementDTO.getId())
+                put(ENTITY_API_URL_ID, updatedStockMovement.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(stockMovementDTO))
+                    .content(om.writeValueAsBytes(updatedStockMovement))
             )
             .andExpect(status().isOk());
 
@@ -737,15 +725,12 @@ class StockMovementResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         stockMovement.setId(longCount.incrementAndGet());
 
-        // Create the StockMovement
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStockMovementMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, stockMovementDTO.getId())
+                put(ENTITY_API_URL_ID, stockMovement.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(stockMovementDTO))
+                    .content(om.writeValueAsBytes(stockMovement))
             )
             .andExpect(status().isBadRequest());
 
@@ -759,15 +744,12 @@ class StockMovementResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         stockMovement.setId(longCount.incrementAndGet());
 
-        // Create the StockMovement
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStockMovementMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(stockMovementDTO))
+                    .content(om.writeValueAsBytes(stockMovement))
             )
             .andExpect(status().isBadRequest());
 
@@ -781,12 +763,9 @@ class StockMovementResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         stockMovement.setId(longCount.incrementAndGet());
 
-        // Create the StockMovement
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStockMovementMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovementDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(stockMovement)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the StockMovement in the database
@@ -868,15 +847,12 @@ class StockMovementResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         stockMovement.setId(longCount.incrementAndGet());
 
-        // Create the StockMovement
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStockMovementMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, stockMovementDTO.getId())
+                patch(ENTITY_API_URL_ID, stockMovement.getId())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(stockMovementDTO))
+                    .content(om.writeValueAsBytes(stockMovement))
             )
             .andExpect(status().isBadRequest());
 
@@ -890,15 +866,12 @@ class StockMovementResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         stockMovement.setId(longCount.incrementAndGet());
 
-        // Create the StockMovement
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStockMovementMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(stockMovementDTO))
+                    .content(om.writeValueAsBytes(stockMovement))
             )
             .andExpect(status().isBadRequest());
 
@@ -912,12 +885,9 @@ class StockMovementResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         stockMovement.setId(longCount.incrementAndGet());
 
-        // Create the StockMovement
-        StockMovementDTO stockMovementDTO = stockMovementMapper.toDto(stockMovement);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStockMovementMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(stockMovementDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(stockMovement)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the StockMovement in the database

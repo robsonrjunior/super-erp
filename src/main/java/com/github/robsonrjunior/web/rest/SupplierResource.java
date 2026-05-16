@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.Supplier;
 import com.github.robsonrjunior.repository.SupplierRepository;
 import com.github.robsonrjunior.service.SupplierQueryService;
 import com.github.robsonrjunior.service.SupplierService;
 import com.github.robsonrjunior.service.criteria.SupplierCriteria;
-import com.github.robsonrjunior.service.dto.SupplierDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -59,42 +59,42 @@ public class SupplierResource {
     /**
      * {@code POST  /suppliers} : Create a new supplier.
      *
-     * @param supplierDTO the supplierDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new supplierDTO, or with status {@code 400 (Bad Request)} if the supplier has already an ID.
+     * @param supplier the supplier to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new supplier, or with status {@code 400 (Bad Request)} if the supplier has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<SupplierDTO> createSupplier(@Valid @RequestBody SupplierDTO supplierDTO) throws URISyntaxException {
-        LOG.debug("REST request to save Supplier : {}", supplierDTO);
-        if (supplierDTO.getId() != null) {
+    public ResponseEntity<Supplier> createSupplier(@Valid @RequestBody Supplier supplier) throws URISyntaxException {
+        LOG.debug("REST request to save Supplier : {}", supplier);
+        if (supplier.getId() != null) {
             throw new BadRequestAlertException("A new supplier cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        supplierDTO = supplierService.save(supplierDTO);
-        return ResponseEntity.created(new URI("/api/suppliers/" + supplierDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, supplierDTO.getId().toString()))
-            .body(supplierDTO);
+        supplier = supplierService.save(supplier);
+        return ResponseEntity.created(new URI("/api/suppliers/" + supplier.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, supplier.getId().toString()))
+            .body(supplier);
     }
 
     /**
      * {@code PUT  /suppliers/:id} : Updates an existing supplier.
      *
-     * @param id the id of the supplierDTO to save.
-     * @param supplierDTO the supplierDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated supplierDTO,
-     * or with status {@code 400 (Bad Request)} if the supplierDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the supplierDTO couldn't be updated.
+     * @param id the id of the supplier to save.
+     * @param supplier the supplier to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated supplier,
+     * or with status {@code 400 (Bad Request)} if the supplier is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the supplier couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<SupplierDTO> updateSupplier(
+    public ResponseEntity<Supplier> updateSupplier(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody SupplierDTO supplierDTO
+        @Valid @RequestBody Supplier supplier
     ) throws URISyntaxException {
-        LOG.debug("REST request to update Supplier : {}, {}", id, supplierDTO);
-        if (supplierDTO.getId() == null) {
+        LOG.debug("REST request to update Supplier : {}, {}", id, supplier);
+        if (supplier.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, supplierDTO.getId())) {
+        if (!Objects.equals(id, supplier.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -102,33 +102,33 @@ public class SupplierResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        supplierDTO = supplierService.update(supplierDTO);
+        supplier = supplierService.update(supplier);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, supplierDTO.getId().toString()))
-            .body(supplierDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, supplier.getId().toString()))
+            .body(supplier);
     }
 
     /**
      * {@code PATCH  /suppliers/:id} : Partial updates given fields of an existing supplier, field will ignore if it is null
      *
-     * @param id the id of the supplierDTO to save.
-     * @param supplierDTO the supplierDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated supplierDTO,
-     * or with status {@code 400 (Bad Request)} if the supplierDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the supplierDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the supplierDTO couldn't be updated.
+     * @param id the id of the supplier to save.
+     * @param supplier the supplier to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated supplier,
+     * or with status {@code 400 (Bad Request)} if the supplier is not valid,
+     * or with status {@code 404 (Not Found)} if the supplier is not found,
+     * or with status {@code 500 (Internal Server Error)} if the supplier couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<SupplierDTO> partialUpdateSupplier(
+    public ResponseEntity<Supplier> partialUpdateSupplier(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody SupplierDTO supplierDTO
+        @NotNull @RequestBody Supplier supplier
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update Supplier partially : {}, {}", id, supplierDTO);
-        if (supplierDTO.getId() == null) {
+        LOG.debug("REST request to partial update Supplier partially : {}, {}", id, supplier);
+        if (supplier.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, supplierDTO.getId())) {
+        if (!Objects.equals(id, supplier.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -136,11 +136,11 @@ public class SupplierResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<SupplierDTO> result = supplierService.partialUpdate(supplierDTO);
+        Optional<Supplier> result = supplierService.partialUpdate(supplier);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, supplierDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, supplier.getId().toString())
         );
     }
 
@@ -152,13 +152,13 @@ public class SupplierResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Suppliers in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<SupplierDTO>> getAllSuppliers(
+    public ResponseEntity<List<Supplier>> getAllSuppliers(
         SupplierCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get Suppliers by criteria: {}", criteria);
 
-        Page<SupplierDTO> page = supplierQueryService.findByCriteria(criteria, pageable);
+        Page<Supplier> page = supplierQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -178,20 +178,20 @@ public class SupplierResource {
     /**
      * {@code GET  /suppliers/:id} : get the "id" supplier.
      *
-     * @param id the id of the supplierDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the supplierDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the supplier to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the supplier, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<SupplierDTO> getSupplier(@PathVariable("id") Long id) {
+    public ResponseEntity<Supplier> getSupplier(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Supplier : {}", id);
-        Optional<SupplierDTO> supplierDTO = supplierService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(supplierDTO);
+        Optional<Supplier> supplier = supplierService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(supplier);
     }
 
     /**
      * {@code DELETE  /suppliers/:id} : delete the "id" supplier.
      *
-     * @param id the id of the supplierDTO to delete.
+     * @param id the id of the supplier to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

@@ -13,7 +13,7 @@ export interface ISale {
   netAmount?: number | null;
   notes?: string | null;
   deletedAt?: dayjs.Dayjs | null;
-  items?: Pick<ISaleItem, 'id'> | null;
+  items?: ISaleItem | null;
 }
 
 export type NewSale = Omit<ISale, 'id'> & { id: null };

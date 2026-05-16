@@ -151,3 +151,6 @@ Desktop.ini
 ######################
 coverage/
 .nyc_output/
+
+# Windows reserved device name
+nul

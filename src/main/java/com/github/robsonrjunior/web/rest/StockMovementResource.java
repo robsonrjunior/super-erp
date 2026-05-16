@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.StockMovement;
 import com.github.robsonrjunior.repository.StockMovementRepository;
 import com.github.robsonrjunior.service.StockMovementQueryService;
 import com.github.robsonrjunior.service.StockMovementService;
 import com.github.robsonrjunior.service.criteria.StockMovementCriteria;
-import com.github.robsonrjunior.service.dto.StockMovementDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -59,43 +59,42 @@ public class StockMovementResource {
     /**
      * {@code POST  /stock-movements} : Create a new stockMovement.
      *
-     * @param stockMovementDTO the stockMovementDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new stockMovementDTO, or with status {@code 400 (Bad Request)} if the stockMovement has already an ID.
+     * @param stockMovement the stockMovement to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new stockMovement, or with status {@code 400 (Bad Request)} if the stockMovement has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<StockMovementDTO> createStockMovement(@Valid @RequestBody StockMovementDTO stockMovementDTO)
-        throws URISyntaxException {
-        LOG.debug("REST request to save StockMovement : {}", stockMovementDTO);
-        if (stockMovementDTO.getId() != null) {
+    public ResponseEntity<StockMovement> createStockMovement(@Valid @RequestBody StockMovement stockMovement) throws URISyntaxException {
+        LOG.debug("REST request to save StockMovement : {}", stockMovement);
+        if (stockMovement.getId() != null) {
             throw new BadRequestAlertException("A new stockMovement cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        stockMovementDTO = stockMovementService.save(stockMovementDTO);
-        return ResponseEntity.created(new URI("/api/stock-movements/" + stockMovementDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, stockMovementDTO.getId().toString()))
-            .body(stockMovementDTO);
+        stockMovement = stockMovementService.save(stockMovement);
+        return ResponseEntity.created(new URI("/api/stock-movements/" + stockMovement.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, stockMovement.getId().toString()))
+            .body(stockMovement);
     }
 
     /**
      * {@code PUT  /stock-movements/:id} : Updates an existing stockMovement.
      *
-     * @param id the id of the stockMovementDTO to save.
-     * @param stockMovementDTO the stockMovementDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stockMovementDTO,
-     * or with status {@code 400 (Bad Request)} if the stockMovementDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the stockMovementDTO couldn't be updated.
+     * @param id the id of the stockMovement to save.
+     * @param stockMovement the stockMovement to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stockMovement,
+     * or with status {@code 400 (Bad Request)} if the stockMovement is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the stockMovement couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<StockMovementDTO> updateStockMovement(
+    public ResponseEntity<StockMovement> updateStockMovement(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody StockMovementDTO stockMovementDTO
+        @Valid @RequestBody StockMovement stockMovement
     ) throws URISyntaxException {
-        LOG.debug("REST request to update StockMovement : {}, {}", id, stockMovementDTO);
-        if (stockMovementDTO.getId() == null) {
+        LOG.debug("REST request to update StockMovement : {}, {}", id, stockMovement);
+        if (stockMovement.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, stockMovementDTO.getId())) {
+        if (!Objects.equals(id, stockMovement.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -103,33 +102,33 @@ public class StockMovementResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        stockMovementDTO = stockMovementService.update(stockMovementDTO);
+        stockMovement = stockMovementService.update(stockMovement);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, stockMovementDTO.getId().toString()))
-            .body(stockMovementDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, stockMovement.getId().toString()))
+            .body(stockMovement);
     }
 
     /**
      * {@code PATCH  /stock-movements/:id} : Partial updates given fields of an existing stockMovement, field will ignore if it is null
      *
-     * @param id the id of the stockMovementDTO to save.
-     * @param stockMovementDTO the stockMovementDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stockMovementDTO,
-     * or with status {@code 400 (Bad Request)} if the stockMovementDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the stockMovementDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the stockMovementDTO couldn't be updated.
+     * @param id the id of the stockMovement to save.
+     * @param stockMovement the stockMovement to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stockMovement,
+     * or with status {@code 400 (Bad Request)} if the stockMovement is not valid,
+     * or with status {@code 404 (Not Found)} if the stockMovement is not found,
+     * or with status {@code 500 (Internal Server Error)} if the stockMovement couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<StockMovementDTO> partialUpdateStockMovement(
+    public ResponseEntity<StockMovement> partialUpdateStockMovement(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody StockMovementDTO stockMovementDTO
+        @NotNull @RequestBody StockMovement stockMovement
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update StockMovement partially : {}, {}", id, stockMovementDTO);
-        if (stockMovementDTO.getId() == null) {
+        LOG.debug("REST request to partial update StockMovement partially : {}, {}", id, stockMovement);
+        if (stockMovement.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, stockMovementDTO.getId())) {
+        if (!Objects.equals(id, stockMovement.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -137,11 +136,11 @@ public class StockMovementResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<StockMovementDTO> result = stockMovementService.partialUpdate(stockMovementDTO);
+        Optional<StockMovement> result = stockMovementService.partialUpdate(stockMovement);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, stockMovementDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, stockMovement.getId().toString())
         );
     }
 
@@ -153,13 +152,13 @@ public class StockMovementResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Stock Movements in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<StockMovementDTO>> getAllStockMovements(
+    public ResponseEntity<List<StockMovement>> getAllStockMovements(
         StockMovementCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get StockMovements by criteria: {}", criteria);
 
-        Page<StockMovementDTO> page = stockMovementQueryService.findByCriteria(criteria, pageable);
+        Page<StockMovement> page = stockMovementQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -179,20 +178,20 @@ public class StockMovementResource {
     /**
      * {@code GET  /stock-movements/:id} : get the "id" stockMovement.
      *
-     * @param id the id of the stockMovementDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the stockMovementDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the stockMovement to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the stockMovement, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<StockMovementDTO> getStockMovement(@PathVariable("id") Long id) {
+    public ResponseEntity<StockMovement> getStockMovement(@PathVariable("id") Long id) {
         LOG.debug("REST request to get StockMovement : {}", id);
-        Optional<StockMovementDTO> stockMovementDTO = stockMovementService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(stockMovementDTO);
+        Optional<StockMovement> stockMovement = stockMovementService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(stockMovement);
     }
 
     /**
      * {@code DELETE  /stock-movements/:id} : delete the "id" stockMovement.
      *
-     * @param id the id of the stockMovementDTO to delete.
+     * @param id the id of the stockMovement to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

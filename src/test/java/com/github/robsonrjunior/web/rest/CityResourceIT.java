@@ -17,8 +17,6 @@ import com.github.robsonrjunior.domain.State;
 import com.github.robsonrjunior.domain.Supplier;
 import com.github.robsonrjunior.domain.Warehouse;
 import com.github.robsonrjunior.repository.CityRepository;
-import com.github.robsonrjunior.service.dto.CityDTO;
-import com.github.robsonrjunior.service.mapper.CityMapper;
 import jakarta.persistence.EntityManager;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -54,9 +52,6 @@ class CityResourceIT {
 
     @Autowired
     private CityRepository cityRepository;
-
-    @Autowired
-    private CityMapper cityMapper;
 
     @Autowired
     private EntityManager em;
@@ -128,20 +123,18 @@ class CityResourceIT {
     void createCity() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the City
-        CityDTO cityDTO = cityMapper.toDto(city);
-        var returnedCityDTO = om.readValue(
+        var returnedCity = om.readValue(
             restCityMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cityDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(city)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            CityDTO.class
+            City.class
         );
 
         // Validate the City in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedCity = cityMapper.toEntity(returnedCityDTO);
         assertCityUpdatableFieldsEquals(returnedCity, getPersistedCity(returnedCity));
 
         insertedCity = returnedCity;
@@ -152,13 +145,12 @@ class CityResourceIT {
     void createCityWithExistingId() throws Exception {
         // Create the City with an existing ID
         city.setId(1L);
-        CityDTO cityDTO = cityMapper.toDto(city);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCityMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cityDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(city)))
             .andExpect(status().isBadRequest());
 
         // Validate the City in the database
@@ -173,10 +165,9 @@ class CityResourceIT {
         city.setName(null);
 
         // Create the City, which fails.
-        CityDTO cityDTO = cityMapper.toDto(city);
 
         restCityMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cityDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(city)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -472,10 +463,13 @@ class CityResourceIT {
         // Disconnect from session so that the updates on updatedCity are not directly saved in db
         em.detach(updatedCity);
         updatedCity.name(UPDATED_NAME);
-        CityDTO cityDTO = cityMapper.toDto(updatedCity);
 
         restCityMockMvc
-            .perform(put(ENTITY_API_URL_ID, cityDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cityDTO)))
+            .perform(
+                put(ENTITY_API_URL_ID, updatedCity.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(updatedCity))
+            )
             .andExpect(status().isOk());
 
         // Validate the City in the database
@@ -489,12 +483,9 @@ class CityResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         city.setId(longCount.incrementAndGet());
 
-        // Create the City
-        CityDTO cityDTO = cityMapper.toDto(city);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCityMockMvc
-            .perform(put(ENTITY_API_URL_ID, cityDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cityDTO)))
+            .perform(put(ENTITY_API_URL_ID, city.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(city)))
             .andExpect(status().isBadRequest());
 
         // Validate the City in the database
@@ -507,15 +498,12 @@ class CityResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         city.setId(longCount.incrementAndGet());
 
-        // Create the City
-        CityDTO cityDTO = cityMapper.toDto(city);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCityMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(cityDTO))
+                    .content(om.writeValueAsBytes(city))
             )
             .andExpect(status().isBadRequest());
 
@@ -529,12 +517,9 @@ class CityResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         city.setId(longCount.incrementAndGet());
 
-        // Create the City
-        CityDTO cityDTO = cityMapper.toDto(city);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCityMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cityDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(city)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the City in the database
@@ -603,14 +588,9 @@ class CityResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         city.setId(longCount.incrementAndGet());
 
-        // Create the City
-        CityDTO cityDTO = cityMapper.toDto(city);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCityMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, cityDTO.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(cityDTO))
-            )
+            .perform(patch(ENTITY_API_URL_ID, city.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(city)))
             .andExpect(status().isBadRequest());
 
         // Validate the City in the database
@@ -623,15 +603,12 @@ class CityResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         city.setId(longCount.incrementAndGet());
 
-        // Create the City
-        CityDTO cityDTO = cityMapper.toDto(city);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCityMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(cityDTO))
+                    .content(om.writeValueAsBytes(city))
             )
             .andExpect(status().isBadRequest());
 
@@ -645,12 +622,9 @@ class CityResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         city.setId(longCount.incrementAndGet());
 
-        // Create the City
-        CityDTO cityDTO = cityMapper.toDto(city);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCityMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(cityDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(city)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the City in the database

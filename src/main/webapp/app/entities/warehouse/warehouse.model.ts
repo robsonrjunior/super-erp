@@ -9,8 +9,8 @@ export interface IWarehouse {
   code?: string | null;
   active?: boolean | null;
   deletedAt?: dayjs.Dayjs | null;
-  stockMovements?: Pick<IStockMovement, 'id'> | null;
-  sales?: Pick<ISale, 'id'> | null;
+  stockMovements?: IStockMovement | null;
+  sales?: ISale | null;
 }
 
 export type NewWarehouse = Omit<IWarehouse, 'id'> & { id: null };

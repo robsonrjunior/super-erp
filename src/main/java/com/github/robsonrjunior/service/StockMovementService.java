@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.StockMovement;
 import com.github.robsonrjunior.repository.StockMovementRepository;
-import com.github.robsonrjunior.service.dto.StockMovementDTO;
-import com.github.robsonrjunior.service.mapper.StockMovementMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,55 @@ public class StockMovementService {
 
     private final StockMovementRepository stockMovementRepository;
 
-    private final StockMovementMapper stockMovementMapper;
-
-    public StockMovementService(StockMovementRepository stockMovementRepository, StockMovementMapper stockMovementMapper) {
+    public StockMovementService(StockMovementRepository stockMovementRepository) {
         this.stockMovementRepository = stockMovementRepository;
-        this.stockMovementMapper = stockMovementMapper;
     }
 
     /**
      * Save a stockMovement.
      *
-     * @param stockMovementDTO the entity to save.
+     * @param stockMovement the entity to save.
      * @return the persisted entity.
      */
-    public StockMovementDTO save(StockMovementDTO stockMovementDTO) {
-        LOG.debug("Request to save StockMovement : {}", stockMovementDTO);
-        StockMovement stockMovement = stockMovementMapper.toEntity(stockMovementDTO);
-        stockMovement = stockMovementRepository.save(stockMovement);
-        return stockMovementMapper.toDto(stockMovement);
+    public StockMovement save(StockMovement stockMovement) {
+        LOG.debug("Request to save StockMovement : {}", stockMovement);
+        return stockMovementRepository.save(stockMovement);
     }
 
     /**
      * Update a stockMovement.
      *
-     * @param stockMovementDTO the entity to save.
+     * @param stockMovement the entity to save.
      * @return the persisted entity.
      */
-    public StockMovementDTO update(StockMovementDTO stockMovementDTO) {
-        LOG.debug("Request to update StockMovement : {}", stockMovementDTO);
-        StockMovement stockMovement = stockMovementMapper.toEntity(stockMovementDTO);
-        stockMovement = stockMovementRepository.save(stockMovement);
-        return stockMovementMapper.toDto(stockMovement);
+    public StockMovement update(StockMovement stockMovement) {
+        LOG.debug("Request to update StockMovement : {}", stockMovement);
+        return stockMovementRepository.save(stockMovement);
     }
 
     /**
      * Partially update a stockMovement.
      *
-     * @param stockMovementDTO the entity to update partially.
+     * @param stockMovement the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<StockMovementDTO> partialUpdate(StockMovementDTO stockMovementDTO) {
-        LOG.debug("Request to partially update StockMovement : {}", stockMovementDTO);
+    public Optional<StockMovement> partialUpdate(StockMovement stockMovement) {
+        LOG.debug("Request to partially update StockMovement : {}", stockMovement);
 
         return stockMovementRepository
-            .findById(stockMovementDTO.getId())
+            .findById(stockMovement.getId())
             .map(existingStockMovement -> {
-                stockMovementMapper.partialUpdate(existingStockMovement, stockMovementDTO);
+                updateIfPresent(existingStockMovement::setMovementDate, stockMovement.getMovementDate());
+                updateIfPresent(existingStockMovement::setMovementType, stockMovement.getMovementType());
+                updateIfPresent(existingStockMovement::setQuantity, stockMovement.getQuantity());
+                updateIfPresent(existingStockMovement::setUnitCost, stockMovement.getUnitCost());
+                updateIfPresent(existingStockMovement::setReferenceNumber, stockMovement.getReferenceNumber());
+                updateIfPresent(existingStockMovement::setNotes, stockMovement.getNotes());
+                updateIfPresent(existingStockMovement::setDeletedAt, stockMovement.getDeletedAt());
 
                 return existingStockMovement;
             })
-            .map(stockMovementRepository::save)
-            .map(stockMovementMapper::toDto);
+            .map(stockMovementRepository::save);
     }
 
     /**
@@ -81,9 +78,9 @@ public class StockMovementService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<StockMovementDTO> findOne(Long id) {
+    public Optional<StockMovement> findOne(Long id) {
         LOG.debug("Request to get StockMovement : {}", id);
-        return stockMovementRepository.findById(id).map(stockMovementMapper::toDto);
+        return stockMovementRepository.findById(id);
     }
 
     /**
@@ -94,5 +91,11 @@ public class StockMovementService {
     public void delete(Long id) {
         LOG.debug("Request to delete StockMovement : {}", id);
         stockMovementRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

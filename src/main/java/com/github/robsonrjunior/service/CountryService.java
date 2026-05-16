@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Country;
 import com.github.robsonrjunior.repository.CountryRepository;
-import com.github.robsonrjunior.service.dto.CountryDTO;
-import com.github.robsonrjunior.service.mapper.CountryMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,50 @@ public class CountryService {
 
     private final CountryRepository countryRepository;
 
-    private final CountryMapper countryMapper;
-
-    public CountryService(CountryRepository countryRepository, CountryMapper countryMapper) {
+    public CountryService(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
-        this.countryMapper = countryMapper;
     }
 
     /**
      * Save a country.
      *
-     * @param countryDTO the entity to save.
+     * @param country the entity to save.
      * @return the persisted entity.
      */
-    public CountryDTO save(CountryDTO countryDTO) {
-        LOG.debug("Request to save Country : {}", countryDTO);
-        Country country = countryMapper.toEntity(countryDTO);
-        country = countryRepository.save(country);
-        return countryMapper.toDto(country);
+    public Country save(Country country) {
+        LOG.debug("Request to save Country : {}", country);
+        return countryRepository.save(country);
     }
 
     /**
      * Update a country.
      *
-     * @param countryDTO the entity to save.
+     * @param country the entity to save.
      * @return the persisted entity.
      */
-    public CountryDTO update(CountryDTO countryDTO) {
-        LOG.debug("Request to update Country : {}", countryDTO);
-        Country country = countryMapper.toEntity(countryDTO);
-        country = countryRepository.save(country);
-        return countryMapper.toDto(country);
+    public Country update(Country country) {
+        LOG.debug("Request to update Country : {}", country);
+        return countryRepository.save(country);
     }
 
     /**
      * Partially update a country.
      *
-     * @param countryDTO the entity to update partially.
+     * @param country the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<CountryDTO> partialUpdate(CountryDTO countryDTO) {
-        LOG.debug("Request to partially update Country : {}", countryDTO);
+    public Optional<Country> partialUpdate(Country country) {
+        LOG.debug("Request to partially update Country : {}", country);
 
         return countryRepository
-            .findById(countryDTO.getId())
+            .findById(country.getId())
             .map(existingCountry -> {
-                countryMapper.partialUpdate(existingCountry, countryDTO);
+                updateIfPresent(existingCountry::setName, country.getName());
+                updateIfPresent(existingCountry::setIsoCode, country.getIsoCode());
 
                 return existingCountry;
             })
-            .map(countryRepository::save)
-            .map(countryMapper::toDto);
+            .map(countryRepository::save);
     }
 
     /**
@@ -81,9 +73,9 @@ public class CountryService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<CountryDTO> findOne(Long id) {
+    public Optional<Country> findOne(Long id) {
         LOG.debug("Request to get Country : {}", id);
-        return countryRepository.findById(id).map(countryMapper::toDto);
+        return countryRepository.findById(id);
     }
 
     /**
@@ -94,5 +86,11 @@ public class CountryService {
     public void delete(Long id) {
         LOG.debug("Request to delete Country : {}", id);
         countryRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

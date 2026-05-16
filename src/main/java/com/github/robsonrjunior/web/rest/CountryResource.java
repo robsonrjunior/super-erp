@@ -1,10 +1,10 @@
 package com.github.robsonrjunior.web.rest;
 
+import com.github.robsonrjunior.domain.Country;
 import com.github.robsonrjunior.repository.CountryRepository;
 import com.github.robsonrjunior.service.CountryQueryService;
 import com.github.robsonrjunior.service.CountryService;
 import com.github.robsonrjunior.service.criteria.CountryCriteria;
-import com.github.robsonrjunior.service.dto.CountryDTO;
 import com.github.robsonrjunior.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -55,42 +55,42 @@ public class CountryResource {
     /**
      * {@code POST  /countries} : Create a new country.
      *
-     * @param countryDTO the countryDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new countryDTO, or with status {@code 400 (Bad Request)} if the country has already an ID.
+     * @param country the country to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new country, or with status {@code 400 (Bad Request)} if the country has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<CountryDTO> createCountry(@Valid @RequestBody CountryDTO countryDTO) throws URISyntaxException {
-        LOG.debug("REST request to save Country : {}", countryDTO);
-        if (countryDTO.getId() != null) {
+    public ResponseEntity<Country> createCountry(@Valid @RequestBody Country country) throws URISyntaxException {
+        LOG.debug("REST request to save Country : {}", country);
+        if (country.getId() != null) {
             throw new BadRequestAlertException("A new country cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        countryDTO = countryService.save(countryDTO);
-        return ResponseEntity.created(new URI("/api/countries/" + countryDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, countryDTO.getId().toString()))
-            .body(countryDTO);
+        country = countryService.save(country);
+        return ResponseEntity.created(new URI("/api/countries/" + country.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, country.getId().toString()))
+            .body(country);
     }
 
     /**
      * {@code PUT  /countries/:id} : Updates an existing country.
      *
-     * @param id the id of the countryDTO to save.
-     * @param countryDTO the countryDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated countryDTO,
-     * or with status {@code 400 (Bad Request)} if the countryDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the countryDTO couldn't be updated.
+     * @param id the id of the country to save.
+     * @param country the country to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated country,
+     * or with status {@code 400 (Bad Request)} if the country is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the country couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<CountryDTO> updateCountry(
+    public ResponseEntity<Country> updateCountry(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody CountryDTO countryDTO
+        @Valid @RequestBody Country country
     ) throws URISyntaxException {
-        LOG.debug("REST request to update Country : {}, {}", id, countryDTO);
-        if (countryDTO.getId() == null) {
+        LOG.debug("REST request to update Country : {}, {}", id, country);
+        if (country.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, countryDTO.getId())) {
+        if (!Objects.equals(id, country.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -98,33 +98,33 @@ public class CountryResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        countryDTO = countryService.update(countryDTO);
+        country = countryService.update(country);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, countryDTO.getId().toString()))
-            .body(countryDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, country.getId().toString()))
+            .body(country);
     }
 
     /**
      * {@code PATCH  /countries/:id} : Partial updates given fields of an existing country, field will ignore if it is null
      *
-     * @param id the id of the countryDTO to save.
-     * @param countryDTO the countryDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated countryDTO,
-     * or with status {@code 400 (Bad Request)} if the countryDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the countryDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the countryDTO couldn't be updated.
+     * @param id the id of the country to save.
+     * @param country the country to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated country,
+     * or with status {@code 400 (Bad Request)} if the country is not valid,
+     * or with status {@code 404 (Not Found)} if the country is not found,
+     * or with status {@code 500 (Internal Server Error)} if the country couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<CountryDTO> partialUpdateCountry(
+    public ResponseEntity<Country> partialUpdateCountry(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody CountryDTO countryDTO
+        @NotNull @RequestBody Country country
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update Country partially : {}, {}", id, countryDTO);
-        if (countryDTO.getId() == null) {
+        LOG.debug("REST request to partial update Country partially : {}, {}", id, country);
+        if (country.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, countryDTO.getId())) {
+        if (!Objects.equals(id, country.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -132,11 +132,11 @@ public class CountryResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<CountryDTO> result = countryService.partialUpdate(countryDTO);
+        Optional<Country> result = countryService.partialUpdate(country);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, countryDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, country.getId().toString())
         );
     }
 
@@ -148,13 +148,13 @@ public class CountryResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Countries in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<CountryDTO>> getAllCountries(
+    public ResponseEntity<List<Country>> getAllCountries(
         CountryCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get Countries by criteria: {}", criteria);
 
-        Page<CountryDTO> page = countryQueryService.findByCriteria(criteria, pageable);
+        Page<Country> page = countryQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -174,20 +174,20 @@ public class CountryResource {
     /**
      * {@code GET  /countries/:id} : get the "id" country.
      *
-     * @param id the id of the countryDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the countryDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the country to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the country, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CountryDTO> getCountry(@PathVariable("id") Long id) {
+    public ResponseEntity<Country> getCountry(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Country : {}", id);
-        Optional<CountryDTO> countryDTO = countryService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(countryDTO);
+        Optional<Country> country = countryService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(country);
     }
 
     /**
      * {@code DELETE  /countries/:id} : delete the "id" country.
      *
-     * @param id the id of the countryDTO to delete.
+     * @param id the id of the country to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

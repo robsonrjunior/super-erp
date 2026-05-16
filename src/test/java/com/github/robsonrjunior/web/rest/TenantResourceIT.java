@@ -21,8 +21,6 @@ import com.github.robsonrjunior.domain.Supplier;
 import com.github.robsonrjunior.domain.Tenant;
 import com.github.robsonrjunior.domain.Warehouse;
 import com.github.robsonrjunior.repository.TenantRepository;
-import com.github.robsonrjunior.service.dto.TenantDTO;
-import com.github.robsonrjunior.service.mapper.TenantMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -69,9 +67,6 @@ class TenantResourceIT {
 
     @Autowired
     private TenantRepository tenantRepository;
-
-    @Autowired
-    private TenantMapper tenantMapper;
 
     @Autowired
     private EntityManager em;
@@ -121,20 +116,18 @@ class TenantResourceIT {
     void createTenant() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Tenant
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
-        var returnedTenantDTO = om.readValue(
+        var returnedTenant = om.readValue(
             restTenantMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenant)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            TenantDTO.class
+            Tenant.class
         );
 
         // Validate the Tenant in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedTenant = tenantMapper.toEntity(returnedTenantDTO);
         assertTenantUpdatableFieldsEquals(returnedTenant, getPersistedTenant(returnedTenant));
 
         insertedTenant = returnedTenant;
@@ -145,13 +138,12 @@ class TenantResourceIT {
     void createTenantWithExistingId() throws Exception {
         // Create the Tenant with an existing ID
         tenant.setId(1L);
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restTenantMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenant)))
             .andExpect(status().isBadRequest());
 
         // Validate the Tenant in the database
@@ -166,10 +158,9 @@ class TenantResourceIT {
         tenant.setName(null);
 
         // Create the Tenant, which fails.
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
 
         restTenantMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenant)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -183,10 +174,9 @@ class TenantResourceIT {
         tenant.setCode(null);
 
         // Create the Tenant, which fails.
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
 
         restTenantMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenant)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -200,10 +190,9 @@ class TenantResourceIT {
         tenant.setActive(null);
 
         // Create the Tenant, which fails.
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
 
         restTenantMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenant)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -706,11 +695,12 @@ class TenantResourceIT {
         // Disconnect from session so that the updates on updatedTenant are not directly saved in db
         em.detach(updatedTenant);
         updatedTenant.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).deletedAt(UPDATED_DELETED_AT);
-        TenantDTO tenantDTO = tenantMapper.toDto(updatedTenant);
 
         restTenantMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, tenantDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO))
+                put(ENTITY_API_URL_ID, updatedTenant.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(updatedTenant))
             )
             .andExpect(status().isOk());
 
@@ -725,14 +715,9 @@ class TenantResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         tenant.setId(longCount.incrementAndGet());
 
-        // Create the Tenant
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restTenantMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, tenantDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO))
-            )
+            .perform(put(ENTITY_API_URL_ID, tenant.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenant)))
             .andExpect(status().isBadRequest());
 
         // Validate the Tenant in the database
@@ -745,15 +730,12 @@ class TenantResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         tenant.setId(longCount.incrementAndGet());
 
-        // Create the Tenant
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restTenantMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(tenantDTO))
+                    .content(om.writeValueAsBytes(tenant))
             )
             .andExpect(status().isBadRequest());
 
@@ -767,12 +749,9 @@ class TenantResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         tenant.setId(longCount.incrementAndGet());
 
-        // Create the Tenant
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restTenantMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenantDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tenant)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Tenant in the database
@@ -841,15 +820,10 @@ class TenantResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         tenant.setId(longCount.incrementAndGet());
 
-        // Create the Tenant
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restTenantMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, tenantDTO.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(tenantDTO))
+                patch(ENTITY_API_URL_ID, tenant.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(tenant))
             )
             .andExpect(status().isBadRequest());
 
@@ -863,15 +837,12 @@ class TenantResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         tenant.setId(longCount.incrementAndGet());
 
-        // Create the Tenant
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restTenantMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(tenantDTO))
+                    .content(om.writeValueAsBytes(tenant))
             )
             .andExpect(status().isBadRequest());
 
@@ -885,12 +856,9 @@ class TenantResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         tenant.setId(longCount.incrementAndGet());
 
-        // Create the Tenant
-        TenantDTO tenantDTO = tenantMapper.toDto(tenant);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restTenantMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(tenantDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(tenant)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Tenant in the database

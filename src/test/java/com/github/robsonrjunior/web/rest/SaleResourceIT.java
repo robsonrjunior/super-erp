@@ -14,8 +14,6 @@ import com.github.robsonrjunior.domain.Sale;
 import com.github.robsonrjunior.domain.SaleItem;
 import com.github.robsonrjunior.domain.enumeration.SaleStatus;
 import com.github.robsonrjunior.repository.SaleRepository;
-import com.github.robsonrjunior.service.dto.SaleDTO;
-import com.github.robsonrjunior.service.mapper.SaleMapper;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -78,9 +76,6 @@ class SaleResourceIT {
 
     @Autowired
     private SaleRepository saleRepository;
-
-    @Autowired
-    private SaleMapper saleMapper;
 
     @Autowired
     private EntityManager em;
@@ -148,20 +143,18 @@ class SaleResourceIT {
     void createSale() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Sale
-        SaleDTO saleDTO = saleMapper.toDto(sale);
-        var returnedSaleDTO = om.readValue(
+        var returnedSale = om.readValue(
             restSaleMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            SaleDTO.class
+            Sale.class
         );
 
         // Validate the Sale in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedSale = saleMapper.toEntity(returnedSaleDTO);
         assertSaleUpdatableFieldsEquals(returnedSale, getPersistedSale(returnedSale));
 
         insertedSale = returnedSale;
@@ -172,13 +165,12 @@ class SaleResourceIT {
     void createSaleWithExistingId() throws Exception {
         // Create the Sale with an existing ID
         sale.setId(1L);
-        SaleDTO saleDTO = saleMapper.toDto(sale);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restSaleMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         // Validate the Sale in the database
@@ -193,10 +185,9 @@ class SaleResourceIT {
         sale.setSaleDate(null);
 
         // Create the Sale, which fails.
-        SaleDTO saleDTO = saleMapper.toDto(sale);
 
         restSaleMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -210,10 +201,9 @@ class SaleResourceIT {
         sale.setSaleNumber(null);
 
         // Create the Sale, which fails.
-        SaleDTO saleDTO = saleMapper.toDto(sale);
 
         restSaleMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -227,10 +217,9 @@ class SaleResourceIT {
         sale.setStatus(null);
 
         // Create the Sale, which fails.
-        SaleDTO saleDTO = saleMapper.toDto(sale);
 
         restSaleMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -244,10 +233,9 @@ class SaleResourceIT {
         sale.setGrossAmount(null);
 
         // Create the Sale, which fails.
-        SaleDTO saleDTO = saleMapper.toDto(sale);
 
         restSaleMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -261,10 +249,9 @@ class SaleResourceIT {
         sale.setNetAmount(null);
 
         // Create the Sale, which fails.
-        SaleDTO saleDTO = saleMapper.toDto(sale);
 
         restSaleMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -847,10 +834,13 @@ class SaleResourceIT {
             .netAmount(UPDATED_NET_AMOUNT)
             .notes(UPDATED_NOTES)
             .deletedAt(UPDATED_DELETED_AT);
-        SaleDTO saleDTO = saleMapper.toDto(updatedSale);
 
         restSaleMockMvc
-            .perform(put(ENTITY_API_URL_ID, saleDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(
+                put(ENTITY_API_URL_ID, updatedSale.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(updatedSale))
+            )
             .andExpect(status().isOk());
 
         // Validate the Sale in the database
@@ -864,12 +854,9 @@ class SaleResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         sale.setId(longCount.incrementAndGet());
 
-        // Create the Sale
-        SaleDTO saleDTO = saleMapper.toDto(sale);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restSaleMockMvc
-            .perform(put(ENTITY_API_URL_ID, saleDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(put(ENTITY_API_URL_ID, sale.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         // Validate the Sale in the database
@@ -882,15 +869,12 @@ class SaleResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         sale.setId(longCount.incrementAndGet());
 
-        // Create the Sale
-        SaleDTO saleDTO = saleMapper.toDto(sale);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSaleMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(saleDTO))
+                    .content(om.writeValueAsBytes(sale))
             )
             .andExpect(status().isBadRequest());
 
@@ -904,12 +888,9 @@ class SaleResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         sale.setId(longCount.incrementAndGet());
 
-        // Create the Sale
-        SaleDTO saleDTO = saleMapper.toDto(sale);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSaleMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(saleDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sale)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Sale in the database
@@ -986,14 +967,9 @@ class SaleResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         sale.setId(longCount.incrementAndGet());
 
-        // Create the Sale
-        SaleDTO saleDTO = saleMapper.toDto(sale);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restSaleMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, saleDTO.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(saleDTO))
-            )
+            .perform(patch(ENTITY_API_URL_ID, sale.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(sale)))
             .andExpect(status().isBadRequest());
 
         // Validate the Sale in the database
@@ -1006,15 +982,12 @@ class SaleResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         sale.setId(longCount.incrementAndGet());
 
-        // Create the Sale
-        SaleDTO saleDTO = saleMapper.toDto(sale);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSaleMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(saleDTO))
+                    .content(om.writeValueAsBytes(sale))
             )
             .andExpect(status().isBadRequest());
 
@@ -1028,12 +1001,9 @@ class SaleResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         sale.setId(longCount.incrementAndGet());
 
-        // Create the Sale
-        SaleDTO saleDTO = saleMapper.toDto(sale);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restSaleMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(saleDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(sale)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Sale in the database

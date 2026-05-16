@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.StockMovement;
 import com.github.robsonrjunior.repository.StockMovementRepository;
 import com.github.robsonrjunior.service.criteria.StockMovementCriteria;
-import com.github.robsonrjunior.service.dto.StockMovementDTO;
-import com.github.robsonrjunior.service.mapper.StockMovementMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link StockMovement} entities in the database.
  * The main input is a {@link StockMovementCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link StockMovementDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link StockMovement} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class StockMovementQueryService extends QueryService<StockMovement> {
 
     private final StockMovementRepository stockMovementRepository;
 
-    private final StockMovementMapper stockMovementMapper;
-
-    public StockMovementQueryService(StockMovementRepository stockMovementRepository, StockMovementMapper stockMovementMapper) {
+    public StockMovementQueryService(StockMovementRepository stockMovementRepository) {
         this.stockMovementRepository = stockMovementRepository;
-        this.stockMovementMapper = stockMovementMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link StockMovementDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link StockMovement} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<StockMovementDTO> findByCriteria(StockMovementCriteria criteria, Pageable page) {
+    public Page<StockMovement> findByCriteria(StockMovementCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<StockMovement> specification = createSpecification(criteria);
-        return stockMovementRepository.findAll(specification, page).map(stockMovementMapper::toDto);
+        return stockMovementRepository.findAll(specification, page);
     }
 
     /**

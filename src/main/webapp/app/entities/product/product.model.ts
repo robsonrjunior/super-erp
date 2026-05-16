@@ -15,8 +15,8 @@ export interface IProduct {
   minStock?: number | null;
   active?: boolean | null;
   deletedAt?: dayjs.Dayjs | null;
-  saleItems?: Pick<ISaleItem, 'id'> | null;
-  stockMovements?: Pick<IStockMovement, 'id'> | null;
+  saleItems?: ISaleItem | null;
+  stockMovements?: IStockMovement | null;
 }
 
 export type NewProduct = Omit<IProduct, 'id'> & { id: null };

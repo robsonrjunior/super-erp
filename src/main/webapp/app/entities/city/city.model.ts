@@ -8,12 +8,12 @@ import { IWarehouse } from 'app/entities/warehouse/warehouse.model';
 export interface ICity {
   id: number;
   name?: string | null;
-  suppliers?: Pick<ISupplier, 'id'> | null;
-  customers?: Pick<ICustomer, 'id'> | null;
-  people?: Pick<IPerson, 'id'> | null;
-  companies?: Pick<ICompany, 'id'> | null;
-  warehouses?: Pick<IWarehouse, 'id'> | null;
-  state?: Pick<IState, 'id'> | null;
+  suppliers?: ISupplier | null;
+  customers?: ICustomer | null;
+  people?: IPerson | null;
+  companies?: ICompany | null;
+  warehouses?: IWarehouse | null;
+  state?: IState | null;
 }
 
 export type NewCity = Omit<ICity, 'id'> & { id: null };

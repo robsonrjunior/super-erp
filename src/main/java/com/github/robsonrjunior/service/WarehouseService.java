@@ -2,9 +2,8 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Warehouse;
 import com.github.robsonrjunior.repository.WarehouseRepository;
-import com.github.robsonrjunior.service.dto.WarehouseDTO;
-import com.github.robsonrjunior.service.mapper.WarehouseMapper;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,57 +20,52 @@ public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
 
-    private final WarehouseMapper warehouseMapper;
-
-    public WarehouseService(WarehouseRepository warehouseRepository, WarehouseMapper warehouseMapper) {
+    public WarehouseService(WarehouseRepository warehouseRepository) {
         this.warehouseRepository = warehouseRepository;
-        this.warehouseMapper = warehouseMapper;
     }
 
     /**
      * Save a warehouse.
      *
-     * @param warehouseDTO the entity to save.
+     * @param warehouse the entity to save.
      * @return the persisted entity.
      */
-    public WarehouseDTO save(WarehouseDTO warehouseDTO) {
-        LOG.debug("Request to save Warehouse : {}", warehouseDTO);
-        Warehouse warehouse = warehouseMapper.toEntity(warehouseDTO);
-        warehouse = warehouseRepository.save(warehouse);
-        return warehouseMapper.toDto(warehouse);
+    public Warehouse save(Warehouse warehouse) {
+        LOG.debug("Request to save Warehouse : {}", warehouse);
+        return warehouseRepository.save(warehouse);
     }
 
     /**
      * Update a warehouse.
      *
-     * @param warehouseDTO the entity to save.
+     * @param warehouse the entity to save.
      * @return the persisted entity.
      */
-    public WarehouseDTO update(WarehouseDTO warehouseDTO) {
-        LOG.debug("Request to update Warehouse : {}", warehouseDTO);
-        Warehouse warehouse = warehouseMapper.toEntity(warehouseDTO);
-        warehouse = warehouseRepository.save(warehouse);
-        return warehouseMapper.toDto(warehouse);
+    public Warehouse update(Warehouse warehouse) {
+        LOG.debug("Request to update Warehouse : {}", warehouse);
+        return warehouseRepository.save(warehouse);
     }
 
     /**
      * Partially update a warehouse.
      *
-     * @param warehouseDTO the entity to update partially.
+     * @param warehouse the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<WarehouseDTO> partialUpdate(WarehouseDTO warehouseDTO) {
-        LOG.debug("Request to partially update Warehouse : {}", warehouseDTO);
+    public Optional<Warehouse> partialUpdate(Warehouse warehouse) {
+        LOG.debug("Request to partially update Warehouse : {}", warehouse);
 
         return warehouseRepository
-            .findById(warehouseDTO.getId())
+            .findById(warehouse.getId())
             .map(existingWarehouse -> {
-                warehouseMapper.partialUpdate(existingWarehouse, warehouseDTO);
+                updateIfPresent(existingWarehouse::setName, warehouse.getName());
+                updateIfPresent(existingWarehouse::setCode, warehouse.getCode());
+                updateIfPresent(existingWarehouse::setActive, warehouse.getActive());
+                updateIfPresent(existingWarehouse::setDeletedAt, warehouse.getDeletedAt());
 
                 return existingWarehouse;
             })
-            .map(warehouseRepository::save)
-            .map(warehouseMapper::toDto);
+            .map(warehouseRepository::save);
     }
 
     /**
@@ -81,9 +75,9 @@ public class WarehouseService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<WarehouseDTO> findOne(Long id) {
+    public Optional<Warehouse> findOne(Long id) {
         LOG.debug("Request to get Warehouse : {}", id);
-        return warehouseRepository.findById(id).map(warehouseMapper::toDto);
+        return warehouseRepository.findById(id);
     }
 
     /**
@@ -94,5 +88,11 @@ public class WarehouseService {
     public void delete(Long id) {
         LOG.debug("Request to delete Warehouse : {}", id);
         warehouseRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

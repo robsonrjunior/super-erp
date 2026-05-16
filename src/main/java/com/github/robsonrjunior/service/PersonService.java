@@ -2,12 +2,9 @@ package com.github.robsonrjunior.service;
 
 import com.github.robsonrjunior.domain.Person;
 import com.github.robsonrjunior.repository.PersonRepository;
-import com.github.robsonrjunior.service.dto.PersonDTO;
-import com.github.robsonrjunior.service.mapper.PersonMapper;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,57 +22,55 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
-    private final PersonMapper personMapper;
-
-    public PersonService(PersonRepository personRepository, PersonMapper personMapper) {
+    public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
-        this.personMapper = personMapper;
     }
 
     /**
      * Save a person.
      *
-     * @param personDTO the entity to save.
+     * @param person the entity to save.
      * @return the persisted entity.
      */
-    public PersonDTO save(PersonDTO personDTO) {
-        LOG.debug("Request to save Person : {}", personDTO);
-        Person person = personMapper.toEntity(personDTO);
-        person = personRepository.save(person);
-        return personMapper.toDto(person);
+    public Person save(Person person) {
+        LOG.debug("Request to save Person : {}", person);
+        return personRepository.save(person);
     }
 
     /**
      * Update a person.
      *
-     * @param personDTO the entity to save.
+     * @param person the entity to save.
      * @return the persisted entity.
      */
-    public PersonDTO update(PersonDTO personDTO) {
-        LOG.debug("Request to update Person : {}", personDTO);
-        Person person = personMapper.toEntity(personDTO);
-        person = personRepository.save(person);
-        return personMapper.toDto(person);
+    public Person update(Person person) {
+        LOG.debug("Request to update Person : {}", person);
+        return personRepository.save(person);
     }
 
     /**
      * Partially update a person.
      *
-     * @param personDTO the entity to update partially.
+     * @param person the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<PersonDTO> partialUpdate(PersonDTO personDTO) {
-        LOG.debug("Request to partially update Person : {}", personDTO);
+    public Optional<Person> partialUpdate(Person person) {
+        LOG.debug("Request to partially update Person : {}", person);
 
         return personRepository
-            .findById(personDTO.getId())
+            .findById(person.getId())
             .map(existingPerson -> {
-                personMapper.partialUpdate(existingPerson, personDTO);
+                updateIfPresent(existingPerson::setFullName, person.getFullName());
+                updateIfPresent(existingPerson::setCpf, person.getCpf());
+                updateIfPresent(existingPerson::setBirthDate, person.getBirthDate());
+                updateIfPresent(existingPerson::setEmail, person.getEmail());
+                updateIfPresent(existingPerson::setPhone, person.getPhone());
+                updateIfPresent(existingPerson::setActive, person.getActive());
+                updateIfPresent(existingPerson::setDeletedAt, person.getDeletedAt());
 
                 return existingPerson;
             })
-            .map(personRepository::save)
-            .map(personMapper::toDto);
+            .map(personRepository::save);
     }
 
     /**
@@ -83,12 +78,11 @@ public class PersonService {
      *  @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<PersonDTO> findAllWhereCustomerIsNull() {
+    public List<Person> findAllWhereCustomerIsNull() {
         LOG.debug("Request to get all people where Customer is null");
         return StreamSupport.stream(personRepository.findAll().spliterator(), false)
             .filter(person -> person.getCustomer() == null)
-            .map(personMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+            .toList();
     }
 
     /**
@@ -96,12 +90,11 @@ public class PersonService {
      *  @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<PersonDTO> findAllWhereSupplierIsNull() {
+    public List<Person> findAllWhereSupplierIsNull() {
         LOG.debug("Request to get all people where Supplier is null");
         return StreamSupport.stream(personRepository.findAll().spliterator(), false)
             .filter(person -> person.getSupplier() == null)
-            .map(personMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+            .toList();
     }
 
     /**
@@ -111,9 +104,9 @@ public class PersonService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<PersonDTO> findOne(Long id) {
+    public Optional<Person> findOne(Long id) {
         LOG.debug("Request to get Person : {}", id);
-        return personRepository.findById(id).map(personMapper::toDto);
+        return personRepository.findById(id);
     }
 
     /**
@@ -124,5 +117,11 @@ public class PersonService {
     public void delete(Long id) {
         LOG.debug("Request to delete Person : {}", id);
         personRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

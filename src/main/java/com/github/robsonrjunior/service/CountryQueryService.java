@@ -4,8 +4,6 @@ import com.github.robsonrjunior.domain.*; // for static metamodels
 import com.github.robsonrjunior.domain.Country;
 import com.github.robsonrjunior.repository.CountryRepository;
 import com.github.robsonrjunior.service.criteria.CountryCriteria;
-import com.github.robsonrjunior.service.dto.CountryDTO;
-import com.github.robsonrjunior.service.mapper.CountryMapper;
 import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Country} entities in the database.
  * The main input is a {@link CountryCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link CountryDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Country} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class CountryQueryService extends QueryService<Country> {
 
     private final CountryRepository countryRepository;
 
-    private final CountryMapper countryMapper;
-
-    public CountryQueryService(CountryRepository countryRepository, CountryMapper countryMapper) {
+    public CountryQueryService(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
-        this.countryMapper = countryMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link CountryDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Country} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<CountryDTO> findByCriteria(CountryCriteria criteria, Pageable page) {
+    public Page<Country> findByCriteria(CountryCriteria criteria, Pageable page) {
         LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Country> specification = createSpecification(criteria);
-        return countryRepository.findAll(specification, page).map(countryMapper::toDto);
+        return countryRepository.findAll(specification, page);
     }
 
     /**
