@@ -1,3 +1,13 @@
-<div class="footer">
-  <p jhiTranslate="footer">Este é o rodapé da página</p>
-</div>
+<footer class="footer d-flex justify-content-between align-items-center px-4 py-3 border-top bg-dark text-white">
+  <div><strong>Super ERP</strong> © {{ currentYear }}</div>
+
+  <p-selectButton [options]="languageOptions" [(ngModel)]="selectedLanguage" optionValue="value" (onChange)="changeLanguage($event.value)">
+    <ng-template let-item pTemplate="item">
+      <div class="d-flex align-items-center gap-2">
+        <span>{{ item.label }}</span>
+
+        <img [src]="item.flag" width="20" height="15" alt="flag" />
+      </div>
+    </ng-template>
+  </p-selectButton>
+</footer>

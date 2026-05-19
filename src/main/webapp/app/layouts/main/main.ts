@@ -12,6 +12,7 @@ import PageRibbon from '../profiles/page-ribbon';
 @Component({
   selector: 'jhi-main',
   templateUrl: './main.html',
+  styleUrls: ['./main.scss'],
   providers: [AppPageTitleStrategy],
   imports: [RouterOutlet, Footer, PageRibbon],
 })

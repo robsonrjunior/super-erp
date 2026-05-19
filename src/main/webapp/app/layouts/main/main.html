@@ -1,13 +1,15 @@
 <jhi-page-ribbon />
 
-<div>
-  <router-outlet name="navbar" />
-</div>
-
-<div class="container-fluid">
-  <div class="card jh-card">
-    <router-outlet />
+<div class="app-layout">
+  <div>
+    <router-outlet name="navbar" />
   </div>
 
-  <jhi-footer />
+  <main class="app-content container-fluid">
+    <div class="card jh-card">
+      <router-outlet />
+    </div>
+  </main>
+
+  <app-footer />
 </div>
