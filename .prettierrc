@@ -5,10 +5,10 @@ useTabs: false
 arrowParens: avoid
 bracketSameLine: false
 overrides:
-  - files: "*.html"
+  - files: '*.html'
     options:
       parser: angular
-  - files: "*.java"
+  - files: '*.java'
     options:
       tabWidth: 4
 plugins:
