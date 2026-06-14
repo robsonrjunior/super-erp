@@ -89,31 +89,6 @@ public class SaleItem extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public SaleItem id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public SaleItem quantity(BigDecimal quantity) {
-        this.setQuantity(quantity);
-        return this;
-    }
-
-    public SaleItem unitPrice(BigDecimal unitPrice) {
-        this.setUnitPrice(unitPrice);
-        return this;
-    }
-
-    public SaleItem discountAmount(BigDecimal discountAmount) {
-        this.setDiscountAmount(discountAmount);
-        return this;
-    }
-
-    public SaleItem lineTotal(BigDecimal lineTotal) {
-        this.setLineTotal(lineTotal);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setSaleItems(null));
@@ -122,11 +97,6 @@ public class SaleItem extends SoftDeletableEntity {
             tenants.forEach(i -> i.setSaleItems(this));
         }
         this.tenants = tenants;
-    }
-
-    public SaleItem tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public SaleItem addTenant(Tenant tenant) {
@@ -151,11 +121,6 @@ public class SaleItem extends SoftDeletableEntity {
         this.sales = sales;
     }
 
-    public SaleItem sales(Set<Sale> sales) {
-        this.setSales(sales);
-        return this;
-    }
-
     public SaleItem addSale(Sale sale) {
         this.sales.add(sale);
         sale.setItems(this);
@@ -176,11 +141,6 @@ public class SaleItem extends SoftDeletableEntity {
             products.forEach(i -> i.setSaleItems(this));
         }
         this.products = products;
-    }
-
-    public SaleItem products(Set<Product> products) {
-        this.setProducts(products);
-        return this;
     }
 
     public SaleItem addProduct(Product product) {

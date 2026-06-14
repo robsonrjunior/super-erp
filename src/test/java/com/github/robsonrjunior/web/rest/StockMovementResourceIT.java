@@ -89,13 +89,13 @@ class StockMovementResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static StockMovement createEntity(EntityManager em) {
-        StockMovement stockMovement = new StockMovement()
-            .movementDate(DEFAULT_MOVEMENT_DATE)
-            .movementType(DEFAULT_MOVEMENT_TYPE)
-            .quantity(DEFAULT_QUANTITY)
-            .unitCost(DEFAULT_UNIT_COST)
-            .referenceNumber(DEFAULT_REFERENCE_NUMBER)
-            .notes(DEFAULT_NOTES);
+        StockMovement stockMovement = new StockMovement();
+        stockMovement.setMovementDate(DEFAULT_MOVEMENT_DATE);
+        stockMovement.setMovementType(DEFAULT_MOVEMENT_TYPE);
+        stockMovement.setQuantity(DEFAULT_QUANTITY);
+        stockMovement.setUnitCost(DEFAULT_UNIT_COST);
+        stockMovement.setReferenceNumber(DEFAULT_REFERENCE_NUMBER);
+        stockMovement.setNotes(DEFAULT_NOTES);
         stockMovement.setDeletedAt(DEFAULT_DELETED_AT);
         return stockMovement;
     }
@@ -107,13 +107,13 @@ class StockMovementResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static StockMovement createUpdatedEntity(EntityManager em) {
-        StockMovement updatedStockMovement = new StockMovement()
-            .movementDate(UPDATED_MOVEMENT_DATE)
-            .movementType(UPDATED_MOVEMENT_TYPE)
-            .quantity(UPDATED_QUANTITY)
-            .unitCost(UPDATED_UNIT_COST)
-            .referenceNumber(UPDATED_REFERENCE_NUMBER)
-            .notes(UPDATED_NOTES);
+        StockMovement updatedStockMovement = new StockMovement();
+        updatedStockMovement.setMovementDate(UPDATED_MOVEMENT_DATE);
+        updatedStockMovement.setMovementType(UPDATED_MOVEMENT_TYPE);
+        updatedStockMovement.setQuantity(UPDATED_QUANTITY);
+        updatedStockMovement.setUnitCost(UPDATED_UNIT_COST);
+        updatedStockMovement.setReferenceNumber(UPDATED_REFERENCE_NUMBER);
+        updatedStockMovement.setNotes(UPDATED_NOTES);
         updatedStockMovement.setDeletedAt(UPDATED_DELETED_AT);
         return updatedStockMovement;
     }
@@ -697,14 +697,13 @@ class StockMovementResourceIT {
         StockMovement updatedStockMovement = stockMovementRepository.findById(stockMovement.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedStockMovement are not directly saved in db
         em.detach(updatedStockMovement);
-        updatedStockMovement
-            .movementDate(UPDATED_MOVEMENT_DATE)
-            .movementType(UPDATED_MOVEMENT_TYPE)
-            .quantity(UPDATED_QUANTITY)
-            .unitCost(UPDATED_UNIT_COST)
-            .referenceNumber(UPDATED_REFERENCE_NUMBER)
-            .notes(UPDATED_NOTES)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedStockMovement.setMovementDate(UPDATED_MOVEMENT_DATE);
+        updatedStockMovement.setMovementType(UPDATED_MOVEMENT_TYPE);
+        updatedStockMovement.setQuantity(UPDATED_QUANTITY);
+        updatedStockMovement.setUnitCost(UPDATED_UNIT_COST);
+        updatedStockMovement.setReferenceNumber(UPDATED_REFERENCE_NUMBER);
+        updatedStockMovement.setNotes(UPDATED_NOTES);
+        updatedStockMovement.setDeletedAt(UPDATED_DELETED_AT);
 
         restStockMovementMockMvc
             .perform(
@@ -784,10 +783,9 @@ class StockMovementResourceIT {
         StockMovement partialUpdatedStockMovement = new StockMovement();
         partialUpdatedStockMovement.setId(stockMovement.getId());
 
-        partialUpdatedStockMovement
-            .movementDate(UPDATED_MOVEMENT_DATE)
-            .referenceNumber(UPDATED_REFERENCE_NUMBER)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedStockMovement.setMovementDate(UPDATED_MOVEMENT_DATE);
+        partialUpdatedStockMovement.setReferenceNumber(UPDATED_REFERENCE_NUMBER);
+        partialUpdatedStockMovement.setDeletedAt(UPDATED_DELETED_AT);
 
         restStockMovementMockMvc
             .perform(
@@ -818,14 +816,13 @@ class StockMovementResourceIT {
         StockMovement partialUpdatedStockMovement = new StockMovement();
         partialUpdatedStockMovement.setId(stockMovement.getId());
 
-        partialUpdatedStockMovement
-            .movementDate(UPDATED_MOVEMENT_DATE)
-            .movementType(UPDATED_MOVEMENT_TYPE)
-            .quantity(UPDATED_QUANTITY)
-            .unitCost(UPDATED_UNIT_COST)
-            .referenceNumber(UPDATED_REFERENCE_NUMBER)
-            .notes(UPDATED_NOTES)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedStockMovement.setMovementDate(UPDATED_MOVEMENT_DATE);
+        partialUpdatedStockMovement.setMovementType(UPDATED_MOVEMENT_TYPE);
+        partialUpdatedStockMovement.setQuantity(UPDATED_QUANTITY);
+        partialUpdatedStockMovement.setUnitCost(UPDATED_UNIT_COST);
+        partialUpdatedStockMovement.setReferenceNumber(UPDATED_REFERENCE_NUMBER);
+        partialUpdatedStockMovement.setNotes(UPDATED_NOTES);
+        partialUpdatedStockMovement.setDeletedAt(UPDATED_DELETED_AT);
 
         restStockMovementMockMvc
             .perform(

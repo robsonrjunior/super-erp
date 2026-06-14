@@ -36,7 +36,7 @@ class WarehouseTest {
         warehouse.setStockMovements(stockMovementBack);
         assertThat(warehouse.getStockMovements()).isEqualTo(stockMovementBack);
 
-        warehouse.stockMovements(null);
+        warehouse.setStockMovements(null);
         assertThat(warehouse.getStockMovements()).isNull();
     }
 
@@ -48,7 +48,7 @@ class WarehouseTest {
         warehouse.setSales(saleBack);
         assertThat(warehouse.getSales()).isEqualTo(saleBack);
 
-        warehouse.sales(null);
+        warehouse.setSales(null);
         assertThat(warehouse.getSales()).isNull();
     }
 
@@ -65,7 +65,7 @@ class WarehouseTest {
         assertThat(warehouse.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getWarehouses()).isNull();
 
-        warehouse.tenants(new HashSet<>(Set.of(tenantBack)));
+        warehouse.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(warehouse.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getWarehouses()).isEqualTo(warehouse);
 
@@ -87,7 +87,7 @@ class WarehouseTest {
         assertThat(warehouse.getCities()).doesNotContain(cityBack);
         assertThat(cityBack.getWarehouses()).isNull();
 
-        warehouse.cities(new HashSet<>(Set.of(cityBack)));
+        warehouse.setCities(new HashSet<>(Set.of(cityBack)));
         assertThat(warehouse.getCities()).containsOnly(cityBack);
         assertThat(cityBack.getWarehouses()).isEqualTo(warehouse);
 

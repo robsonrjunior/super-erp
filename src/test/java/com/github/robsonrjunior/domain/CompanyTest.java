@@ -37,7 +37,7 @@ class CompanyTest {
         assertThat(company.getCustomer()).isEqualTo(customerBack);
         assertThat(customerBack.getCompany()).isEqualTo(company);
 
-        company.customer(null);
+        company.setCustomer(null);
         assertThat(company.getCustomer()).isNull();
         assertThat(customerBack.getCompany()).isNull();
     }
@@ -51,7 +51,7 @@ class CompanyTest {
         assertThat(company.getSupplier()).isEqualTo(supplierBack);
         assertThat(supplierBack.getCompany()).isEqualTo(company);
 
-        company.supplier(null);
+        company.setSupplier(null);
         assertThat(company.getSupplier()).isNull();
         assertThat(supplierBack.getCompany()).isNull();
     }
@@ -69,7 +69,7 @@ class CompanyTest {
         assertThat(company.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getCompanies()).isNull();
 
-        company.tenants(new HashSet<>(Set.of(tenantBack)));
+        company.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(company.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getCompanies()).isEqualTo(company);
 
@@ -91,7 +91,7 @@ class CompanyTest {
         assertThat(company.getCities()).doesNotContain(cityBack);
         assertThat(cityBack.getCompanies()).isNull();
 
-        company.cities(new HashSet<>(Set.of(cityBack)));
+        company.setCities(new HashSet<>(Set.of(cityBack)));
         assertThat(company.getCities()).containsOnly(cityBack);
         assertThat(cityBack.getCompanies()).isEqualTo(company);
 

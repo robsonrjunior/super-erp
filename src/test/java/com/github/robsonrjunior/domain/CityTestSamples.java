@@ -10,14 +10,23 @@ public class CityTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static City getCitySample1() {
-        return new City().id(1L).name("name1");
+        City city = new City();
+        city.setId(1L);
+        city.setName("name1");
+        return city;
     }
 
     public static City getCitySample2() {
-        return new City().id(2L).name("name2");
+        City city = new City();
+        city.setId(2L);
+        city.setName("name2");
+        return city;
     }
 
     public static City getCityRandomSampleGenerator() {
-        return new City().id(longCount.incrementAndGet()).name(UUID.randomUUID().toString());
+        City city = new City();
+        city.setId(longCount.incrementAndGet());
+        city.setName(UUID.randomUUID().toString());
+        return city;
     }
 }

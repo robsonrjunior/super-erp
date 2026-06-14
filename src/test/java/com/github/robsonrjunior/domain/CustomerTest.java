@@ -37,7 +37,7 @@ class CustomerTest {
         customer.setPerson(personBack);
         assertThat(customer.getPerson()).isEqualTo(personBack);
 
-        customer.person(null);
+        customer.setPerson(null);
         assertThat(customer.getPerson()).isNull();
     }
 
@@ -49,7 +49,7 @@ class CustomerTest {
         customer.setCompany(companyBack);
         assertThat(customer.getCompany()).isEqualTo(companyBack);
 
-        customer.company(null);
+        customer.setCompany(null);
         assertThat(customer.getCompany()).isNull();
     }
 
@@ -61,7 +61,7 @@ class CustomerTest {
         customer.setSales(saleBack);
         assertThat(customer.getSales()).isEqualTo(saleBack);
 
-        customer.sales(null);
+        customer.setSales(null);
         assertThat(customer.getSales()).isNull();
     }
 
@@ -78,7 +78,7 @@ class CustomerTest {
         assertThat(customer.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getCustomers()).isNull();
 
-        customer.tenants(new HashSet<>(Set.of(tenantBack)));
+        customer.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(customer.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getCustomers()).isEqualTo(customer);
 
@@ -100,7 +100,7 @@ class CustomerTest {
         assertThat(customer.getCities()).doesNotContain(cityBack);
         assertThat(cityBack.getCustomers()).isNull();
 
-        customer.cities(new HashSet<>(Set.of(cityBack)));
+        customer.setCities(new HashSet<>(Set.of(cityBack)));
         assertThat(customer.getCities()).containsOnly(cityBack);
         assertThat(cityBack.getCustomers()).isEqualTo(customer);
 

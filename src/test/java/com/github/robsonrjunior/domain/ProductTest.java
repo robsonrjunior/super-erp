@@ -35,7 +35,7 @@ class ProductTest {
         product.setSaleItems(saleItemBack);
         assertThat(product.getSaleItems()).isEqualTo(saleItemBack);
 
-        product.saleItems(null);
+        product.setSaleItems(null);
         assertThat(product.getSaleItems()).isNull();
     }
 
@@ -47,7 +47,7 @@ class ProductTest {
         product.setStockMovements(stockMovementBack);
         assertThat(product.getStockMovements()).isEqualTo(stockMovementBack);
 
-        product.stockMovements(null);
+        product.setStockMovements(null);
         assertThat(product.getStockMovements()).isNull();
     }
 
@@ -64,7 +64,7 @@ class ProductTest {
         assertThat(product.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getProducts()).isNull();
 
-        product.tenants(new HashSet<>(Set.of(tenantBack)));
+        product.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(product.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getProducts()).isEqualTo(product);
 

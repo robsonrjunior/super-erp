@@ -10,14 +10,26 @@ public class TenantTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Tenant getTenantSample1() {
-        return new Tenant().id(1L).name("name1").code("code1");
+        Tenant tenant = new Tenant();
+        tenant.setId(1L);
+        tenant.setName("name1");
+        tenant.setCode("code1");
+        return tenant;
     }
 
     public static Tenant getTenantSample2() {
-        return new Tenant().id(2L).name("name2").code("code2");
+        Tenant tenant = new Tenant();
+        tenant.setId(2L);
+        tenant.setName("name2");
+        tenant.setCode("code2");
+        return tenant;
     }
 
     public static Tenant getTenantRandomSampleGenerator() {
-        return new Tenant().id(longCount.incrementAndGet()).name(UUID.randomUUID().toString()).code(UUID.randomUUID().toString());
+        Tenant tenant = new Tenant();
+        tenant.setId(longCount.incrementAndGet());
+        tenant.setName(UUID.randomUUID().toString());
+        tenant.setCode(UUID.randomUUID().toString());
+        return tenant;
     }
 }

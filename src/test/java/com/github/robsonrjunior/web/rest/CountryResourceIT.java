@@ -67,7 +67,10 @@ class CountryResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Country createEntity() {
-        return new Country().name(DEFAULT_NAME).isoCode(DEFAULT_ISO_CODE);
+        Country country = new Country();
+        country.setName(DEFAULT_NAME);
+        country.setIsoCode(DEFAULT_ISO_CODE);
+        return country;
     }
 
     /**
@@ -77,7 +80,10 @@ class CountryResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Country createUpdatedEntity() {
-        return new Country().name(UPDATED_NAME).isoCode(UPDATED_ISO_CODE);
+        Country country = new Country();
+        country.setName(UPDATED_NAME);
+        country.setIsoCode(UPDATED_ISO_CODE);
+        return country;
     }
 
     @BeforeEach
@@ -374,7 +380,8 @@ class CountryResourceIT {
         Country updatedCountry = countryRepository.findById(country.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedCountry are not directly saved in db
         em.detach(updatedCountry);
-        updatedCountry.name(UPDATED_NAME).isoCode(UPDATED_ISO_CODE);
+        updatedCountry.setName(UPDATED_NAME);
+        updatedCountry.setIsoCode(UPDATED_ISO_CODE);
 
         restCountryMockMvc
             .perform(
@@ -450,7 +457,8 @@ class CountryResourceIT {
         Country partialUpdatedCountry = new Country();
         partialUpdatedCountry.setId(country.getId());
 
-        partialUpdatedCountry.name(UPDATED_NAME).isoCode(UPDATED_ISO_CODE);
+        partialUpdatedCountry.setName(UPDATED_NAME);
+        partialUpdatedCountry.setIsoCode(UPDATED_ISO_CODE);
 
         restCountryMockMvc
             .perform(
@@ -478,7 +486,8 @@ class CountryResourceIT {
         Country partialUpdatedCountry = new Country();
         partialUpdatedCountry.setId(country.getId());
 
-        partialUpdatedCountry.name(UPDATED_NAME).isoCode(UPDATED_ISO_CODE);
+        partialUpdatedCountry.setName(UPDATED_NAME);
+        partialUpdatedCountry.setIsoCode(UPDATED_ISO_CODE);
 
         restCountryMockMvc
             .perform(

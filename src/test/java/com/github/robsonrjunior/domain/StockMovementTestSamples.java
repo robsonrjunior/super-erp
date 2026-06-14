@@ -10,17 +10,26 @@ public class StockMovementTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static StockMovement getStockMovementSample1() {
-        return new StockMovement().id(1L).referenceNumber("referenceNumber1").notes("notes1");
+        StockMovement stockMovement = new StockMovement();
+        stockMovement.setId(1L);
+        stockMovement.setReferenceNumber("referenceNumber1");
+        stockMovement.setNotes("notes1");
+        return stockMovement;
     }
 
     public static StockMovement getStockMovementSample2() {
-        return new StockMovement().id(2L).referenceNumber("referenceNumber2").notes("notes2");
+        StockMovement stockMovement = new StockMovement();
+        stockMovement.setId(2L);
+        stockMovement.setReferenceNumber("referenceNumber2");
+        stockMovement.setNotes("notes2");
+        return stockMovement;
     }
 
     public static StockMovement getStockMovementRandomSampleGenerator() {
-        return new StockMovement()
-            .id(longCount.incrementAndGet())
-            .referenceNumber(UUID.randomUUID().toString())
-            .notes(UUID.randomUUID().toString());
+        StockMovement stockMovement = new StockMovement();
+        stockMovement.setId(longCount.incrementAndGet());
+        stockMovement.setReferenceNumber(UUID.randomUUID().toString());
+        stockMovement.setNotes(UUID.randomUUID().toString());
+        return stockMovement;
     }
 }

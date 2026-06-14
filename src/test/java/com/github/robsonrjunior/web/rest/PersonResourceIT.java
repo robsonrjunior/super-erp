@@ -87,13 +87,13 @@ class PersonResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Person createEntity(EntityManager em) {
-        Person person = new Person()
-            .fullName(DEFAULT_FULL_NAME)
-            .cpf(DEFAULT_CPF)
-            .birthDate(DEFAULT_BIRTH_DATE)
-            .email(DEFAULT_EMAIL)
-            .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE);
+        Person person = new Person();
+        person.setFullName(DEFAULT_FULL_NAME);
+        person.setCpf(DEFAULT_CPF);
+        person.setBirthDate(DEFAULT_BIRTH_DATE);
+        person.setEmail(DEFAULT_EMAIL);
+        person.setPhone(DEFAULT_PHONE);
+        person.setActive(DEFAULT_ACTIVE);
         person.setDeletedAt(DEFAULT_DELETED_AT);
         return person;
     }
@@ -105,13 +105,13 @@ class PersonResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Person createUpdatedEntity(EntityManager em) {
-        Person updatedPerson = new Person()
-            .fullName(UPDATED_FULL_NAME)
-            .cpf(UPDATED_CPF)
-            .birthDate(UPDATED_BIRTH_DATE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE);
+        Person updatedPerson = new Person();
+        updatedPerson.setFullName(UPDATED_FULL_NAME);
+        updatedPerson.setCpf(UPDATED_CPF);
+        updatedPerson.setBirthDate(UPDATED_BIRTH_DATE);
+        updatedPerson.setEmail(UPDATED_EMAIL);
+        updatedPerson.setPhone(UPDATED_PHONE);
+        updatedPerson.setActive(UPDATED_ACTIVE);
         updatedPerson.setDeletedAt(UPDATED_DELETED_AT);
         return updatedPerson;
     }
@@ -671,14 +671,13 @@ class PersonResourceIT {
         Person updatedPerson = personRepository.findById(person.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedPerson are not directly saved in db
         em.detach(updatedPerson);
-        updatedPerson
-            .fullName(UPDATED_FULL_NAME)
-            .cpf(UPDATED_CPF)
-            .birthDate(UPDATED_BIRTH_DATE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedPerson.setFullName(UPDATED_FULL_NAME);
+        updatedPerson.setCpf(UPDATED_CPF);
+        updatedPerson.setBirthDate(UPDATED_BIRTH_DATE);
+        updatedPerson.setEmail(UPDATED_EMAIL);
+        updatedPerson.setPhone(UPDATED_PHONE);
+        updatedPerson.setActive(UPDATED_ACTIVE);
+        updatedPerson.setDeletedAt(UPDATED_DELETED_AT);
 
         restPersonMockMvc
             .perform(
@@ -754,7 +753,9 @@ class PersonResourceIT {
         Person partialUpdatedPerson = new Person();
         partialUpdatedPerson.setId(person.getId());
 
-        partialUpdatedPerson.fullName(UPDATED_FULL_NAME).birthDate(UPDATED_BIRTH_DATE).email(UPDATED_EMAIL);
+        partialUpdatedPerson.setFullName(UPDATED_FULL_NAME);
+        partialUpdatedPerson.setBirthDate(UPDATED_BIRTH_DATE);
+        partialUpdatedPerson.setEmail(UPDATED_EMAIL);
 
         restPersonMockMvc
             .perform(
@@ -782,14 +783,13 @@ class PersonResourceIT {
         Person partialUpdatedPerson = new Person();
         partialUpdatedPerson.setId(person.getId());
 
-        partialUpdatedPerson
-            .fullName(UPDATED_FULL_NAME)
-            .cpf(UPDATED_CPF)
-            .birthDate(UPDATED_BIRTH_DATE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedPerson.setFullName(UPDATED_FULL_NAME);
+        partialUpdatedPerson.setCpf(UPDATED_CPF);
+        partialUpdatedPerson.setBirthDate(UPDATED_BIRTH_DATE);
+        partialUpdatedPerson.setEmail(UPDATED_EMAIL);
+        partialUpdatedPerson.setPhone(UPDATED_PHONE);
+        partialUpdatedPerson.setActive(UPDATED_ACTIVE);
+        partialUpdatedPerson.setDeletedAt(UPDATED_DELETED_AT);
 
         restPersonMockMvc
             .perform(

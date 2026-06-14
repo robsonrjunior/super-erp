@@ -112,51 +112,6 @@ public class Sale extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Sale id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Sale saleDate(Instant saleDate) {
-        this.setSaleDate(saleDate);
-        return this;
-    }
-
-    public Sale saleNumber(String saleNumber) {
-        this.setSaleNumber(saleNumber);
-        return this;
-    }
-
-    public Sale status(SaleStatus status) {
-        this.setStatus(status);
-        return this;
-    }
-
-    public Sale grossAmount(BigDecimal grossAmount) {
-        this.setGrossAmount(grossAmount);
-        return this;
-    }
-
-    public Sale discountAmount(BigDecimal discountAmount) {
-        this.setDiscountAmount(discountAmount);
-        return this;
-    }
-
-    public Sale netAmount(BigDecimal netAmount) {
-        this.setNetAmount(netAmount);
-        return this;
-    }
-
-    public Sale notes(String notes) {
-        this.setNotes(notes);
-        return this;
-    }
-
-    public Sale items(SaleItem saleItem) {
-        this.setItems(saleItem);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setSales(null));
@@ -165,11 +120,6 @@ public class Sale extends SoftDeletableEntity {
             tenants.forEach(i -> i.setSales(this));
         }
         this.tenants = tenants;
-    }
-
-    public Sale tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public Sale addTenant(Tenant tenant) {
@@ -194,11 +144,6 @@ public class Sale extends SoftDeletableEntity {
         this.warehouses = warehouses;
     }
 
-    public Sale warehouses(Set<Warehouse> warehouses) {
-        this.setWarehouses(warehouses);
-        return this;
-    }
-
     public Sale addWarehouse(Warehouse warehouse) {
         this.warehouses.add(warehouse);
         warehouse.setSales(this);
@@ -219,11 +164,6 @@ public class Sale extends SoftDeletableEntity {
             customers.forEach(i -> i.setSales(this));
         }
         this.customers = customers;
-    }
-
-    public Sale customers(Set<Customer> customers) {
-        this.setCustomers(customers);
-        return this;
     }
 
     public Sale addCustomer(Customer customer) {

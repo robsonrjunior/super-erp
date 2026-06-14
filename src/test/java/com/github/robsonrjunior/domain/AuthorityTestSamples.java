@@ -5,14 +5,20 @@ import java.util.UUID;
 public class AuthorityTestSamples {
 
     public static Authority getAuthoritySample1() {
-        return new Authority().name("name1");
+        Authority authority = new Authority();
+        authority.setName("name1");
+        return authority;
     }
 
     public static Authority getAuthoritySample2() {
-        return new Authority().name("name2");
+        Authority authority = new Authority();
+        authority.setName("name2");
+        return authority;
     }
 
     public static Authority getAuthorityRandomSampleGenerator() {
-        return new Authority().name(UUID.randomUUID().toString());
+        Authority authority = new Authority();
+        authority.setName(UUID.randomUUID().toString());
+        return authority;
     }
 }

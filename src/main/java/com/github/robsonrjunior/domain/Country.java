@@ -54,21 +54,6 @@ public class Country implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Country id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Country name(String name) {
-        this.setName(name);
-        return this;
-    }
-
-    public Country isoCode(String isoCode) {
-        this.setIsoCode(isoCode);
-        return this;
-    }
-
     public void setStateses(Set<State> states) {
         if (this.stateses != null) {
             this.stateses.forEach(i -> i.setCountry(null));
@@ -77,11 +62,6 @@ public class Country implements Serializable {
             states.forEach(i -> i.setCountry(this));
         }
         this.stateses = states;
-    }
-
-    public Country stateses(Set<State> states) {
-        this.setStateses(states);
-        return this;
     }
 
     public Country addStates(State state) {

@@ -84,11 +84,11 @@ class SaleItemResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static SaleItem createEntity(EntityManager em) {
-        SaleItem saleItem = new SaleItem()
-            .quantity(DEFAULT_QUANTITY)
-            .unitPrice(DEFAULT_UNIT_PRICE)
-            .discountAmount(DEFAULT_DISCOUNT_AMOUNT)
-            .lineTotal(DEFAULT_LINE_TOTAL);
+        SaleItem saleItem = new SaleItem();
+        saleItem.setQuantity(DEFAULT_QUANTITY);
+        saleItem.setUnitPrice(DEFAULT_UNIT_PRICE);
+        saleItem.setDiscountAmount(DEFAULT_DISCOUNT_AMOUNT);
+        saleItem.setLineTotal(DEFAULT_LINE_TOTAL);
         saleItem.setDeletedAt(DEFAULT_DELETED_AT);
         return saleItem;
     }
@@ -100,11 +100,11 @@ class SaleItemResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static SaleItem createUpdatedEntity(EntityManager em) {
-        SaleItem updatedSaleItem = new SaleItem()
-            .quantity(UPDATED_QUANTITY)
-            .unitPrice(UPDATED_UNIT_PRICE)
-            .discountAmount(UPDATED_DISCOUNT_AMOUNT)
-            .lineTotal(UPDATED_LINE_TOTAL);
+        SaleItem updatedSaleItem = new SaleItem();
+        updatedSaleItem.setQuantity(UPDATED_QUANTITY);
+        updatedSaleItem.setUnitPrice(UPDATED_UNIT_PRICE);
+        updatedSaleItem.setDiscountAmount(UPDATED_DISCOUNT_AMOUNT);
+        updatedSaleItem.setLineTotal(UPDATED_LINE_TOTAL);
         updatedSaleItem.setDeletedAt(UPDATED_DELETED_AT);
         return updatedSaleItem;
     }
@@ -659,12 +659,11 @@ class SaleItemResourceIT {
         SaleItem updatedSaleItem = saleItemRepository.findById(saleItem.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedSaleItem are not directly saved in db
         em.detach(updatedSaleItem);
-        updatedSaleItem
-            .quantity(UPDATED_QUANTITY)
-            .unitPrice(UPDATED_UNIT_PRICE)
-            .discountAmount(UPDATED_DISCOUNT_AMOUNT)
-            .lineTotal(UPDATED_LINE_TOTAL)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedSaleItem.setQuantity(UPDATED_QUANTITY);
+        updatedSaleItem.setUnitPrice(UPDATED_UNIT_PRICE);
+        updatedSaleItem.setDiscountAmount(UPDATED_DISCOUNT_AMOUNT);
+        updatedSaleItem.setLineTotal(UPDATED_LINE_TOTAL);
+        updatedSaleItem.setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleItemMockMvc
             .perform(
@@ -742,7 +741,8 @@ class SaleItemResourceIT {
         SaleItem partialUpdatedSaleItem = new SaleItem();
         partialUpdatedSaleItem.setId(saleItem.getId());
 
-        partialUpdatedSaleItem.quantity(UPDATED_QUANTITY).unitPrice(UPDATED_UNIT_PRICE);
+        partialUpdatedSaleItem.setQuantity(UPDATED_QUANTITY);
+        partialUpdatedSaleItem.setUnitPrice(UPDATED_UNIT_PRICE);
 
         restSaleItemMockMvc
             .perform(
@@ -770,12 +770,11 @@ class SaleItemResourceIT {
         SaleItem partialUpdatedSaleItem = new SaleItem();
         partialUpdatedSaleItem.setId(saleItem.getId());
 
-        partialUpdatedSaleItem
-            .quantity(UPDATED_QUANTITY)
-            .unitPrice(UPDATED_UNIT_PRICE)
-            .discountAmount(UPDATED_DISCOUNT_AMOUNT)
-            .lineTotal(UPDATED_LINE_TOTAL)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedSaleItem.setQuantity(UPDATED_QUANTITY);
+        partialUpdatedSaleItem.setUnitPrice(UPDATED_UNIT_PRICE);
+        partialUpdatedSaleItem.setDiscountAmount(UPDATED_DISCOUNT_AMOUNT);
+        partialUpdatedSaleItem.setLineTotal(UPDATED_LINE_TOTAL);
+        partialUpdatedSaleItem.setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleItemMockMvc
             .perform(

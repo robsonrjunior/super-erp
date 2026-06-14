@@ -37,7 +37,7 @@ class SupplierTest {
         supplier.setPerson(personBack);
         assertThat(supplier.getPerson()).isEqualTo(personBack);
 
-        supplier.person(null);
+        supplier.setPerson(null);
         assertThat(supplier.getPerson()).isNull();
     }
 
@@ -49,7 +49,7 @@ class SupplierTest {
         supplier.setCompany(companyBack);
         assertThat(supplier.getCompany()).isEqualTo(companyBack);
 
-        supplier.company(null);
+        supplier.setCompany(null);
         assertThat(supplier.getCompany()).isNull();
     }
 
@@ -61,7 +61,7 @@ class SupplierTest {
         supplier.setRawMaterials(rawMaterialBack);
         assertThat(supplier.getRawMaterials()).isEqualTo(rawMaterialBack);
 
-        supplier.rawMaterials(null);
+        supplier.setRawMaterials(null);
         assertThat(supplier.getRawMaterials()).isNull();
     }
 
@@ -78,7 +78,7 @@ class SupplierTest {
         assertThat(supplier.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getSuppliers()).isNull();
 
-        supplier.tenants(new HashSet<>(Set.of(tenantBack)));
+        supplier.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(supplier.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getSuppliers()).isEqualTo(supplier);
 
@@ -100,7 +100,7 @@ class SupplierTest {
         assertThat(supplier.getCities()).doesNotContain(cityBack);
         assertThat(cityBack.getSuppliers()).isNull();
 
-        supplier.cities(new HashSet<>(Set.of(cityBack)));
+        supplier.setCities(new HashSet<>(Set.of(cityBack)));
         assertThat(supplier.getCities()).containsOnly(cityBack);
         assertThat(cityBack.getSuppliers()).isEqualTo(supplier);
 

@@ -70,7 +70,8 @@ class CityResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static City createEntity(EntityManager em) {
-        City city = new City().name(DEFAULT_NAME);
+        City city = new City();
+        city.setName(DEFAULT_NAME);
         // Add required entity
         State state;
         if (TestUtil.findAll(em, State.class).isEmpty()) {
@@ -91,7 +92,8 @@ class CityResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static City createUpdatedEntity(EntityManager em) {
-        City updatedCity = new City().name(UPDATED_NAME);
+        City updatedCity = new City();
+        updatedCity.setName(UPDATED_NAME);
         // Add required entity
         State state;
         if (TestUtil.findAll(em, State.class).isEmpty()) {
@@ -462,7 +464,7 @@ class CityResourceIT {
         City updatedCity = cityRepository.findById(city.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedCity are not directly saved in db
         em.detach(updatedCity);
-        updatedCity.name(UPDATED_NAME);
+        updatedCity.setName(UPDATED_NAME);
 
         restCityMockMvc
             .perform(
@@ -538,7 +540,7 @@ class CityResourceIT {
         City partialUpdatedCity = new City();
         partialUpdatedCity.setId(city.getId());
 
-        partialUpdatedCity.name(UPDATED_NAME);
+        partialUpdatedCity.setName(UPDATED_NAME);
 
         restCityMockMvc
             .perform(
@@ -566,7 +568,7 @@ class CityResourceIT {
         City partialUpdatedCity = new City();
         partialUpdatedCity.setId(city.getId());
 
-        partialUpdatedCity.name(UPDATED_NAME);
+        partialUpdatedCity.setName(UPDATED_NAME);
 
         restCityMockMvc
             .perform(

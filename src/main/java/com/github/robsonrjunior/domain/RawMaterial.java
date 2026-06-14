@@ -107,51 +107,6 @@ public class RawMaterial extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public RawMaterial id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public RawMaterial name(String name) {
-        this.setName(name);
-        return this;
-    }
-
-    public RawMaterial sku(String sku) {
-        this.setSku(sku);
-        return this;
-    }
-
-    public RawMaterial unitOfMeasure(UnitOfMeasure unitOfMeasure) {
-        this.setUnitOfMeasure(unitOfMeasure);
-        return this;
-    }
-
-    public RawMaterial unitDecimalPlaces(Integer unitDecimalPlaces) {
-        this.setUnitDecimalPlaces(unitDecimalPlaces);
-        return this;
-    }
-
-    public RawMaterial unitCost(BigDecimal unitCost) {
-        this.setUnitCost(unitCost);
-        return this;
-    }
-
-    public RawMaterial minStock(BigDecimal minStock) {
-        this.setMinStock(minStock);
-        return this;
-    }
-
-    public RawMaterial active(Boolean active) {
-        this.setActive(active);
-        return this;
-    }
-
-    public RawMaterial stockMovements(StockMovement stockMovement) {
-        this.setStockMovements(stockMovement);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setRawMaterials(null));
@@ -160,11 +115,6 @@ public class RawMaterial extends SoftDeletableEntity {
             tenants.forEach(i -> i.setRawMaterials(this));
         }
         this.tenants = tenants;
-    }
-
-    public RawMaterial tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public RawMaterial addTenant(Tenant tenant) {
@@ -187,11 +137,6 @@ public class RawMaterial extends SoftDeletableEntity {
             suppliers.forEach(i -> i.setRawMaterials(this));
         }
         this.primarySuppliers = suppliers;
-    }
-
-    public RawMaterial primarySuppliers(Set<Supplier> suppliers) {
-        this.setPrimarySuppliers(suppliers);
-        return this;
     }
 
     public RawMaterial addPrimarySupplier(Supplier supplier) {

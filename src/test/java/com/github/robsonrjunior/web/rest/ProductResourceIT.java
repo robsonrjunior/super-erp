@@ -99,15 +99,15 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createEntity(EntityManager em) {
-        Product product = new Product()
-            .name(DEFAULT_NAME)
-            .sku(DEFAULT_SKU)
-            .unitOfMeasure(DEFAULT_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(DEFAULT_UNIT_DECIMAL_PLACES)
-            .salePrice(DEFAULT_SALE_PRICE)
-            .costPrice(DEFAULT_COST_PRICE)
-            .minStock(DEFAULT_MIN_STOCK)
-            .active(DEFAULT_ACTIVE);
+        Product product = new Product();
+        product.setName(DEFAULT_NAME);
+        product.setSku(DEFAULT_SKU);
+        product.setUnitOfMeasure(DEFAULT_UNIT_OF_MEASURE);
+        product.setUnitDecimalPlaces(DEFAULT_UNIT_DECIMAL_PLACES);
+        product.setSalePrice(DEFAULT_SALE_PRICE);
+        product.setCostPrice(DEFAULT_COST_PRICE);
+        product.setMinStock(DEFAULT_MIN_STOCK);
+        product.setActive(DEFAULT_ACTIVE);
         product.setDeletedAt(DEFAULT_DELETED_AT);
         return product;
     }
@@ -119,15 +119,15 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createUpdatedEntity(EntityManager em) {
-        Product updatedProduct = new Product()
-            .name(UPDATED_NAME)
-            .sku(UPDATED_SKU)
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
-            .salePrice(UPDATED_SALE_PRICE)
-            .costPrice(UPDATED_COST_PRICE)
-            .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE);
+        Product updatedProduct = new Product();
+        updatedProduct.setName(UPDATED_NAME);
+        updatedProduct.setSku(UPDATED_SKU);
+        updatedProduct.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        updatedProduct.setUnitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES);
+        updatedProduct.setSalePrice(UPDATED_SALE_PRICE);
+        updatedProduct.setCostPrice(UPDATED_COST_PRICE);
+        updatedProduct.setMinStock(UPDATED_MIN_STOCK);
+        updatedProduct.setActive(UPDATED_ACTIVE);
         updatedProduct.setDeletedAt(UPDATED_DELETED_AT);
         return updatedProduct;
     }
@@ -946,16 +946,15 @@ class ProductResourceIT {
         Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedProduct are not directly saved in db
         em.detach(updatedProduct);
-        updatedProduct
-            .name(UPDATED_NAME)
-            .sku(UPDATED_SKU)
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
-            .salePrice(UPDATED_SALE_PRICE)
-            .costPrice(UPDATED_COST_PRICE)
-            .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedProduct.setName(UPDATED_NAME);
+        updatedProduct.setSku(UPDATED_SKU);
+        updatedProduct.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        updatedProduct.setUnitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES);
+        updatedProduct.setSalePrice(UPDATED_SALE_PRICE);
+        updatedProduct.setCostPrice(UPDATED_COST_PRICE);
+        updatedProduct.setMinStock(UPDATED_MIN_STOCK);
+        updatedProduct.setActive(UPDATED_ACTIVE);
+        updatedProduct.setDeletedAt(UPDATED_DELETED_AT);
 
         restProductMockMvc
             .perform(
@@ -1031,14 +1030,13 @@ class ProductResourceIT {
         Product partialUpdatedProduct = new Product();
         partialUpdatedProduct.setId(product.getId());
 
-        partialUpdatedProduct
-            .sku(UPDATED_SKU)
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
-            .salePrice(UPDATED_SALE_PRICE)
-            .costPrice(UPDATED_COST_PRICE)
-            .minStock(UPDATED_MIN_STOCK)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedProduct.setSku(UPDATED_SKU);
+        partialUpdatedProduct.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        partialUpdatedProduct.setUnitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES);
+        partialUpdatedProduct.setSalePrice(UPDATED_SALE_PRICE);
+        partialUpdatedProduct.setCostPrice(UPDATED_COST_PRICE);
+        partialUpdatedProduct.setMinStock(UPDATED_MIN_STOCK);
+        partialUpdatedProduct.setDeletedAt(UPDATED_DELETED_AT);
 
         restProductMockMvc
             .perform(
@@ -1066,16 +1064,15 @@ class ProductResourceIT {
         Product partialUpdatedProduct = new Product();
         partialUpdatedProduct.setId(product.getId());
 
-        partialUpdatedProduct
-            .name(UPDATED_NAME)
-            .sku(UPDATED_SKU)
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
-            .salePrice(UPDATED_SALE_PRICE)
-            .costPrice(UPDATED_COST_PRICE)
-            .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedProduct.setName(UPDATED_NAME);
+        partialUpdatedProduct.setSku(UPDATED_SKU);
+        partialUpdatedProduct.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        partialUpdatedProduct.setUnitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES);
+        partialUpdatedProduct.setSalePrice(UPDATED_SALE_PRICE);
+        partialUpdatedProduct.setCostPrice(UPDATED_COST_PRICE);
+        partialUpdatedProduct.setMinStock(UPDATED_MIN_STOCK);
+        partialUpdatedProduct.setActive(UPDATED_ACTIVE);
+        partialUpdatedProduct.setDeletedAt(UPDATED_DELETED_AT);
 
         restProductMockMvc
             .perform(

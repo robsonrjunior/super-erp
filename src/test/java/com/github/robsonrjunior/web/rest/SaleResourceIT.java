@@ -94,14 +94,14 @@ class SaleResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Sale createEntity(EntityManager em) {
-        Sale sale = new Sale()
-            .saleDate(DEFAULT_SALE_DATE)
-            .saleNumber(DEFAULT_SALE_NUMBER)
-            .status(DEFAULT_STATUS)
-            .grossAmount(DEFAULT_GROSS_AMOUNT)
-            .discountAmount(DEFAULT_DISCOUNT_AMOUNT)
-            .netAmount(DEFAULT_NET_AMOUNT)
-            .notes(DEFAULT_NOTES);
+        Sale sale = new Sale();
+        sale.setSaleDate(DEFAULT_SALE_DATE);
+        sale.setSaleNumber(DEFAULT_SALE_NUMBER);
+        sale.setStatus(DEFAULT_STATUS);
+        sale.setGrossAmount(DEFAULT_GROSS_AMOUNT);
+        sale.setDiscountAmount(DEFAULT_DISCOUNT_AMOUNT);
+        sale.setNetAmount(DEFAULT_NET_AMOUNT);
+        sale.setNotes(DEFAULT_NOTES);
         sale.setDeletedAt(DEFAULT_DELETED_AT);
         return sale;
     }
@@ -113,14 +113,14 @@ class SaleResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Sale createUpdatedEntity(EntityManager em) {
-        Sale updatedSale = new Sale()
-            .saleDate(UPDATED_SALE_DATE)
-            .saleNumber(UPDATED_SALE_NUMBER)
-            .status(UPDATED_STATUS)
-            .grossAmount(UPDATED_GROSS_AMOUNT)
-            .discountAmount(UPDATED_DISCOUNT_AMOUNT)
-            .netAmount(UPDATED_NET_AMOUNT)
-            .notes(UPDATED_NOTES);
+        Sale updatedSale = new Sale();
+        updatedSale.setSaleDate(UPDATED_SALE_DATE);
+        updatedSale.setSaleNumber(UPDATED_SALE_NUMBER);
+        updatedSale.setStatus(UPDATED_STATUS);
+        updatedSale.setGrossAmount(UPDATED_GROSS_AMOUNT);
+        updatedSale.setDiscountAmount(UPDATED_DISCOUNT_AMOUNT);
+        updatedSale.setNetAmount(UPDATED_NET_AMOUNT);
+        updatedSale.setNotes(UPDATED_NOTES);
         updatedSale.setDeletedAt(UPDATED_DELETED_AT);
         return updatedSale;
     }
@@ -825,15 +825,14 @@ class SaleResourceIT {
         Sale updatedSale = saleRepository.findById(sale.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedSale are not directly saved in db
         em.detach(updatedSale);
-        updatedSale
-            .saleDate(UPDATED_SALE_DATE)
-            .saleNumber(UPDATED_SALE_NUMBER)
-            .status(UPDATED_STATUS)
-            .grossAmount(UPDATED_GROSS_AMOUNT)
-            .discountAmount(UPDATED_DISCOUNT_AMOUNT)
-            .netAmount(UPDATED_NET_AMOUNT)
-            .notes(UPDATED_NOTES)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedSale.setSaleDate(UPDATED_SALE_DATE);
+        updatedSale.setSaleNumber(UPDATED_SALE_NUMBER);
+        updatedSale.setStatus(UPDATED_STATUS);
+        updatedSale.setGrossAmount(UPDATED_GROSS_AMOUNT);
+        updatedSale.setDiscountAmount(UPDATED_DISCOUNT_AMOUNT);
+        updatedSale.setNetAmount(UPDATED_NET_AMOUNT);
+        updatedSale.setNotes(UPDATED_NOTES);
+        updatedSale.setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleMockMvc
             .perform(
@@ -909,7 +908,9 @@ class SaleResourceIT {
         Sale partialUpdatedSale = new Sale();
         partialUpdatedSale.setId(sale.getId());
 
-        partialUpdatedSale.saleDate(UPDATED_SALE_DATE).saleNumber(UPDATED_SALE_NUMBER).notes(UPDATED_NOTES);
+        partialUpdatedSale.setSaleDate(UPDATED_SALE_DATE);
+        partialUpdatedSale.setSaleNumber(UPDATED_SALE_NUMBER);
+        partialUpdatedSale.setNotes(UPDATED_NOTES);
 
         restSaleMockMvc
             .perform(
@@ -937,15 +938,14 @@ class SaleResourceIT {
         Sale partialUpdatedSale = new Sale();
         partialUpdatedSale.setId(sale.getId());
 
-        partialUpdatedSale
-            .saleDate(UPDATED_SALE_DATE)
-            .saleNumber(UPDATED_SALE_NUMBER)
-            .status(UPDATED_STATUS)
-            .grossAmount(UPDATED_GROSS_AMOUNT)
-            .discountAmount(UPDATED_DISCOUNT_AMOUNT)
-            .netAmount(UPDATED_NET_AMOUNT)
-            .notes(UPDATED_NOTES)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedSale.setSaleDate(UPDATED_SALE_DATE);
+        partialUpdatedSale.setSaleNumber(UPDATED_SALE_NUMBER);
+        partialUpdatedSale.setStatus(UPDATED_STATUS);
+        partialUpdatedSale.setGrossAmount(UPDATED_GROSS_AMOUNT);
+        partialUpdatedSale.setDiscountAmount(UPDATED_DISCOUNT_AMOUNT);
+        partialUpdatedSale.setNetAmount(UPDATED_NET_AMOUNT);
+        partialUpdatedSale.setNotes(UPDATED_NOTES);
+        partialUpdatedSale.setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleMockMvc
             .perform(

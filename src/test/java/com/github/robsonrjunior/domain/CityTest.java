@@ -36,7 +36,7 @@ class CityTest {
         city.setSuppliers(supplierBack);
         assertThat(city.getSuppliers()).isEqualTo(supplierBack);
 
-        city.suppliers(null);
+        city.setSuppliers(null);
         assertThat(city.getSuppliers()).isNull();
     }
 
@@ -48,7 +48,7 @@ class CityTest {
         city.setCustomers(customerBack);
         assertThat(city.getCustomers()).isEqualTo(customerBack);
 
-        city.customers(null);
+        city.setCustomers(null);
         assertThat(city.getCustomers()).isNull();
     }
 
@@ -60,7 +60,7 @@ class CityTest {
         city.setPeople(personBack);
         assertThat(city.getPeople()).isEqualTo(personBack);
 
-        city.people(null);
+        city.setPeople(null);
         assertThat(city.getPeople()).isNull();
     }
 
@@ -72,7 +72,7 @@ class CityTest {
         city.setCompanies(companyBack);
         assertThat(city.getCompanies()).isEqualTo(companyBack);
 
-        city.companies(null);
+        city.setCompanies(null);
         assertThat(city.getCompanies()).isNull();
     }
 
@@ -84,7 +84,7 @@ class CityTest {
         city.setWarehouses(warehouseBack);
         assertThat(city.getWarehouses()).isEqualTo(warehouseBack);
 
-        city.warehouses(null);
+        city.setWarehouses(null);
         assertThat(city.getWarehouses()).isNull();
     }
 
@@ -96,7 +96,7 @@ class CityTest {
         city.setState(stateBack);
         assertThat(city.getState()).isEqualTo(stateBack);
 
-        city.state(null);
+        city.setState(null);
         assertThat(city.getState()).isNull();
     }
 }

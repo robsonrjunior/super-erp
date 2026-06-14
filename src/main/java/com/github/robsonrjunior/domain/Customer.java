@@ -117,61 +117,6 @@ public class Customer extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Customer id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Customer legalName(String legalName) {
-        this.setLegalName(legalName);
-        return this;
-    }
-
-    public Customer tradeName(String tradeName) {
-        this.setTradeName(tradeName);
-        return this;
-    }
-
-    public Customer taxId(String taxId) {
-        this.setTaxId(taxId);
-        return this;
-    }
-
-    public Customer partyType(PartyType partyType) {
-        this.setPartyType(partyType);
-        return this;
-    }
-
-    public Customer email(String email) {
-        this.setEmail(email);
-        return this;
-    }
-
-    public Customer phone(String phone) {
-        this.setPhone(phone);
-        return this;
-    }
-
-    public Customer active(Boolean active) {
-        this.setActive(active);
-        return this;
-    }
-
-    public Customer person(Person person) {
-        this.setPerson(person);
-        return this;
-    }
-
-    public Customer company(Company company) {
-        this.setCompany(company);
-        return this;
-    }
-
-    public Customer sales(Sale sale) {
-        this.setSales(sale);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setCustomers(null));
@@ -180,11 +125,6 @@ public class Customer extends SoftDeletableEntity {
             tenants.forEach(i -> i.setCustomers(this));
         }
         this.tenants = tenants;
-    }
-
-    public Customer tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public Customer addTenant(Tenant tenant) {
@@ -207,11 +147,6 @@ public class Customer extends SoftDeletableEntity {
             cities.forEach(i -> i.setCustomers(this));
         }
         this.cities = cities;
-    }
-
-    public Customer cities(Set<City> cities) {
-        this.setCities(cities);
-        return this;
     }
 
     public Customer addCity(City city) {

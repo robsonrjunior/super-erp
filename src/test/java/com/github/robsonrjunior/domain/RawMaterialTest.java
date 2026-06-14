@@ -35,7 +35,7 @@ class RawMaterialTest {
         rawMaterial.setStockMovements(stockMovementBack);
         assertThat(rawMaterial.getStockMovements()).isEqualTo(stockMovementBack);
 
-        rawMaterial.stockMovements(null);
+        rawMaterial.setStockMovements(null);
         assertThat(rawMaterial.getStockMovements()).isNull();
     }
 
@@ -52,7 +52,7 @@ class RawMaterialTest {
         assertThat(rawMaterial.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getRawMaterials()).isNull();
 
-        rawMaterial.tenants(new HashSet<>(Set.of(tenantBack)));
+        rawMaterial.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(rawMaterial.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getRawMaterials()).isEqualTo(rawMaterial);
 
@@ -74,7 +74,7 @@ class RawMaterialTest {
         assertThat(rawMaterial.getPrimarySuppliers()).doesNotContain(supplierBack);
         assertThat(supplierBack.getRawMaterials()).isNull();
 
-        rawMaterial.primarySuppliers(new HashSet<>(Set.of(supplierBack)));
+        rawMaterial.setPrimarySuppliers(new HashSet<>(Set.of(supplierBack)));
         assertThat(rawMaterial.getPrimarySuppliers()).containsOnly(supplierBack);
         assertThat(supplierBack.getRawMaterials()).isEqualTo(rawMaterial);
 

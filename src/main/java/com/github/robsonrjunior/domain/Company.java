@@ -108,46 +108,6 @@ public class Company extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Company id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Company legalName(String legalName) {
-        this.setLegalName(legalName);
-        return this;
-    }
-
-    public Company tradeName(String tradeName) {
-        this.setTradeName(tradeName);
-        return this;
-    }
-
-    public Company cnpj(String cnpj) {
-        this.setCnpj(cnpj);
-        return this;
-    }
-
-    public Company stateRegistration(String stateRegistration) {
-        this.setStateRegistration(stateRegistration);
-        return this;
-    }
-
-    public Company email(String email) {
-        this.setEmail(email);
-        return this;
-    }
-
-    public Company phone(String phone) {
-        this.setPhone(phone);
-        return this;
-    }
-
-    public Company active(Boolean active) {
-        this.setActive(active);
-        return this;
-    }
-
     public void setCustomer(Customer customer) {
         if (this.customer != null) {
             this.customer.setCompany(null);
@@ -156,11 +116,6 @@ public class Company extends SoftDeletableEntity {
             customer.setCompany(this);
         }
         this.customer = customer;
-    }
-
-    public Company customer(Customer customer) {
-        this.setCustomer(customer);
-        return this;
     }
 
     public void setSupplier(Supplier supplier) {
@@ -173,11 +128,6 @@ public class Company extends SoftDeletableEntity {
         this.supplier = supplier;
     }
 
-    public Company supplier(Supplier supplier) {
-        this.setSupplier(supplier);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setCompanies(null));
@@ -186,11 +136,6 @@ public class Company extends SoftDeletableEntity {
             tenants.forEach(i -> i.setCompanies(this));
         }
         this.tenants = tenants;
-    }
-
-    public Company tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public Company addTenant(Tenant tenant) {
@@ -213,11 +158,6 @@ public class Company extends SoftDeletableEntity {
             cities.forEach(i -> i.setCompanies(this));
         }
         this.cities = cities;
-    }
-
-    public Company cities(Set<City> cities) {
-        this.setCities(cities);
-        return this;
     }
 
     public Company addCity(City city) {

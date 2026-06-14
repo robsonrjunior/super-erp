@@ -40,7 +40,7 @@ class TenantTest {
         tenant.setCustomers(customerBack);
         assertThat(tenant.getCustomers()).isEqualTo(customerBack);
 
-        tenant.customers(null);
+        tenant.setCustomers(null);
         assertThat(tenant.getCustomers()).isNull();
     }
 
@@ -52,7 +52,7 @@ class TenantTest {
         tenant.setSuppliers(supplierBack);
         assertThat(tenant.getSuppliers()).isEqualTo(supplierBack);
 
-        tenant.suppliers(null);
+        tenant.setSuppliers(null);
         assertThat(tenant.getSuppliers()).isNull();
     }
 
@@ -64,7 +64,7 @@ class TenantTest {
         tenant.setPeople(personBack);
         assertThat(tenant.getPeople()).isEqualTo(personBack);
 
-        tenant.people(null);
+        tenant.setPeople(null);
         assertThat(tenant.getPeople()).isNull();
     }
 
@@ -76,7 +76,7 @@ class TenantTest {
         tenant.setCompanies(companyBack);
         assertThat(tenant.getCompanies()).isEqualTo(companyBack);
 
-        tenant.companies(null);
+        tenant.setCompanies(null);
         assertThat(tenant.getCompanies()).isNull();
     }
 
@@ -88,7 +88,7 @@ class TenantTest {
         tenant.setProducts(productBack);
         assertThat(tenant.getProducts()).isEqualTo(productBack);
 
-        tenant.products(null);
+        tenant.setProducts(null);
         assertThat(tenant.getProducts()).isNull();
     }
 
@@ -100,7 +100,7 @@ class TenantTest {
         tenant.setRawMaterials(rawMaterialBack);
         assertThat(tenant.getRawMaterials()).isEqualTo(rawMaterialBack);
 
-        tenant.rawMaterials(null);
+        tenant.setRawMaterials(null);
         assertThat(tenant.getRawMaterials()).isNull();
     }
 
@@ -112,7 +112,7 @@ class TenantTest {
         tenant.setWarehouses(warehouseBack);
         assertThat(tenant.getWarehouses()).isEqualTo(warehouseBack);
 
-        tenant.warehouses(null);
+        tenant.setWarehouses(null);
         assertThat(tenant.getWarehouses()).isNull();
     }
 
@@ -124,7 +124,7 @@ class TenantTest {
         tenant.setSales(saleBack);
         assertThat(tenant.getSales()).isEqualTo(saleBack);
 
-        tenant.sales(null);
+        tenant.setSales(null);
         assertThat(tenant.getSales()).isNull();
     }
 
@@ -136,7 +136,7 @@ class TenantTest {
         tenant.setSaleItems(saleItemBack);
         assertThat(tenant.getSaleItems()).isEqualTo(saleItemBack);
 
-        tenant.saleItems(null);
+        tenant.setSaleItems(null);
         assertThat(tenant.getSaleItems()).isNull();
     }
 
@@ -148,7 +148,7 @@ class TenantTest {
         tenant.setStockMovements(stockMovementBack);
         assertThat(tenant.getStockMovements()).isEqualTo(stockMovementBack);
 
-        tenant.stockMovements(null);
+        tenant.setStockMovements(null);
         assertThat(tenant.getStockMovements()).isNull();
     }
 }

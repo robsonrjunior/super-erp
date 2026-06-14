@@ -37,7 +37,7 @@ class PersonTest {
         assertThat(person.getCustomer()).isEqualTo(customerBack);
         assertThat(customerBack.getPerson()).isEqualTo(person);
 
-        person.customer(null);
+        person.setCustomer(null);
         assertThat(person.getCustomer()).isNull();
         assertThat(customerBack.getPerson()).isNull();
     }
@@ -51,7 +51,7 @@ class PersonTest {
         assertThat(person.getSupplier()).isEqualTo(supplierBack);
         assertThat(supplierBack.getPerson()).isEqualTo(person);
 
-        person.supplier(null);
+        person.setSupplier(null);
         assertThat(person.getSupplier()).isNull();
         assertThat(supplierBack.getPerson()).isNull();
     }
@@ -69,7 +69,7 @@ class PersonTest {
         assertThat(person.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getPeople()).isNull();
 
-        person.tenants(new HashSet<>(Set.of(tenantBack)));
+        person.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(person.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getPeople()).isEqualTo(person);
 
@@ -91,7 +91,7 @@ class PersonTest {
         assertThat(person.getCities()).doesNotContain(cityBack);
         assertThat(cityBack.getPeople()).isNull();
 
-        person.cities(new HashSet<>(Set.of(cityBack)));
+        person.setCities(new HashSet<>(Set.of(cityBack)));
         assertThat(person.getCities()).containsOnly(cityBack);
         assertThat(cityBack.getPeople()).isEqualTo(person);
 

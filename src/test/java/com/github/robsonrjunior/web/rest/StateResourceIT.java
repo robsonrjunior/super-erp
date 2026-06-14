@@ -68,7 +68,9 @@ class StateResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static State createEntity(EntityManager em) {
-        State state = new State().name(DEFAULT_NAME).code(DEFAULT_CODE);
+        State state = new State();
+        state.setName(DEFAULT_NAME);
+        state.setCode(DEFAULT_CODE);
         // Add required entity
         Country country;
         if (TestUtil.findAll(em, Country.class).isEmpty()) {
@@ -89,7 +91,9 @@ class StateResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static State createUpdatedEntity(EntityManager em) {
-        State updatedState = new State().name(UPDATED_NAME).code(UPDATED_CODE);
+        State updatedState = new State();
+        updatedState.setName(UPDATED_NAME);
+        updatedState.setCode(UPDATED_CODE);
         // Add required entity
         Country country;
         if (TestUtil.findAll(em, Country.class).isEmpty()) {
@@ -419,7 +423,8 @@ class StateResourceIT {
         State updatedState = stateRepository.findById(state.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedState are not directly saved in db
         em.detach(updatedState);
-        updatedState.name(UPDATED_NAME).code(UPDATED_CODE);
+        updatedState.setName(UPDATED_NAME);
+        updatedState.setCode(UPDATED_CODE);
 
         restStateMockMvc
             .perform(
@@ -495,7 +500,7 @@ class StateResourceIT {
         State partialUpdatedState = new State();
         partialUpdatedState.setId(state.getId());
 
-        partialUpdatedState.name(UPDATED_NAME);
+        partialUpdatedState.setName(UPDATED_NAME);
 
         restStateMockMvc
             .perform(
@@ -523,7 +528,8 @@ class StateResourceIT {
         State partialUpdatedState = new State();
         partialUpdatedState.setId(state.getId());
 
-        partialUpdatedState.name(UPDATED_NAME).code(UPDATED_CODE);
+        partialUpdatedState.setName(UPDATED_NAME);
+        partialUpdatedState.setCode(UPDATED_CODE);
 
         restStateMockMvc
             .perform(

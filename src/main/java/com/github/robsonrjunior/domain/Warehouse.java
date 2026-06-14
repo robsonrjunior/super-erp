@@ -87,36 +87,6 @@ public class Warehouse extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Warehouse id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Warehouse name(String name) {
-        this.setName(name);
-        return this;
-    }
-
-    public Warehouse code(String code) {
-        this.setCode(code);
-        return this;
-    }
-
-    public Warehouse active(Boolean active) {
-        this.setActive(active);
-        return this;
-    }
-
-    public Warehouse stockMovements(StockMovement stockMovement) {
-        this.setStockMovements(stockMovement);
-        return this;
-    }
-
-    public Warehouse sales(Sale sale) {
-        this.setSales(sale);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setWarehouses(null));
@@ -125,11 +95,6 @@ public class Warehouse extends SoftDeletableEntity {
             tenants.forEach(i -> i.setWarehouses(this));
         }
         this.tenants = tenants;
-    }
-
-    public Warehouse tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public Warehouse addTenant(Tenant tenant) {
@@ -152,11 +117,6 @@ public class Warehouse extends SoftDeletableEntity {
             cities.forEach(i -> i.setWarehouses(this));
         }
         this.cities = cities;
-    }
-
-    public Warehouse cities(Set<City> cities) {
-        this.setCities(cities);
-        return this;
     }
 
     public Warehouse addCity(City city) {

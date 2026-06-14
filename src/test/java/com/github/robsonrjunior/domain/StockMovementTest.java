@@ -41,7 +41,7 @@ class StockMovementTest {
         assertThat(stockMovement.getTenants()).doesNotContain(tenantBack);
         assertThat(tenantBack.getStockMovements()).isNull();
 
-        stockMovement.tenants(new HashSet<>(Set.of(tenantBack)));
+        stockMovement.setTenants(new HashSet<>(Set.of(tenantBack)));
         assertThat(stockMovement.getTenants()).containsOnly(tenantBack);
         assertThat(tenantBack.getStockMovements()).isEqualTo(stockMovement);
 
@@ -63,7 +63,7 @@ class StockMovementTest {
         assertThat(stockMovement.getWarehouses()).doesNotContain(warehouseBack);
         assertThat(warehouseBack.getStockMovements()).isNull();
 
-        stockMovement.warehouses(new HashSet<>(Set.of(warehouseBack)));
+        stockMovement.setWarehouses(new HashSet<>(Set.of(warehouseBack)));
         assertThat(stockMovement.getWarehouses()).containsOnly(warehouseBack);
         assertThat(warehouseBack.getStockMovements()).isEqualTo(stockMovement);
 
@@ -85,7 +85,7 @@ class StockMovementTest {
         assertThat(stockMovement.getProducts()).doesNotContain(productBack);
         assertThat(productBack.getStockMovements()).isNull();
 
-        stockMovement.products(new HashSet<>(Set.of(productBack)));
+        stockMovement.setProducts(new HashSet<>(Set.of(productBack)));
         assertThat(stockMovement.getProducts()).containsOnly(productBack);
         assertThat(productBack.getStockMovements()).isEqualTo(stockMovement);
 
@@ -107,7 +107,7 @@ class StockMovementTest {
         assertThat(stockMovement.getRawMaterials()).doesNotContain(rawMaterialBack);
         assertThat(rawMaterialBack.getStockMovements()).isNull();
 
-        stockMovement.rawMaterials(new HashSet<>(Set.of(rawMaterialBack)));
+        stockMovement.setRawMaterials(new HashSet<>(Set.of(rawMaterialBack)));
         assertThat(stockMovement.getRawMaterials()).containsOnly(rawMaterialBack);
         assertThat(rawMaterialBack.getStockMovements()).isEqualTo(stockMovement);
 

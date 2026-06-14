@@ -85,7 +85,10 @@ class TenantResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Tenant createEntity() {
-        Tenant tenant = new Tenant().name(DEFAULT_NAME).code(DEFAULT_CODE).active(DEFAULT_ACTIVE);
+        Tenant tenant = new Tenant();
+        tenant.setName(DEFAULT_NAME);
+        tenant.setCode(DEFAULT_CODE);
+        tenant.setActive(DEFAULT_ACTIVE);
         tenant.setDeletedAt(DEFAULT_DELETED_AT);
         return tenant;
     }
@@ -97,7 +100,10 @@ class TenantResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Tenant createUpdatedEntity() {
-        Tenant tenant = new Tenant().name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE);
+        Tenant tenant = new Tenant();
+        tenant.setName(UPDATED_NAME);
+        tenant.setCode(UPDATED_CODE);
+        tenant.setActive(UPDATED_ACTIVE);
         tenant.setDeletedAt(UPDATED_DELETED_AT);
         return tenant;
     }
@@ -698,7 +704,10 @@ class TenantResourceIT {
         Tenant updatedTenant = tenantRepository.findById(tenant.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedTenant are not directly saved in db
         em.detach(updatedTenant);
-        updatedTenant.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).setDeletedAt(UPDATED_DELETED_AT);
+        updatedTenant.setName(UPDATED_NAME);
+        updatedTenant.setCode(UPDATED_CODE);
+        updatedTenant.setActive(UPDATED_ACTIVE);
+        updatedTenant.setDeletedAt(UPDATED_DELETED_AT);
 
         restTenantMockMvc
             .perform(
@@ -802,7 +811,10 @@ class TenantResourceIT {
         Tenant partialUpdatedTenant = new Tenant();
         partialUpdatedTenant.setId(tenant.getId());
 
-        partialUpdatedTenant.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedTenant.setName(UPDATED_NAME);
+        partialUpdatedTenant.setCode(UPDATED_CODE);
+        partialUpdatedTenant.setActive(UPDATED_ACTIVE);
+        partialUpdatedTenant.setDeletedAt(UPDATED_DELETED_AT);
 
         restTenantMockMvc
             .perform(

@@ -10,14 +10,26 @@ public class SaleTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Sale getSaleSample1() {
-        return new Sale().id(1L).saleNumber("saleNumber1").notes("notes1");
+        Sale sale = new Sale();
+        sale.setId(1L);
+        sale.setSaleNumber("saleNumber1");
+        sale.setNotes("notes1");
+        return sale;
     }
 
     public static Sale getSaleSample2() {
-        return new Sale().id(2L).saleNumber("saleNumber2").notes("notes2");
+        Sale sale = new Sale();
+        sale.setId(2L);
+        sale.setSaleNumber("saleNumber2");
+        sale.setNotes("notes2");
+        return sale;
     }
 
     public static Sale getSaleRandomSampleGenerator() {
-        return new Sale().id(longCount.incrementAndGet()).saleNumber(UUID.randomUUID().toString()).notes(UUID.randomUUID().toString());
+        Sale sale = new Sale();
+        sale.setId(longCount.incrementAndGet());
+        sale.setSaleNumber(UUID.randomUUID().toString());
+        sale.setNotes(UUID.randomUUID().toString());
+        return sale;
     }
 }

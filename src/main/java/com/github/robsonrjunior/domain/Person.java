@@ -103,41 +103,6 @@ public class Person extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Person id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Person fullName(String fullName) {
-        this.setFullName(fullName);
-        return this;
-    }
-
-    public Person cpf(String cpf) {
-        this.setCpf(cpf);
-        return this;
-    }
-
-    public Person birthDate(LocalDate birthDate) {
-        this.setBirthDate(birthDate);
-        return this;
-    }
-
-    public Person email(String email) {
-        this.setEmail(email);
-        return this;
-    }
-
-    public Person phone(String phone) {
-        this.setPhone(phone);
-        return this;
-    }
-
-    public Person active(Boolean active) {
-        this.setActive(active);
-        return this;
-    }
-
     public void setCustomer(Customer customer) {
         if (this.customer != null) {
             this.customer.setPerson(null);
@@ -146,11 +111,6 @@ public class Person extends SoftDeletableEntity {
             customer.setPerson(this);
         }
         this.customer = customer;
-    }
-
-    public Person customer(Customer customer) {
-        this.setCustomer(customer);
-        return this;
     }
 
     public void setSupplier(Supplier supplier) {
@@ -163,11 +123,6 @@ public class Person extends SoftDeletableEntity {
         this.supplier = supplier;
     }
 
-    public Person supplier(Supplier supplier) {
-        this.setSupplier(supplier);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setPeople(null));
@@ -176,11 +131,6 @@ public class Person extends SoftDeletableEntity {
             tenants.forEach(i -> i.setPeople(this));
         }
         this.tenants = tenants;
-    }
-
-    public Person tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public Person addTenant(Tenant tenant) {
@@ -203,11 +153,6 @@ public class Person extends SoftDeletableEntity {
             cities.forEach(i -> i.setPeople(this));
         }
         this.cities = cities;
-    }
-
-    public Person cities(Set<City> cities) {
-        this.setCities(cities);
-        return this;
     }
 
     public Person addCity(City city) {

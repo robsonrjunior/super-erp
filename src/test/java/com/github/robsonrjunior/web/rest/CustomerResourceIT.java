@@ -91,14 +91,14 @@ class CustomerResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Customer createEntity(EntityManager em) {
-        Customer customer = new Customer()
-            .legalName(DEFAULT_LEGAL_NAME)
-            .tradeName(DEFAULT_TRADE_NAME)
-            .taxId(DEFAULT_TAX_ID)
-            .partyType(DEFAULT_PARTY_TYPE)
-            .email(DEFAULT_EMAIL)
-            .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE);
+        Customer customer = new Customer();
+        customer.setLegalName(DEFAULT_LEGAL_NAME);
+        customer.setTradeName(DEFAULT_TRADE_NAME);
+        customer.setTaxId(DEFAULT_TAX_ID);
+        customer.setPartyType(DEFAULT_PARTY_TYPE);
+        customer.setEmail(DEFAULT_EMAIL);
+        customer.setPhone(DEFAULT_PHONE);
+        customer.setActive(DEFAULT_ACTIVE);
         customer.setDeletedAt(DEFAULT_DELETED_AT);
         return customer;
     }
@@ -110,14 +110,14 @@ class CustomerResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Customer createUpdatedEntity(EntityManager em) {
-        Customer updatedCustomer = new Customer()
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .taxId(UPDATED_TAX_ID)
-            .partyType(UPDATED_PARTY_TYPE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE);
+        Customer updatedCustomer = new Customer();
+        updatedCustomer.setLegalName(UPDATED_LEGAL_NAME);
+        updatedCustomer.setTradeName(UPDATED_TRADE_NAME);
+        updatedCustomer.setTaxId(UPDATED_TAX_ID);
+        updatedCustomer.setPartyType(UPDATED_PARTY_TYPE);
+        updatedCustomer.setEmail(UPDATED_EMAIL);
+        updatedCustomer.setPhone(UPDATED_PHONE);
+        updatedCustomer.setActive(UPDATED_ACTIVE);
         updatedCustomer.setDeletedAt(UPDATED_DELETED_AT);
         return updatedCustomer;
     }
@@ -772,15 +772,14 @@ class CustomerResourceIT {
         Customer updatedCustomer = customerRepository.findById(customer.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedCustomer are not directly saved in db
         em.detach(updatedCustomer);
-        updatedCustomer
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .taxId(UPDATED_TAX_ID)
-            .partyType(UPDATED_PARTY_TYPE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedCustomer.setLegalName(UPDATED_LEGAL_NAME);
+        updatedCustomer.setTradeName(UPDATED_TRADE_NAME);
+        updatedCustomer.setTaxId(UPDATED_TAX_ID);
+        updatedCustomer.setPartyType(UPDATED_PARTY_TYPE);
+        updatedCustomer.setEmail(UPDATED_EMAIL);
+        updatedCustomer.setPhone(UPDATED_PHONE);
+        updatedCustomer.setActive(UPDATED_ACTIVE);
+        updatedCustomer.setDeletedAt(UPDATED_DELETED_AT);
 
         restCustomerMockMvc
             .perform(
@@ -858,7 +857,9 @@ class CustomerResourceIT {
         Customer partialUpdatedCustomer = new Customer();
         partialUpdatedCustomer.setId(customer.getId());
 
-        partialUpdatedCustomer.legalName(UPDATED_LEGAL_NAME).taxId(UPDATED_TAX_ID).email(UPDATED_EMAIL);
+        partialUpdatedCustomer.setLegalName(UPDATED_LEGAL_NAME);
+        partialUpdatedCustomer.setTaxId(UPDATED_TAX_ID);
+        partialUpdatedCustomer.setEmail(UPDATED_EMAIL);
 
         restCustomerMockMvc
             .perform(
@@ -886,15 +887,14 @@ class CustomerResourceIT {
         Customer partialUpdatedCustomer = new Customer();
         partialUpdatedCustomer.setId(customer.getId());
 
-        partialUpdatedCustomer
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .taxId(UPDATED_TAX_ID)
-            .partyType(UPDATED_PARTY_TYPE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedCustomer.setLegalName(UPDATED_LEGAL_NAME);
+        partialUpdatedCustomer.setTradeName(UPDATED_TRADE_NAME);
+        partialUpdatedCustomer.setTaxId(UPDATED_TAX_ID);
+        partialUpdatedCustomer.setPartyType(UPDATED_PARTY_TYPE);
+        partialUpdatedCustomer.setEmail(UPDATED_EMAIL);
+        partialUpdatedCustomer.setPhone(UPDATED_PHONE);
+        partialUpdatedCustomer.setActive(UPDATED_ACTIVE);
+        partialUpdatedCustomer.setDeletedAt(UPDATED_DELETED_AT);
 
         restCustomerMockMvc
             .perform(

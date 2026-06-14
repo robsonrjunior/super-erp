@@ -87,14 +87,14 @@ class CompanyResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Company createEntity(EntityManager em) {
-        Company company = new Company()
-            .legalName(DEFAULT_LEGAL_NAME)
-            .tradeName(DEFAULT_TRADE_NAME)
-            .cnpj(DEFAULT_CNPJ)
-            .stateRegistration(DEFAULT_STATE_REGISTRATION)
-            .email(DEFAULT_EMAIL)
-            .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE);
+        Company company = new Company();
+        company.setLegalName(DEFAULT_LEGAL_NAME);
+        company.setTradeName(DEFAULT_TRADE_NAME);
+        company.setCnpj(DEFAULT_CNPJ);
+        company.setStateRegistration(DEFAULT_STATE_REGISTRATION);
+        company.setEmail(DEFAULT_EMAIL);
+        company.setPhone(DEFAULT_PHONE);
+        company.setActive(DEFAULT_ACTIVE);
         company.setDeletedAt(DEFAULT_DELETED_AT);
         return company;
     }
@@ -106,14 +106,14 @@ class CompanyResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Company createUpdatedEntity(EntityManager em) {
-        Company updatedCompany = new Company()
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .cnpj(UPDATED_CNPJ)
-            .stateRegistration(UPDATED_STATE_REGISTRATION)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE);
+        Company updatedCompany = new Company();
+        updatedCompany.setLegalName(UPDATED_LEGAL_NAME);
+        updatedCompany.setTradeName(UPDATED_TRADE_NAME);
+        updatedCompany.setCnpj(UPDATED_CNPJ);
+        updatedCompany.setStateRegistration(UPDATED_STATE_REGISTRATION);
+        updatedCompany.setEmail(UPDATED_EMAIL);
+        updatedCompany.setPhone(UPDATED_PHONE);
+        updatedCompany.setActive(UPDATED_ACTIVE);
         updatedCompany.setDeletedAt(UPDATED_DELETED_AT);
         return updatedCompany;
     }
@@ -718,15 +718,14 @@ class CompanyResourceIT {
         Company updatedCompany = companyRepository.findById(company.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedCompany are not directly saved in db
         em.detach(updatedCompany);
-        updatedCompany
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .cnpj(UPDATED_CNPJ)
-            .stateRegistration(UPDATED_STATE_REGISTRATION)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedCompany.setLegalName(UPDATED_LEGAL_NAME);
+        updatedCompany.setTradeName(UPDATED_TRADE_NAME);
+        updatedCompany.setCnpj(UPDATED_CNPJ);
+        updatedCompany.setStateRegistration(UPDATED_STATE_REGISTRATION);
+        updatedCompany.setEmail(UPDATED_EMAIL);
+        updatedCompany.setPhone(UPDATED_PHONE);
+        updatedCompany.setActive(UPDATED_ACTIVE);
+        updatedCompany.setDeletedAt(UPDATED_DELETED_AT);
 
         restCompanyMockMvc
             .perform(
@@ -802,11 +801,10 @@ class CompanyResourceIT {
         Company partialUpdatedCompany = new Company();
         partialUpdatedCompany.setId(company.getId());
 
-        partialUpdatedCompany
-            .tradeName(UPDATED_TRADE_NAME)
-            .stateRegistration(UPDATED_STATE_REGISTRATION)
-            .email(UPDATED_EMAIL)
-            .active(UPDATED_ACTIVE);
+        partialUpdatedCompany.setTradeName(UPDATED_TRADE_NAME);
+        partialUpdatedCompany.setStateRegistration(UPDATED_STATE_REGISTRATION);
+        partialUpdatedCompany.setEmail(UPDATED_EMAIL);
+        partialUpdatedCompany.setActive(UPDATED_ACTIVE);
 
         restCompanyMockMvc
             .perform(
@@ -834,15 +832,14 @@ class CompanyResourceIT {
         Company partialUpdatedCompany = new Company();
         partialUpdatedCompany.setId(company.getId());
 
-        partialUpdatedCompany
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .cnpj(UPDATED_CNPJ)
-            .stateRegistration(UPDATED_STATE_REGISTRATION)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedCompany.setLegalName(UPDATED_LEGAL_NAME);
+        partialUpdatedCompany.setTradeName(UPDATED_TRADE_NAME);
+        partialUpdatedCompany.setCnpj(UPDATED_CNPJ);
+        partialUpdatedCompany.setStateRegistration(UPDATED_STATE_REGISTRATION);
+        partialUpdatedCompany.setEmail(UPDATED_EMAIL);
+        partialUpdatedCompany.setPhone(UPDATED_PHONE);
+        partialUpdatedCompany.setActive(UPDATED_ACTIVE);
+        partialUpdatedCompany.setDeletedAt(UPDATED_DELETED_AT);
 
         restCompanyMockMvc
             .perform(

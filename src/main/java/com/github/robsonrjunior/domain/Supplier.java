@@ -117,61 +117,6 @@ public class Supplier extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Supplier id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Supplier legalName(String legalName) {
-        this.setLegalName(legalName);
-        return this;
-    }
-
-    public Supplier tradeName(String tradeName) {
-        this.setTradeName(tradeName);
-        return this;
-    }
-
-    public Supplier taxId(String taxId) {
-        this.setTaxId(taxId);
-        return this;
-    }
-
-    public Supplier partyType(PartyType partyType) {
-        this.setPartyType(partyType);
-        return this;
-    }
-
-    public Supplier email(String email) {
-        this.setEmail(email);
-        return this;
-    }
-
-    public Supplier phone(String phone) {
-        this.setPhone(phone);
-        return this;
-    }
-
-    public Supplier active(Boolean active) {
-        this.setActive(active);
-        return this;
-    }
-
-    public Supplier person(Person person) {
-        this.setPerson(person);
-        return this;
-    }
-
-    public Supplier company(Company company) {
-        this.setCompany(company);
-        return this;
-    }
-
-    public Supplier rawMaterials(RawMaterial rawMaterial) {
-        this.setRawMaterials(rawMaterial);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setSuppliers(null));
@@ -180,11 +125,6 @@ public class Supplier extends SoftDeletableEntity {
             tenants.forEach(i -> i.setSuppliers(this));
         }
         this.tenants = tenants;
-    }
-
-    public Supplier tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public Supplier addTenant(Tenant tenant) {
@@ -207,11 +147,6 @@ public class Supplier extends SoftDeletableEntity {
             cities.forEach(i -> i.setSuppliers(this));
         }
         this.cities = cities;
-    }
-
-    public Supplier cities(Set<City> cities) {
-        this.setCities(cities);
-        return this;
     }
 
     public Supplier addCity(City city) {

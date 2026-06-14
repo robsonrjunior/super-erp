@@ -39,7 +39,7 @@ class StateTest {
         assertThat(state.getCitieses()).doesNotContain(cityBack);
         assertThat(cityBack.getState()).isNull();
 
-        state.citieses(new HashSet<>(Set.of(cityBack)));
+        state.setCitieses(new HashSet<>(Set.of(cityBack)));
         assertThat(state.getCitieses()).containsOnly(cityBack);
         assertThat(cityBack.getState()).isEqualTo(state);
 
@@ -56,7 +56,7 @@ class StateTest {
         state.setCountry(countryBack);
         assertThat(state.getCountry()).isEqualTo(countryBack);
 
-        state.country(null);
+        state.setCountry(null);
         assertThat(state.getCountry()).isNull();
     }
 }

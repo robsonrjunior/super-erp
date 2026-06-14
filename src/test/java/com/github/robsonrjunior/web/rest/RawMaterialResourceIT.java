@@ -94,14 +94,14 @@ class RawMaterialResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static RawMaterial createEntity(EntityManager em) {
-        RawMaterial rawMaterial = new RawMaterial()
-            .name(DEFAULT_NAME)
-            .sku(DEFAULT_SKU)
-            .unitOfMeasure(DEFAULT_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(DEFAULT_UNIT_DECIMAL_PLACES)
-            .unitCost(DEFAULT_UNIT_COST)
-            .minStock(DEFAULT_MIN_STOCK)
-            .active(DEFAULT_ACTIVE);
+        RawMaterial rawMaterial = new RawMaterial();
+        rawMaterial.setName(DEFAULT_NAME);
+        rawMaterial.setSku(DEFAULT_SKU);
+        rawMaterial.setUnitOfMeasure(DEFAULT_UNIT_OF_MEASURE);
+        rawMaterial.setUnitDecimalPlaces(DEFAULT_UNIT_DECIMAL_PLACES);
+        rawMaterial.setUnitCost(DEFAULT_UNIT_COST);
+        rawMaterial.setMinStock(DEFAULT_MIN_STOCK);
+        rawMaterial.setActive(DEFAULT_ACTIVE);
         rawMaterial.setDeletedAt(DEFAULT_DELETED_AT);
         return rawMaterial;
     }
@@ -113,14 +113,14 @@ class RawMaterialResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static RawMaterial createUpdatedEntity(EntityManager em) {
-        RawMaterial updatedRawMaterial = new RawMaterial()
-            .name(UPDATED_NAME)
-            .sku(UPDATED_SKU)
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
-            .unitCost(UPDATED_UNIT_COST)
-            .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE);
+        RawMaterial updatedRawMaterial = new RawMaterial();
+        updatedRawMaterial.setName(UPDATED_NAME);
+        updatedRawMaterial.setSku(UPDATED_SKU);
+        updatedRawMaterial.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        updatedRawMaterial.setUnitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES);
+        updatedRawMaterial.setUnitCost(UPDATED_UNIT_COST);
+        updatedRawMaterial.setMinStock(UPDATED_MIN_STOCK);
+        updatedRawMaterial.setActive(UPDATED_ACTIVE);
         updatedRawMaterial.setDeletedAt(UPDATED_DELETED_AT);
         return updatedRawMaterial;
     }
@@ -828,15 +828,14 @@ class RawMaterialResourceIT {
         RawMaterial updatedRawMaterial = rawMaterialRepository.findById(rawMaterial.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedRawMaterial are not directly saved in db
         em.detach(updatedRawMaterial);
-        updatedRawMaterial
-            .name(UPDATED_NAME)
-            .sku(UPDATED_SKU)
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
-            .unitCost(UPDATED_UNIT_COST)
-            .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedRawMaterial.setName(UPDATED_NAME);
+        updatedRawMaterial.setSku(UPDATED_SKU);
+        updatedRawMaterial.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        updatedRawMaterial.setUnitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES);
+        updatedRawMaterial.setUnitCost(UPDATED_UNIT_COST);
+        updatedRawMaterial.setMinStock(UPDATED_MIN_STOCK);
+        updatedRawMaterial.setActive(UPDATED_ACTIVE);
+        updatedRawMaterial.setDeletedAt(UPDATED_DELETED_AT);
 
         restRawMaterialMockMvc
             .perform(
@@ -916,12 +915,11 @@ class RawMaterialResourceIT {
         RawMaterial partialUpdatedRawMaterial = new RawMaterial();
         partialUpdatedRawMaterial.setId(rawMaterial.getId());
 
-        partialUpdatedRawMaterial
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitCost(UPDATED_UNIT_COST)
-            .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedRawMaterial.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        partialUpdatedRawMaterial.setUnitCost(UPDATED_UNIT_COST);
+        partialUpdatedRawMaterial.setMinStock(UPDATED_MIN_STOCK);
+        partialUpdatedRawMaterial.setActive(UPDATED_ACTIVE);
+        partialUpdatedRawMaterial.setDeletedAt(UPDATED_DELETED_AT);
 
         restRawMaterialMockMvc
             .perform(
@@ -952,15 +950,14 @@ class RawMaterialResourceIT {
         RawMaterial partialUpdatedRawMaterial = new RawMaterial();
         partialUpdatedRawMaterial.setId(rawMaterial.getId());
 
-        partialUpdatedRawMaterial
-            .name(UPDATED_NAME)
-            .sku(UPDATED_SKU)
-            .unitOfMeasure(UPDATED_UNIT_OF_MEASURE)
-            .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
-            .unitCost(UPDATED_UNIT_COST)
-            .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedRawMaterial.setName(UPDATED_NAME);
+        partialUpdatedRawMaterial.setSku(UPDATED_SKU);
+        partialUpdatedRawMaterial.setUnitOfMeasure(UPDATED_UNIT_OF_MEASURE);
+        partialUpdatedRawMaterial.setUnitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES);
+        partialUpdatedRawMaterial.setUnitCost(UPDATED_UNIT_COST);
+        partialUpdatedRawMaterial.setMinStock(UPDATED_MIN_STOCK);
+        partialUpdatedRawMaterial.setActive(UPDATED_ACTIVE);
+        partialUpdatedRawMaterial.setDeletedAt(UPDATED_DELETED_AT);
 
         restRawMaterialMockMvc
             .perform(

@@ -60,21 +60,6 @@ public class State implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public State id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public State name(String name) {
-        this.setName(name);
-        return this;
-    }
-
-    public State code(String code) {
-        this.setCode(code);
-        return this;
-    }
-
     public void setCitieses(Set<City> cities) {
         if (this.citieses != null) {
             this.citieses.forEach(i -> i.setState(null));
@@ -83,11 +68,6 @@ public class State implements Serializable {
             cities.forEach(i -> i.setState(this));
         }
         this.citieses = cities;
-    }
-
-    public State citieses(Set<City> cities) {
-        this.setCitieses(cities);
-        return this;
     }
 
     public State addCities(City city) {
@@ -99,11 +79,6 @@ public class State implements Serializable {
     public State removeCities(City city) {
         this.citieses.remove(city);
         city.setState(null);
-        return this;
-    }
-
-    public State country(Country country) {
-        this.setCountry(country);
         return this;
     }
 

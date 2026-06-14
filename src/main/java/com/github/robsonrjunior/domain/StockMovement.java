@@ -105,41 +105,6 @@ public class StockMovement extends SoftDeletableEntity {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public StockMovement id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public StockMovement movementDate(Instant movementDate) {
-        this.setMovementDate(movementDate);
-        return this;
-    }
-
-    public StockMovement movementType(MovementType movementType) {
-        this.setMovementType(movementType);
-        return this;
-    }
-
-    public StockMovement quantity(BigDecimal quantity) {
-        this.setQuantity(quantity);
-        return this;
-    }
-
-    public StockMovement unitCost(BigDecimal unitCost) {
-        this.setUnitCost(unitCost);
-        return this;
-    }
-
-    public StockMovement referenceNumber(String referenceNumber) {
-        this.setReferenceNumber(referenceNumber);
-        return this;
-    }
-
-    public StockMovement notes(String notes) {
-        this.setNotes(notes);
-        return this;
-    }
-
     public void setTenants(Set<Tenant> tenants) {
         if (this.tenants != null) {
             this.tenants.forEach(i -> i.setStockMovements(null));
@@ -148,11 +113,6 @@ public class StockMovement extends SoftDeletableEntity {
             tenants.forEach(i -> i.setStockMovements(this));
         }
         this.tenants = tenants;
-    }
-
-    public StockMovement tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
     }
 
     public StockMovement addTenant(Tenant tenant) {
@@ -177,11 +137,6 @@ public class StockMovement extends SoftDeletableEntity {
         this.warehouses = warehouses;
     }
 
-    public StockMovement warehouses(Set<Warehouse> warehouses) {
-        this.setWarehouses(warehouses);
-        return this;
-    }
-
     public StockMovement addWarehouse(Warehouse warehouse) {
         this.warehouses.add(warehouse);
         warehouse.setStockMovements(this);
@@ -204,11 +159,6 @@ public class StockMovement extends SoftDeletableEntity {
         this.products = products;
     }
 
-    public StockMovement products(Set<Product> products) {
-        this.setProducts(products);
-        return this;
-    }
-
     public StockMovement addProduct(Product product) {
         this.products.add(product);
         product.setStockMovements(this);
@@ -229,11 +179,6 @@ public class StockMovement extends SoftDeletableEntity {
             rawMaterials.forEach(i -> i.setStockMovements(this));
         }
         this.rawMaterials = rawMaterials;
-    }
-
-    public StockMovement rawMaterials(Set<RawMaterial> rawMaterials) {
-        this.setRawMaterials(rawMaterials);
-        return this;
     }
 
     public StockMovement addRawMaterial(RawMaterial rawMaterial) {

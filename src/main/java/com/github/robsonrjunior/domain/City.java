@@ -72,46 +72,6 @@ public class City implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public City id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public City name(String name) {
-        this.setName(name);
-        return this;
-    }
-
-    public City suppliers(Supplier supplier) {
-        this.setSuppliers(supplier);
-        return this;
-    }
-
-    public City customers(Customer customer) {
-        this.setCustomers(customer);
-        return this;
-    }
-
-    public City people(Person person) {
-        this.setPeople(person);
-        return this;
-    }
-
-    public City companies(Company company) {
-        this.setCompanies(company);
-        return this;
-    }
-
-    public City warehouses(Warehouse warehouse) {
-        this.setWarehouses(warehouse);
-        return this;
-    }
-
-    public City state(State state) {
-        this.setState(state);
-        return this;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

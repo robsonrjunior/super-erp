@@ -12,18 +12,29 @@ public class ProductTestSamples {
     private static final AtomicInteger intCount = new AtomicInteger(random.nextInt() + (2 * Short.MAX_VALUE));
 
     public static Product getProductSample1() {
-        return new Product().id(1L).name("name1").sku("sku1").unitDecimalPlaces(1);
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("name1");
+        product.setSku("sku1");
+        product.setUnitDecimalPlaces(1);
+        return product;
     }
 
     public static Product getProductSample2() {
-        return new Product().id(2L).name("name2").sku("sku2").unitDecimalPlaces(2);
+        Product product = new Product();
+        product.setId(2L);
+        product.setName("name2");
+        product.setSku("sku2");
+        product.setUnitDecimalPlaces(2);
+        return product;
     }
 
     public static Product getProductRandomSampleGenerator() {
-        return new Product()
-            .id(longCount.incrementAndGet())
-            .name(UUID.randomUUID().toString())
-            .sku(UUID.randomUUID().toString())
-            .unitDecimalPlaces(intCount.incrementAndGet());
+        Product product = new Product();
+        product.setId(longCount.incrementAndGet());
+        product.setName(UUID.randomUUID().toString());
+        product.setSku(UUID.randomUUID().toString());
+        product.setUnitDecimalPlaces(intCount.incrementAndGet());
+        return product;
     }
 }

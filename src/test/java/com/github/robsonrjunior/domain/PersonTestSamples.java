@@ -10,19 +10,32 @@ public class PersonTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Person getPersonSample1() {
-        return new Person().id(1L).fullName("fullName1").cpf("cpf1").email("email1").phone("phone1");
+        Person person = new Person();
+        person.setId(1L);
+        person.setFullName("fullName1");
+        person.setCpf("cpf1");
+        person.setEmail("email1");
+        person.setPhone("phone1");
+        return person;
     }
 
     public static Person getPersonSample2() {
-        return new Person().id(2L).fullName("fullName2").cpf("cpf2").email("email2").phone("phone2");
+        Person person = new Person();
+        person.setId(2L);
+        person.setFullName("fullName2");
+        person.setCpf("cpf2");
+        person.setEmail("email2");
+        person.setPhone("phone2");
+        return person;
     }
 
     public static Person getPersonRandomSampleGenerator() {
-        return new Person()
-            .id(longCount.incrementAndGet())
-            .fullName(UUID.randomUUID().toString())
-            .cpf(UUID.randomUUID().toString())
-            .email(UUID.randomUUID().toString())
-            .phone(UUID.randomUUID().toString());
+        Person person = new Person();
+        person.setId(longCount.incrementAndGet());
+        person.setFullName(UUID.randomUUID().toString());
+        person.setCpf(UUID.randomUUID().toString());
+        person.setEmail(UUID.randomUUID().toString());
+        person.setPhone(UUID.randomUUID().toString());
+        return person;
     }
 }

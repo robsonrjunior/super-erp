@@ -91,14 +91,14 @@ class SupplierResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Supplier createEntity(EntityManager em) {
-        Supplier supplier = new Supplier()
-            .legalName(DEFAULT_LEGAL_NAME)
-            .tradeName(DEFAULT_TRADE_NAME)
-            .taxId(DEFAULT_TAX_ID)
-            .partyType(DEFAULT_PARTY_TYPE)
-            .email(DEFAULT_EMAIL)
-            .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE);
+        Supplier supplier = new Supplier();
+        supplier.setLegalName(DEFAULT_LEGAL_NAME);
+        supplier.setTradeName(DEFAULT_TRADE_NAME);
+        supplier.setTaxId(DEFAULT_TAX_ID);
+        supplier.setPartyType(DEFAULT_PARTY_TYPE);
+        supplier.setEmail(DEFAULT_EMAIL);
+        supplier.setPhone(DEFAULT_PHONE);
+        supplier.setActive(DEFAULT_ACTIVE);
         supplier.setDeletedAt(DEFAULT_DELETED_AT);
         return supplier;
     }
@@ -110,14 +110,14 @@ class SupplierResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Supplier createUpdatedEntity(EntityManager em) {
-        Supplier updatedSupplier = new Supplier()
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .taxId(UPDATED_TAX_ID)
-            .partyType(UPDATED_PARTY_TYPE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE);
+        Supplier updatedSupplier = new Supplier();
+        updatedSupplier.setLegalName(UPDATED_LEGAL_NAME);
+        updatedSupplier.setTradeName(UPDATED_TRADE_NAME);
+        updatedSupplier.setTaxId(UPDATED_TAX_ID);
+        updatedSupplier.setPartyType(UPDATED_PARTY_TYPE);
+        updatedSupplier.setEmail(UPDATED_EMAIL);
+        updatedSupplier.setPhone(UPDATED_PHONE);
+        updatedSupplier.setActive(UPDATED_ACTIVE);
         updatedSupplier.setDeletedAt(UPDATED_DELETED_AT);
         return updatedSupplier;
     }
@@ -772,15 +772,14 @@ class SupplierResourceIT {
         Supplier updatedSupplier = supplierRepository.findById(supplier.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedSupplier are not directly saved in db
         em.detach(updatedSupplier);
-        updatedSupplier
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .taxId(UPDATED_TAX_ID)
-            .partyType(UPDATED_PARTY_TYPE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        updatedSupplier.setLegalName(UPDATED_LEGAL_NAME);
+        updatedSupplier.setTradeName(UPDATED_TRADE_NAME);
+        updatedSupplier.setTaxId(UPDATED_TAX_ID);
+        updatedSupplier.setPartyType(UPDATED_PARTY_TYPE);
+        updatedSupplier.setEmail(UPDATED_EMAIL);
+        updatedSupplier.setPhone(UPDATED_PHONE);
+        updatedSupplier.setActive(UPDATED_ACTIVE);
+        updatedSupplier.setDeletedAt(UPDATED_DELETED_AT);
 
         restSupplierMockMvc
             .perform(
@@ -858,12 +857,11 @@ class SupplierResourceIT {
         Supplier partialUpdatedSupplier = new Supplier();
         partialUpdatedSupplier.setId(supplier.getId());
 
-        partialUpdatedSupplier
-            .tradeName(UPDATED_TRADE_NAME)
-            .taxId(UPDATED_TAX_ID)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedSupplier.setTradeName(UPDATED_TRADE_NAME);
+        partialUpdatedSupplier.setTaxId(UPDATED_TAX_ID);
+        partialUpdatedSupplier.setEmail(UPDATED_EMAIL);
+        partialUpdatedSupplier.setPhone(UPDATED_PHONE);
+        partialUpdatedSupplier.setDeletedAt(UPDATED_DELETED_AT);
 
         restSupplierMockMvc
             .perform(
@@ -891,15 +889,14 @@ class SupplierResourceIT {
         Supplier partialUpdatedSupplier = new Supplier();
         partialUpdatedSupplier.setId(supplier.getId());
 
-        partialUpdatedSupplier
-            .legalName(UPDATED_LEGAL_NAME)
-            .tradeName(UPDATED_TRADE_NAME)
-            .taxId(UPDATED_TAX_ID)
-            .partyType(UPDATED_PARTY_TYPE)
-            .email(UPDATED_EMAIL)
-            .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .setDeletedAt(UPDATED_DELETED_AT);
+        partialUpdatedSupplier.setLegalName(UPDATED_LEGAL_NAME);
+        partialUpdatedSupplier.setTradeName(UPDATED_TRADE_NAME);
+        partialUpdatedSupplier.setTaxId(UPDATED_TAX_ID);
+        partialUpdatedSupplier.setPartyType(UPDATED_PARTY_TYPE);
+        partialUpdatedSupplier.setEmail(UPDATED_EMAIL);
+        partialUpdatedSupplier.setPhone(UPDATED_PHONE);
+        partialUpdatedSupplier.setActive(UPDATED_ACTIVE);
+        partialUpdatedSupplier.setDeletedAt(UPDATED_DELETED_AT);
 
         restSupplierMockMvc
             .perform(

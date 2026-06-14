@@ -126,64 +126,14 @@ public class Product extends SoftDeletableEntity {
     @JsonView({ Multiple.class, Single.class })
     private Set<Tenant> tenants = new HashSet<>();
 
-    public Product id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public Product name(String name) {
-        this.setName(name);
-        return this;
-    }
-
-    public Product sku(String sku) {
-        this.setSku(sku);
-        return this;
-    }
-
-    public Product unitOfMeasure(UnitOfMeasure unitOfMeasure) {
-        this.setUnitOfMeasure(unitOfMeasure);
-        return this;
-    }
-
-    public Product unitDecimalPlaces(Integer unitDecimalPlaces) {
-        this.setUnitDecimalPlaces(unitDecimalPlaces);
-        return this;
-    }
-
-    public Product salePrice(BigDecimal salePrice) {
-        this.setSalePrice(salePrice);
-        return this;
-    }
-
-    public Product costPrice(BigDecimal costPrice) {
-        this.setCostPrice(costPrice);
-        return this;
-    }
-
-    public Product minStock(BigDecimal minStock) {
-        this.setMinStock(minStock);
-        return this;
-    }
-
-    public Product active(Boolean active) {
-        this.setActive(active);
-        return this;
-    }
-
-    public Product saleItems(SaleItem saleItem) {
-        this.setSaleItems(saleItem);
-        return this;
-    }
-
-    public Product stockMovements(StockMovement stockMovement) {
-        this.setStockMovements(stockMovement);
-        return this;
-    }
-
-    public Product tenants(Set<Tenant> tenants) {
-        this.setTenants(tenants);
-        return this;
+    public void setTenants(Set<Tenant> tenants) {
+        if (this.tenants != null) {
+            this.tenants.forEach(i -> i.setProducts(null));
+        }
+        if (tenants != null) {
+            tenants.forEach(i -> i.setProducts(this));
+        }
+        this.tenants = tenants;
     }
 
     public Product addTenant(Tenant tenant) {

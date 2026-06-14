@@ -10,14 +10,26 @@ public class StateTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static State getStateSample1() {
-        return new State().id(1L).name("name1").code("code1");
+        State state = new State();
+        state.setId(1L);
+        state.setName("name1");
+        state.setCode("code1");
+        return state;
     }
 
     public static State getStateSample2() {
-        return new State().id(2L).name("name2").code("code2");
+        State state = new State();
+        state.setId(2L);
+        state.setName("name2");
+        state.setCode("code2");
+        return state;
     }
 
     public static State getStateRandomSampleGenerator() {
-        return new State().id(longCount.incrementAndGet()).name(UUID.randomUUID().toString()).code(UUID.randomUUID().toString());
+        State state = new State();
+        state.setId(longCount.incrementAndGet());
+        state.setName(UUID.randomUUID().toString());
+        state.setCode(UUID.randomUUID().toString());
+        return state;
     }
 }

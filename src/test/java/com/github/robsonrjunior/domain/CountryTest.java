@@ -38,7 +38,7 @@ class CountryTest {
         assertThat(country.getStateses()).doesNotContain(stateBack);
         assertThat(stateBack.getCountry()).isNull();
 
-        country.stateses(new HashSet<>(Set.of(stateBack)));
+        country.setStateses(new HashSet<>(Set.of(stateBack)));
         assertThat(country.getStateses()).containsOnly(stateBack);
         assertThat(stateBack.getCountry()).isEqualTo(country);
 

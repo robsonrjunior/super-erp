@@ -9,14 +9,20 @@ public class SaleItemTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static SaleItem getSaleItemSample1() {
-        return new SaleItem().id(1L);
+        SaleItem saleItem = new SaleItem();
+        saleItem.setId(1L);
+        return saleItem;
     }
 
     public static SaleItem getSaleItemSample2() {
-        return new SaleItem().id(2L);
+        SaleItem saleItem = new SaleItem();
+        saleItem.setId(2L);
+        return saleItem;
     }
 
     public static SaleItem getSaleItemRandomSampleGenerator() {
-        return new SaleItem().id(longCount.incrementAndGet());
+        SaleItem saleItem = new SaleItem();
+        saleItem.setId(longCount.incrementAndGet());
+        return saleItem;
     }
 }

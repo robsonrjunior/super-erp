@@ -12,18 +12,29 @@ public class RawMaterialTestSamples {
     private static final AtomicInteger intCount = new AtomicInteger(random.nextInt() + (2 * Short.MAX_VALUE));
 
     public static RawMaterial getRawMaterialSample1() {
-        return new RawMaterial().id(1L).name("name1").sku("sku1").unitDecimalPlaces(1);
+        RawMaterial rawMaterial = new RawMaterial();
+        rawMaterial.setId(1L);
+        rawMaterial.setName("name1");
+        rawMaterial.setSku("sku1");
+        rawMaterial.setUnitDecimalPlaces(1);
+        return rawMaterial;
     }
 
     public static RawMaterial getRawMaterialSample2() {
-        return new RawMaterial().id(2L).name("name2").sku("sku2").unitDecimalPlaces(2);
+        RawMaterial rawMaterial = new RawMaterial();
+        rawMaterial.setId(2L);
+        rawMaterial.setName("name2");
+        rawMaterial.setSku("sku2");
+        rawMaterial.setUnitDecimalPlaces(2);
+        return rawMaterial;
     }
 
     public static RawMaterial getRawMaterialRandomSampleGenerator() {
-        return new RawMaterial()
-            .id(longCount.incrementAndGet())
-            .name(UUID.randomUUID().toString())
-            .sku(UUID.randomUUID().toString())
-            .unitDecimalPlaces(intCount.incrementAndGet());
+        RawMaterial rawMaterial = new RawMaterial();
+        rawMaterial.setId(longCount.incrementAndGet());
+        rawMaterial.setName(UUID.randomUUID().toString());
+        rawMaterial.setSku(UUID.randomUUID().toString());
+        rawMaterial.setUnitDecimalPlaces(intCount.incrementAndGet());
+        return rawMaterial;
     }
 }
