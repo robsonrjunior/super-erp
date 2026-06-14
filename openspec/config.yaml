@@ -1,20 +1,60 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Tech stack: JHipster 9 monolith — Spring Boot 4 (Java 21) backend + Angular 21 frontend, PostgreSQL with Liquibase, JWT auth, Gradle build.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Project structure:
+  - Frontend root: `src/main/webapp/` — Angular source lives here, not at repo root.
+  - Build output: `build/resources/main/static/` — backend serves compiled frontend from here.
+  - Angular component prefix: `jhi` (enforced by ESLint rule).
+  - Gradle profile flags: `-Pprod` (production), `-Pwar` (WAR), `-Ptls` (TLS), `-Pe2e` (e2e).
+  - Backend-only Gradle tasks use `-x webapp -x webapp_test` to skip Node/frontend builds.
+  - Use `./npmw`, not `npm` (wraps Gradle-managed local Node/npm).
+
+  Domain: Multi-tenant ERP covering tenants, suppliers, customers, persons, companies, products, raw materials, warehouses, stock movements, sales, and reference data (countries, states, cities).
+
+  Domain conventions (see also openspec/specs/):
+  - Soft-deletable entities extend `SoftDeletableEntity` (MappedSuperclass with `deletedAt`). Do NOT declare `deletedAt` directly on: Tenant, Supplier, Customer, Person, Company, Product, RawMaterial, Warehouse, StockMovement, Sale, SaleItem.
+  - Reference entities (Country, State, City) do NOT have soft-delete.
+  - Entity methods: Lombok `@Getter`/`@Setter` for simple fields. Hand-written methods only for bidirectional `@OneToMany`/`@ManyToMany` collection synchronization (custom `setXxx(Set)`, `addXxx()`, `removeXxx()`). No fluent builder-style setters returning `this`.
+
+  Code style:
+  - Lombok for getters/setters/builders — never hand-write simple accessors.
+  - Liquibase for all schema changes — ASCII timestamps in changelog filenames.
+  - Prettier: 140 print width, single quotes, 2-space indent (Java: 4-space via prettier-plugin-java).
+  - ESLint: `curly` always, `eqeqeq` always, `arrow-body-style` error, `no-console` (allow warn/error only).
+  - TypeScript in `src/main/webapp/app/**` uses strict type checking.
+
+  Key libraries: JHipster Framework 9.0.0, MapStruct 1.6.3, testcontainers + PostgreSQL for ITs, Angular 21, PrimeNG (Aura theme), ng-bootstrap, ngx-translate, dayjs.
+
+  I18n: `pt-br` (native), `en`, `es`. Translations in `src/main/webapp/i18n/`.
+
+  Generated code: Lines with `jhipster-needle-*` comments are JHipster insertion points — never remove them. Entity configs in `.jhipster/` and `erp-core.jdl` define the domain model.
+
+rules:
+  proposal:
+    - Keep proposals focused on a single concern. Split unrelated changes into separate proposals.
+    - Mention impact on JHipster needle markers when touching generated code regions.
+    - Consider whether the change affects soft-deletable entities — if so, reference openspec/specs/soft-deletable-entity.
+    - Scope both backend and frontend when the feature spans the full stack.
+    - Include a "Non-goals" section to clarify what is explicitly out of scope.
+
+  design:
+    - Include a Liquibase changelog plan when schema changes are involved (ASCII timestamp filenames).
+    - Address JPA metamodel compatibility when modifying entity inheritance or field locations.
+    - Consider i18n impact for any UI changes — translations needed in pt-br, en, es.
+    - Account for bidirectional relationship synchronization when changing entity collections.
+    - Mention Gradle profile flags (`-Pprod`, `-Pe2e`, etc.) when relevant to the design.
+
+  specs:
+    - Use Gherkin-style scenarios: **WHEN** precondition **THEN** expected outcome.
+    - Reference openspec/specs/entity-method-conventions when touching entity classes.
+    - Reference openspec/specs/soft-deletable-entity when touching deletable entities.
+    - Ensure specs cover both backend behavior and frontend UI expectations when full-stack.
+
+  tasks:
+    - Break tasks into chunks of 2 hours or less.
+    - Include exact Gradle or npm commands where applicable (e.g. `./gradlew test integrationTest -x webapp -x webapp_test`).
+    - Separate backend tasks and frontend tasks explicitly.
+    - Include verification steps: lint commands, test commands, manual checks.
+    - Order tasks by dependency — foundational work before integration work.
