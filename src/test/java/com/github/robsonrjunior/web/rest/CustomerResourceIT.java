@@ -98,8 +98,8 @@ class CustomerResourceIT {
             .partyType(DEFAULT_PARTY_TYPE)
             .email(DEFAULT_EMAIL)
             .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .active(DEFAULT_ACTIVE);
+        customer.setDeletedAt(DEFAULT_DELETED_AT);
         return customer;
     }
 
@@ -117,8 +117,8 @@ class CustomerResourceIT {
             .partyType(UPDATED_PARTY_TYPE)
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .active(UPDATED_ACTIVE);
+        updatedCustomer.setDeletedAt(UPDATED_DELETED_AT);
         return updatedCustomer;
     }
 
@@ -780,7 +780,7 @@ class CustomerResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restCustomerMockMvc
             .perform(
@@ -894,7 +894,7 @@ class CustomerResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restCustomerMockMvc
             .perform(

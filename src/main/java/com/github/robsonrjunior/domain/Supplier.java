@@ -6,8 +6,6 @@ import com.github.robsonrjunior.domain.enumeration.PartyType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -21,7 +19,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class Supplier implements Serializable {
+public class Supplier extends SoftDeletableEntity {
 
     public static interface Multiple {}
 
@@ -75,10 +73,6 @@ public class Supplier implements Serializable {
     @Column(name = "active", nullable = false)
     @JsonView({ Multiple.class, Single.class })
     private Boolean active;
-
-    @Column(name = "deleted_at")
-    @JsonView({ Multiple.class, Single.class })
-    private Instant deletedAt;
 
     @JsonIgnoreProperties(value = { "customer", "supplier", "tenants", "cities" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
@@ -160,11 +154,6 @@ public class Supplier implements Serializable {
 
     public Supplier active(Boolean active) {
         this.setActive(active);
-        return this;
-    }
-
-    public Supplier deletedAt(Instant deletedAt) {
-        this.setDeletedAt(deletedAt);
         return this;
     }
 
@@ -268,7 +257,6 @@ public class Supplier implements Serializable {
             ", email='" + getEmail() + "'" +
             ", phone='" + getPhone() + "'" +
             ", active='" + getActive() + "'" +
-            ", deletedAt='" + getDeletedAt() + "'" +
             "}";
     }
 }

@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -21,7 +19,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class SaleItem implements Serializable {
+public class SaleItem extends SoftDeletableEntity {
 
     public static interface Multiple {}
 
@@ -59,10 +57,6 @@ public class SaleItem implements Serializable {
     @Column(name = "line_total", precision = 21, scale = 2, nullable = false)
     @JsonView({ Multiple.class, Single.class })
     private BigDecimal lineTotal;
-
-    @Column(name = "deleted_at")
-    @JsonView({ Multiple.class, Single.class })
-    private Instant deletedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "saleItems")
     @JsonIgnoreProperties(
@@ -117,11 +111,6 @@ public class SaleItem implements Serializable {
 
     public SaleItem lineTotal(BigDecimal lineTotal) {
         this.setLineTotal(lineTotal);
-        return this;
-    }
-
-    public SaleItem deletedAt(Instant deletedAt) {
-        this.setDeletedAt(deletedAt);
         return this;
     }
 
@@ -234,7 +223,6 @@ public class SaleItem implements Serializable {
             ", unitPrice=" + getUnitPrice() +
             ", discountAmount=" + getDiscountAmount() +
             ", lineTotal=" + getLineTotal() +
-            ", deletedAt='" + getDeletedAt() + "'" +
             "}";
     }
 }

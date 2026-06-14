@@ -95,8 +95,8 @@ class StockMovementResourceIT {
             .quantity(DEFAULT_QUANTITY)
             .unitCost(DEFAULT_UNIT_COST)
             .referenceNumber(DEFAULT_REFERENCE_NUMBER)
-            .notes(DEFAULT_NOTES)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .notes(DEFAULT_NOTES);
+        stockMovement.setDeletedAt(DEFAULT_DELETED_AT);
         return stockMovement;
     }
 
@@ -113,8 +113,8 @@ class StockMovementResourceIT {
             .quantity(UPDATED_QUANTITY)
             .unitCost(UPDATED_UNIT_COST)
             .referenceNumber(UPDATED_REFERENCE_NUMBER)
-            .notes(UPDATED_NOTES)
-            .deletedAt(UPDATED_DELETED_AT);
+            .notes(UPDATED_NOTES);
+        updatedStockMovement.setDeletedAt(UPDATED_DELETED_AT);
         return updatedStockMovement;
     }
 
@@ -704,7 +704,7 @@ class StockMovementResourceIT {
             .unitCost(UPDATED_UNIT_COST)
             .referenceNumber(UPDATED_REFERENCE_NUMBER)
             .notes(UPDATED_NOTES)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restStockMovementMockMvc
             .perform(
@@ -787,7 +787,7 @@ class StockMovementResourceIT {
         partialUpdatedStockMovement
             .movementDate(UPDATED_MOVEMENT_DATE)
             .referenceNumber(UPDATED_REFERENCE_NUMBER)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restStockMovementMockMvc
             .perform(
@@ -825,7 +825,7 @@ class StockMovementResourceIT {
             .unitCost(UPDATED_UNIT_COST)
             .referenceNumber(UPDATED_REFERENCE_NUMBER)
             .notes(UPDATED_NOTES)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restStockMovementMockMvc
             .perform(

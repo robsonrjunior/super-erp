@@ -6,7 +6,6 @@ import com.github.robsonrjunior.domain.enumeration.MovementType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
@@ -22,7 +21,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class StockMovement implements Serializable {
+public class StockMovement extends SoftDeletableEntity {
 
     public static interface Multiple {}
 
@@ -69,10 +68,6 @@ public class StockMovement implements Serializable {
     @Column(name = "notes", length = 500)
     @JsonView({ Multiple.class, Single.class })
     private String notes;
-
-    @Column(name = "deleted_at")
-    @JsonView({ Multiple.class, Single.class })
-    private Instant deletedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stockMovements")
     @JsonIgnoreProperties(
@@ -142,11 +137,6 @@ public class StockMovement implements Serializable {
 
     public StockMovement notes(String notes) {
         this.setNotes(notes);
-        return this;
-    }
-
-    public StockMovement deletedAt(Instant deletedAt) {
-        this.setDeletedAt(deletedAt);
         return this;
     }
 
@@ -288,7 +278,6 @@ public class StockMovement implements Serializable {
             ", unitCost=" + getUnitCost() +
             ", referenceNumber='" + getReferenceNumber() + "'" +
             ", notes='" + getNotes() + "'" +
-            ", deletedAt='" + getDeletedAt() + "'" +
             "}";
     }
 }

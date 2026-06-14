@@ -88,8 +88,8 @@ class SaleItemResourceIT {
             .quantity(DEFAULT_QUANTITY)
             .unitPrice(DEFAULT_UNIT_PRICE)
             .discountAmount(DEFAULT_DISCOUNT_AMOUNT)
-            .lineTotal(DEFAULT_LINE_TOTAL)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .lineTotal(DEFAULT_LINE_TOTAL);
+        saleItem.setDeletedAt(DEFAULT_DELETED_AT);
         return saleItem;
     }
 
@@ -104,8 +104,8 @@ class SaleItemResourceIT {
             .quantity(UPDATED_QUANTITY)
             .unitPrice(UPDATED_UNIT_PRICE)
             .discountAmount(UPDATED_DISCOUNT_AMOUNT)
-            .lineTotal(UPDATED_LINE_TOTAL)
-            .deletedAt(UPDATED_DELETED_AT);
+            .lineTotal(UPDATED_LINE_TOTAL);
+        updatedSaleItem.setDeletedAt(UPDATED_DELETED_AT);
         return updatedSaleItem;
     }
 
@@ -664,7 +664,7 @@ class SaleItemResourceIT {
             .unitPrice(UPDATED_UNIT_PRICE)
             .discountAmount(UPDATED_DISCOUNT_AMOUNT)
             .lineTotal(UPDATED_LINE_TOTAL)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleItemMockMvc
             .perform(
@@ -775,7 +775,7 @@ class SaleItemResourceIT {
             .unitPrice(UPDATED_UNIT_PRICE)
             .discountAmount(UPDATED_DISCOUNT_AMOUNT)
             .lineTotal(UPDATED_LINE_TOTAL)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleItemMockMvc
             .perform(

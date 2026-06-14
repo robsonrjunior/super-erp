@@ -98,8 +98,8 @@ class SupplierResourceIT {
             .partyType(DEFAULT_PARTY_TYPE)
             .email(DEFAULT_EMAIL)
             .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .active(DEFAULT_ACTIVE);
+        supplier.setDeletedAt(DEFAULT_DELETED_AT);
         return supplier;
     }
 
@@ -117,8 +117,8 @@ class SupplierResourceIT {
             .partyType(UPDATED_PARTY_TYPE)
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .active(UPDATED_ACTIVE);
+        updatedSupplier.setDeletedAt(UPDATED_DELETED_AT);
         return updatedSupplier;
     }
 
@@ -780,7 +780,7 @@ class SupplierResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restSupplierMockMvc
             .perform(
@@ -863,7 +863,7 @@ class SupplierResourceIT {
             .taxId(UPDATED_TAX_ID)
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restSupplierMockMvc
             .perform(
@@ -899,7 +899,7 @@ class SupplierResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restSupplierMockMvc
             .perform(

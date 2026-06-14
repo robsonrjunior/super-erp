@@ -21,9 +21,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -37,7 +35,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class Product implements Serializable {
+public class Product extends SoftDeletableEntity {
 
     public static interface Multiple {}
 
@@ -98,10 +96,6 @@ public class Product implements Serializable {
     @Column(name = "active", nullable = false)
     @JsonView({ Multiple.class, Single.class })
     private Boolean active;
-
-    @Column(name = "deleted_at")
-    @JsonView({ Multiple.class, Single.class })
-    private Instant deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "tenants", "sales", "products" }, allowSetters = true)
@@ -177,11 +171,6 @@ public class Product implements Serializable {
         return this;
     }
 
-    public Product deletedAt(Instant deletedAt) {
-        this.setDeletedAt(deletedAt);
-        return this;
-    }
-
     public Product saleItems(SaleItem saleItem) {
         this.setSaleItems(saleItem);
         return this;
@@ -250,9 +239,6 @@ public class Product implements Serializable {
             getMinStock() +
             ", active='" +
             getActive() +
-            "'" +
-            ", deletedAt='" +
-            getDeletedAt() +
             "'" +
             "}"
         );

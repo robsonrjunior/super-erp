@@ -107,8 +107,8 @@ class ProductResourceIT {
             .salePrice(DEFAULT_SALE_PRICE)
             .costPrice(DEFAULT_COST_PRICE)
             .minStock(DEFAULT_MIN_STOCK)
-            .active(DEFAULT_ACTIVE)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .active(DEFAULT_ACTIVE);
+        product.setDeletedAt(DEFAULT_DELETED_AT);
         return product;
     }
 
@@ -127,8 +127,8 @@ class ProductResourceIT {
             .salePrice(UPDATED_SALE_PRICE)
             .costPrice(UPDATED_COST_PRICE)
             .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .active(UPDATED_ACTIVE);
+        updatedProduct.setDeletedAt(UPDATED_DELETED_AT);
         return updatedProduct;
     }
 
@@ -955,7 +955,7 @@ class ProductResourceIT {
             .costPrice(UPDATED_COST_PRICE)
             .minStock(UPDATED_MIN_STOCK)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restProductMockMvc
             .perform(
@@ -1038,7 +1038,7 @@ class ProductResourceIT {
             .salePrice(UPDATED_SALE_PRICE)
             .costPrice(UPDATED_COST_PRICE)
             .minStock(UPDATED_MIN_STOCK)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restProductMockMvc
             .perform(
@@ -1075,7 +1075,7 @@ class ProductResourceIT {
             .costPrice(UPDATED_COST_PRICE)
             .minStock(UPDATED_MIN_STOCK)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restProductMockMvc
             .perform(

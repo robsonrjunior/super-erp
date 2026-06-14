@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -20,7 +18,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class Warehouse implements Serializable {
+public class Warehouse extends SoftDeletableEntity {
 
     public static interface Multiple {}
 
@@ -52,10 +50,6 @@ public class Warehouse implements Serializable {
     @Column(name = "active", nullable = false)
     @JsonView({ Multiple.class, Single.class })
     private Boolean active;
-
-    @Column(name = "deleted_at")
-    @JsonView({ Multiple.class, Single.class })
-    private Instant deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "tenants", "warehouses", "products", "rawMaterials" }, allowSetters = true)
@@ -110,11 +104,6 @@ public class Warehouse implements Serializable {
 
     public Warehouse active(Boolean active) {
         this.setActive(active);
-        return this;
-    }
-
-    public Warehouse deletedAt(Instant deletedAt) {
-        this.setDeletedAt(deletedAt);
         return this;
     }
 
@@ -209,7 +198,6 @@ public class Warehouse implements Serializable {
             ", name='" + getName() + "'" +
             ", code='" + getCode() + "'" +
             ", active='" + getActive() + "'" +
-            ", deletedAt='" + getDeletedAt() + "'" +
             "}";
     }
 }

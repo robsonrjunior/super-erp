@@ -101,8 +101,8 @@ class SaleResourceIT {
             .grossAmount(DEFAULT_GROSS_AMOUNT)
             .discountAmount(DEFAULT_DISCOUNT_AMOUNT)
             .netAmount(DEFAULT_NET_AMOUNT)
-            .notes(DEFAULT_NOTES)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .notes(DEFAULT_NOTES);
+        sale.setDeletedAt(DEFAULT_DELETED_AT);
         return sale;
     }
 
@@ -120,8 +120,8 @@ class SaleResourceIT {
             .grossAmount(UPDATED_GROSS_AMOUNT)
             .discountAmount(UPDATED_DISCOUNT_AMOUNT)
             .netAmount(UPDATED_NET_AMOUNT)
-            .notes(UPDATED_NOTES)
-            .deletedAt(UPDATED_DELETED_AT);
+            .notes(UPDATED_NOTES);
+        updatedSale.setDeletedAt(UPDATED_DELETED_AT);
         return updatedSale;
     }
 
@@ -833,7 +833,7 @@ class SaleResourceIT {
             .discountAmount(UPDATED_DISCOUNT_AMOUNT)
             .netAmount(UPDATED_NET_AMOUNT)
             .notes(UPDATED_NOTES)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleMockMvc
             .perform(
@@ -945,7 +945,7 @@ class SaleResourceIT {
             .discountAmount(UPDATED_DISCOUNT_AMOUNT)
             .netAmount(UPDATED_NET_AMOUNT)
             .notes(UPDATED_NOTES)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restSaleMockMvc
             .perform(

@@ -101,8 +101,8 @@ class RawMaterialResourceIT {
             .unitDecimalPlaces(DEFAULT_UNIT_DECIMAL_PLACES)
             .unitCost(DEFAULT_UNIT_COST)
             .minStock(DEFAULT_MIN_STOCK)
-            .active(DEFAULT_ACTIVE)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .active(DEFAULT_ACTIVE);
+        rawMaterial.setDeletedAt(DEFAULT_DELETED_AT);
         return rawMaterial;
     }
 
@@ -120,8 +120,8 @@ class RawMaterialResourceIT {
             .unitDecimalPlaces(UPDATED_UNIT_DECIMAL_PLACES)
             .unitCost(UPDATED_UNIT_COST)
             .minStock(UPDATED_MIN_STOCK)
-            .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .active(UPDATED_ACTIVE);
+        updatedRawMaterial.setDeletedAt(UPDATED_DELETED_AT);
         return updatedRawMaterial;
     }
 
@@ -836,7 +836,7 @@ class RawMaterialResourceIT {
             .unitCost(UPDATED_UNIT_COST)
             .minStock(UPDATED_MIN_STOCK)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restRawMaterialMockMvc
             .perform(
@@ -921,7 +921,7 @@ class RawMaterialResourceIT {
             .unitCost(UPDATED_UNIT_COST)
             .minStock(UPDATED_MIN_STOCK)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restRawMaterialMockMvc
             .perform(
@@ -960,7 +960,7 @@ class RawMaterialResourceIT {
             .unitCost(UPDATED_UNIT_COST)
             .minStock(UPDATED_MIN_STOCK)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restRawMaterialMockMvc
             .perform(

@@ -154,3 +154,6 @@ coverage/
 
 # Windows reserved device name
 nul
+
+# Openspec
+openspec/changes/*

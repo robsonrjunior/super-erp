@@ -93,8 +93,8 @@ class PersonResourceIT {
             .birthDate(DEFAULT_BIRTH_DATE)
             .email(DEFAULT_EMAIL)
             .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .active(DEFAULT_ACTIVE);
+        person.setDeletedAt(DEFAULT_DELETED_AT);
         return person;
     }
 
@@ -111,8 +111,8 @@ class PersonResourceIT {
             .birthDate(UPDATED_BIRTH_DATE)
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .active(UPDATED_ACTIVE);
+        updatedPerson.setDeletedAt(UPDATED_DELETED_AT);
         return updatedPerson;
     }
 
@@ -678,7 +678,7 @@ class PersonResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restPersonMockMvc
             .perform(
@@ -789,7 +789,7 @@ class PersonResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restPersonMockMvc
             .perform(

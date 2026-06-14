@@ -6,9 +6,7 @@ import com.github.robsonrjunior.domain.enumeration.UnitOfMeasure;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -22,7 +20,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class RawMaterial implements Serializable {
+public class RawMaterial extends SoftDeletableEntity {
 
     public static interface Multiple {}
 
@@ -77,10 +75,6 @@ public class RawMaterial implements Serializable {
     @Column(name = "active", nullable = false)
     @JsonView({ Multiple.class, Single.class })
     private Boolean active;
-
-    @Column(name = "deleted_at")
-    @JsonView({ Multiple.class, Single.class })
-    private Instant deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "tenants", "warehouses", "products", "rawMaterials" }, allowSetters = true)
@@ -150,11 +144,6 @@ public class RawMaterial implements Serializable {
 
     public RawMaterial active(Boolean active) {
         this.setActive(active);
-        return this;
-    }
-
-    public RawMaterial deletedAt(Instant deletedAt) {
-        this.setDeletedAt(deletedAt);
         return this;
     }
 
@@ -248,7 +237,6 @@ public class RawMaterial implements Serializable {
             ", unitCost=" + getUnitCost() +
             ", minStock=" + getMinStock() +
             ", active='" + getActive() + "'" +
-            ", deletedAt='" + getDeletedAt() + "'" +
             "}";
     }
 }

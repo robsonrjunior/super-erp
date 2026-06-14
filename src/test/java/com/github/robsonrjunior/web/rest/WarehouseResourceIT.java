@@ -77,7 +77,8 @@ class WarehouseResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Warehouse createEntity(EntityManager em) {
-        Warehouse warehouse = new Warehouse().name(DEFAULT_NAME).code(DEFAULT_CODE).active(DEFAULT_ACTIVE).deletedAt(DEFAULT_DELETED_AT);
+        Warehouse warehouse = new Warehouse().name(DEFAULT_NAME).code(DEFAULT_CODE).active(DEFAULT_ACTIVE);
+        warehouse.setDeletedAt(DEFAULT_DELETED_AT);
         return warehouse;
     }
 
@@ -88,11 +89,8 @@ class WarehouseResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Warehouse createUpdatedEntity(EntityManager em) {
-        Warehouse updatedWarehouse = new Warehouse()
-            .name(UPDATED_NAME)
-            .code(UPDATED_CODE)
-            .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+        Warehouse updatedWarehouse = new Warehouse().name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE);
+        updatedWarehouse.setDeletedAt(UPDATED_DELETED_AT);
         return updatedWarehouse;
     }
 
@@ -516,7 +514,7 @@ class WarehouseResourceIT {
         Warehouse updatedWarehouse = warehouseRepository.findById(warehouse.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedWarehouse are not directly saved in db
         em.detach(updatedWarehouse);
-        updatedWarehouse.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).deletedAt(UPDATED_DELETED_AT);
+        updatedWarehouse.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).setDeletedAt(UPDATED_DELETED_AT);
 
         restWarehouseMockMvc
             .perform(
@@ -594,7 +592,7 @@ class WarehouseResourceIT {
         Warehouse partialUpdatedWarehouse = new Warehouse();
         partialUpdatedWarehouse.setId(warehouse.getId());
 
-        partialUpdatedWarehouse.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).deletedAt(UPDATED_DELETED_AT);
+        partialUpdatedWarehouse.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).setDeletedAt(UPDATED_DELETED_AT);
 
         restWarehouseMockMvc
             .perform(
@@ -625,7 +623,7 @@ class WarehouseResourceIT {
         Warehouse partialUpdatedWarehouse = new Warehouse();
         partialUpdatedWarehouse.setId(warehouse.getId());
 
-        partialUpdatedWarehouse.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).deletedAt(UPDATED_DELETED_AT);
+        partialUpdatedWarehouse.name(UPDATED_NAME).code(UPDATED_CODE).active(UPDATED_ACTIVE).setDeletedAt(UPDATED_DELETED_AT);
 
         restWarehouseMockMvc
             .perform(

@@ -94,8 +94,8 @@ class CompanyResourceIT {
             .stateRegistration(DEFAULT_STATE_REGISTRATION)
             .email(DEFAULT_EMAIL)
             .phone(DEFAULT_PHONE)
-            .active(DEFAULT_ACTIVE)
-            .deletedAt(DEFAULT_DELETED_AT);
+            .active(DEFAULT_ACTIVE);
+        company.setDeletedAt(DEFAULT_DELETED_AT);
         return company;
     }
 
@@ -113,8 +113,8 @@ class CompanyResourceIT {
             .stateRegistration(UPDATED_STATE_REGISTRATION)
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
-            .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .active(UPDATED_ACTIVE);
+        updatedCompany.setDeletedAt(UPDATED_DELETED_AT);
         return updatedCompany;
     }
 
@@ -726,7 +726,7 @@ class CompanyResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restCompanyMockMvc
             .perform(
@@ -842,7 +842,7 @@ class CompanyResourceIT {
             .email(UPDATED_EMAIL)
             .phone(UPDATED_PHONE)
             .active(UPDATED_ACTIVE)
-            .deletedAt(UPDATED_DELETED_AT);
+            .setDeletedAt(UPDATED_DELETED_AT);
 
         restCompanyMockMvc
             .perform(
