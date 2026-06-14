@@ -23,6 +23,7 @@
             id="field_legalName"
             data-cy="legalName"
             [(ngModel)]="company.legalName"
+            #legalNameRef="ngModel"
           />
           @if (legalNameRef.invalid && (legalNameRef.dirty || legalNameRef.touched)) {
             <div>
@@ -51,6 +52,7 @@
             id="field_tradeName"
             data-cy="tradeName"
             [(ngModel)]="company.tradeName"
+            #tradeNameRef="ngModel"
           />
           @if (tradeNameRef.invalid && (tradeNameRef.dirty || tradeNameRef.touched)) {
             <div>
@@ -64,7 +66,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_cnpj" jhiTranslate="superErpApp.company.cnpj">Cnpj</label>
-          <input type="text" class="form-control" name="cnpj" id="field_cnpj" data-cy="cnpj" [(ngModel)]="company.cnpj" />
+          <input
+            type="text"
+            class="form-control"
+            name="cnpj"
+            id="field_cnpj"
+            data-cy="cnpj"
+            [(ngModel)]="company.cnpj"
+            #cnpjRef="ngModel"
+          />
           @if (cnpjRef.invalid && (cnpjRef.dirty || cnpjRef.touched)) {
             <div>
               @if (cnpjRef.errors?.required) {
@@ -94,6 +104,7 @@
             id="field_stateRegistration"
             data-cy="stateRegistration"
             [(ngModel)]="company.stateRegistration"
+            #stateRegistrationRef="ngModel"
           />
           @if (stateRegistrationRef.invalid && (stateRegistrationRef.dirty || stateRegistrationRef.touched)) {
             <div>
@@ -107,7 +118,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_email" jhiTranslate="superErpApp.company.email">Email</label>
-          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" [(ngModel)]="company.email" />
+          <input
+            type="text"
+            class="form-control"
+            name="email"
+            id="field_email"
+            data-cy="email"
+            [(ngModel)]="company.email"
+            #emailRef="ngModel"
+          />
           @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
             <div>
               @if (emailRef.errors?.maxlength) {
@@ -125,7 +144,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_phone" jhiTranslate="superErpApp.company.phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="field_phone" data-cy="phone" [(ngModel)]="company.phone" />
+          <input
+            type="text"
+            class="form-control"
+            name="phone"
+            id="field_phone"
+            data-cy="phone"
+            [(ngModel)]="company.phone"
+            #phoneRef="ngModel"
+          />
           @if (phoneRef.invalid && (phoneRef.dirty || phoneRef.touched)) {
             <div>
               @if (phoneRef.errors?.maxlength) {
@@ -138,7 +165,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_active" jhiTranslate="superErpApp.company.active">Active</label>
-          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" [(ngModel)]="company.active" />
+          <input
+            type="checkbox"
+            class="form-check"
+            name="active"
+            id="field_active"
+            data-cy="active"
+            [(ngModel)]="company.active"
+            #activeRef="ngModel"
+          />
           @if (activeRef.invalid && (activeRef.dirty || activeRef.touched)) {
             <div>
               @if (activeRef.errors?.required) {

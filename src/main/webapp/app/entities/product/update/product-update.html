@@ -16,7 +16,15 @@
         }
         <div class="mb-3">
           <label class="form-label" for="field_name" jhiTranslate="superErpApp.product.name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" [(ngModel)]="product.name" />
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="field_name"
+            data-cy="name"
+            [(ngModel)]="product.name"
+            #nameRef="ngModel"
+          />
           @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
             <div>
               @if (nameRef.errors?.required) {
@@ -37,7 +45,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_sku" jhiTranslate="superErpApp.product.sku">Sku</label>
-          <input type="text" class="form-control" name="sku" id="field_sku" data-cy="sku" [(ngModel)]="product.sku" />
+          <input type="text" class="form-control" name="sku" id="field_sku" data-cy="sku" [(ngModel)]="product.sku" #skuRef="ngModel" />
           @if (skuRef.invalid && (skuRef.dirty || skuRef.touched)) {
             <div>
               @if (skuRef.errors?.required) {
@@ -62,6 +70,7 @@
             class="form-control"
             name="unitOfMeasure"
             [(ngModel)]="product.unitOfMeasure"
+            #unitOfMeasureRef="ngModel"
             id="field_unitOfMeasure"
             data-cy="unitOfMeasure"
           >
@@ -89,6 +98,7 @@
             id="field_unitDecimalPlaces"
             data-cy="unitDecimalPlaces"
             [(ngModel)]="product.unitDecimalPlaces"
+            #unitDecimalPlacesRef="ngModel"
           />
           @if (unitDecimalPlacesRef.invalid && (unitDecimalPlacesRef.dirty || unitDecimalPlacesRef.touched)) {
             <div>
@@ -120,6 +130,7 @@
             id="field_salePrice"
             data-cy="salePrice"
             [(ngModel)]="product.salePrice"
+            #salePriceRef="ngModel"
           />
           @if (salePriceRef.invalid && (salePriceRef.dirty || salePriceRef.touched)) {
             <div>
@@ -146,6 +157,7 @@
             id="field_costPrice"
             data-cy="costPrice"
             [(ngModel)]="product.costPrice"
+            #costPriceRef="ngModel"
           />
           @if (costPriceRef.invalid && (costPriceRef.dirty || costPriceRef.touched)) {
             <div>
@@ -162,7 +174,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_minStock" jhiTranslate="superErpApp.product.minStock">Min Stock</label>
-          <input type="number" class="form-control" name="minStock" id="field_minStock" data-cy="minStock" [(ngModel)]="product.minStock" />
+          <input
+            type="number"
+            class="form-control"
+            name="minStock"
+            id="field_minStock"
+            data-cy="minStock"
+            [(ngModel)]="product.minStock"
+            #minStockRef="ngModel"
+          />
           @if (minStockRef.invalid && (minStockRef.dirty || minStockRef.touched)) {
             <div>
               @if (minStockRef.errors?.min) {
@@ -178,7 +198,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_active" jhiTranslate="superErpApp.product.active">Active</label>
-          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" [(ngModel)]="product.active" />
+          <input
+            type="checkbox"
+            class="form-check"
+            name="active"
+            id="field_active"
+            data-cy="active"
+            [(ngModel)]="product.active"
+            #activeRef="ngModel"
+          />
           @if (activeRef.invalid && (activeRef.dirty || activeRef.touched)) {
             <div>
               @if (activeRef.errors?.required) {

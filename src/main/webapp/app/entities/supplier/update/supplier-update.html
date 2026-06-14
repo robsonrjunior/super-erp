@@ -23,6 +23,7 @@
             id="field_legalName"
             data-cy="legalName"
             [(ngModel)]="supplier.legalName"
+            #legalNameRef="ngModel"
           />
           @if (legalNameRef.invalid && (legalNameRef.dirty || legalNameRef.touched)) {
             <div>
@@ -51,6 +52,7 @@
             id="field_tradeName"
             data-cy="tradeName"
             [(ngModel)]="supplier.tradeName"
+            #tradeNameRef="ngModel"
           />
           @if (tradeNameRef.invalid && (tradeNameRef.dirty || tradeNameRef.touched)) {
             <div>
@@ -64,7 +66,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_taxId" jhiTranslate="superErpApp.supplier.taxId">Tax Id</label>
-          <input type="text" class="form-control" name="taxId" id="field_taxId" data-cy="taxId" [(ngModel)]="supplier.taxId" />
+          <input
+            type="text"
+            class="form-control"
+            name="taxId"
+            id="field_taxId"
+            data-cy="taxId"
+            [(ngModel)]="supplier.taxId"
+            #taxIdRef="ngModel"
+          />
           @if (taxIdRef.invalid && (taxIdRef.dirty || taxIdRef.touched)) {
             <div>
               @if (taxIdRef.errors?.required) {
@@ -85,7 +95,14 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_partyType" jhiTranslate="superErpApp.supplier.partyType">Party Type</label>
-          <select class="form-control" name="partyType" [(ngModel)]="supplier.partyType" id="field_partyType" data-cy="partyType">
+          <select
+            class="form-control"
+            name="partyType"
+            [(ngModel)]="supplier.partyType"
+            #partyTypeRef="ngModel"
+            id="field_partyType"
+            data-cy="partyType"
+          >
             <option [ngValue]="null">{{ 'superErpApp.PartyType.null' | translate }}</option>
             @for (partyType of partyTypeValues; track $index) {
               <option [value]="partyType">{{ 'superErpApp.PartyType.' + partyType | translate }}</option>
@@ -101,7 +118,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_email" jhiTranslate="superErpApp.supplier.email">Email</label>
-          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" [(ngModel)]="supplier.email" />
+          <input
+            type="text"
+            class="form-control"
+            name="email"
+            id="field_email"
+            data-cy="email"
+            [(ngModel)]="supplier.email"
+            #emailRef="ngModel"
+          />
           @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
             <div>
               @if (emailRef.errors?.maxlength) {
@@ -119,7 +144,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_phone" jhiTranslate="superErpApp.supplier.phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="field_phone" data-cy="phone" [(ngModel)]="supplier.phone" />
+          <input
+            type="text"
+            class="form-control"
+            name="phone"
+            id="field_phone"
+            data-cy="phone"
+            [(ngModel)]="supplier.phone"
+            #phoneRef="ngModel"
+          />
           @if (phoneRef.invalid && (phoneRef.dirty || phoneRef.touched)) {
             <div>
               @if (phoneRef.errors?.maxlength) {
@@ -132,7 +165,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_active" jhiTranslate="superErpApp.supplier.active">Active</label>
-          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" [(ngModel)]="supplier.active" />
+          <input
+            type="checkbox"
+            class="form-check"
+            name="active"
+            id="field_active"
+            data-cy="active"
+            [(ngModel)]="supplier.active"
+            #activeRef="ngModel"
+          />
           @if (activeRef.invalid && (activeRef.dirty || activeRef.touched)) {
             <div>
               @if (activeRef.errors?.required) {

@@ -8,7 +8,7 @@ import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
-  selector: 'app-footer',
+  selector: 'jhi-footer',
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
   imports: [FormsModule, TranslateModule, SelectButtonModule],

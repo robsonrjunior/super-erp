@@ -23,6 +23,7 @@
             id="field_quantity"
             data-cy="quantity"
             [(ngModel)]="saleItem.quantity"
+            #quantityRef="ngModel"
           />
           @if (quantityRef.invalid && (quantityRef.dirty || quantityRef.touched)) {
             <div>
@@ -49,6 +50,7 @@
             id="field_unitPrice"
             data-cy="unitPrice"
             [(ngModel)]="saleItem.unitPrice"
+            #unitPriceRef="ngModel"
           />
           @if (unitPriceRef.invalid && (unitPriceRef.dirty || unitPriceRef.touched)) {
             <div>
@@ -75,6 +77,7 @@
             id="field_discountAmount"
             data-cy="discountAmount"
             [(ngModel)]="saleItem.discountAmount"
+            #discountAmountRef="ngModel"
           />
           @if (discountAmountRef.invalid && (discountAmountRef.dirty || discountAmountRef.touched)) {
             <div>
@@ -98,6 +101,7 @@
             id="field_lineTotal"
             data-cy="lineTotal"
             [(ngModel)]="saleItem.lineTotal"
+            #lineTotalRef="ngModel"
           />
           @if (lineTotalRef.invalid && (lineTotalRef.dirty || lineTotalRef.touched)) {
             <div>

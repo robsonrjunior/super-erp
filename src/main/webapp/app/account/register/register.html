@@ -36,7 +36,7 @@
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
       @if (!success()) {
-        <form name="form" (ngSubmit)="register()" [formGroup]="registerForm">
+        <form name="form" (ngSubmit)="register()" #registerFormRef="ngForm">
           <div class="mb-3">
             <label class="form-label" for="login" jhiTranslate="global.form.username.label">Usuário</label>
             <input
@@ -45,11 +45,15 @@
               id="login"
               name="login"
               placeholder="{{ 'global.form.username.placeholder' | translate }}"
-              formControlName="login"
+              [(ngModel)]="registerForm.login"
+              required
+              minlength="1"
+              maxlength="50"
+              pattern="^[_.@A-Za-z0-9-]*$"
+              #loginRef="ngModel"
+              #login
               data-cy="username"
             />
-
-            @let loginRef = registerForm.get('login')!;
             @if (loginRef.invalid && (loginRef.dirty || loginRef.touched)) {
               <div>
                 @if (loginRef?.errors?.required) {
@@ -87,11 +91,15 @@
               id="email"
               name="email"
               placeholder="{{ 'global.form.email.placeholder' | translate }}"
-              formControlName="email"
+              [(ngModel)]="registerForm.email"
+              required
+              email
+              minlength="5"
+              maxlength="50"
+              #emailRef="ngModel"
               data-cy="email"
             />
 
-            @let emailRef = registerForm.get('email')!;
             @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
               <div>
                 @if (emailRef?.errors?.required) {
@@ -127,11 +135,14 @@
               id="password"
               name="password"
               placeholder="{{ 'global.form.newpassword.placeholder' | translate }}"
-              formControlName="password"
+              [(ngModel)]="registerForm.password"
+              required
+              minlength="4"
+              maxlength="50"
+              #passwordRef="ngModel"
               data-cy="firstPassword"
             />
 
-            @let passwordRef = registerForm.get('password')!;
             @if (passwordRef.invalid && (passwordRef.dirty || passwordRef.touched)) {
               <div>
                 @if (passwordRef?.errors?.required) {
@@ -167,11 +178,14 @@
               id="confirmPassword"
               name="confirmPassword"
               placeholder="{{ 'global.form.confirmpassword.placeholder' | translate }}"
-              formControlName="confirmPassword"
+              [(ngModel)]="registerForm.confirmPassword"
+              required
+              minlength="4"
+              maxlength="50"
+              #confirmPasswordRef="ngModel"
               data-cy="secondPassword"
             />
 
-            @let confirmPasswordRef = registerForm.get('confirmPassword')!;
             @if (confirmPasswordRef.invalid && (confirmPasswordRef.dirty || confirmPasswordRef.touched)) {
               <div>
                 @if (confirmPasswordRef?.errors?.required) {
@@ -197,7 +211,7 @@
 
           <button
             type="submit"
-            [disabled]="registerForm.invalid"
+            [disabled]="registerFormRef.invalid"
             class="btn btn-primary"
             data-cy="submit"
             jhiTranslate="register.form.button"

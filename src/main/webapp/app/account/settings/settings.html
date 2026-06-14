@@ -1,9 +1,9 @@
 <div>
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
-      @if (settingsForm.value.login) {
-        <h2 jhiTranslate="settings.title" [translateValues]="{ username: settingsForm.value.login }">
-          Configurações para o usuário [<strong>{{ settingsForm.value.login }}</strong
+      @if (settingsForm.login) {
+        <h2 jhiTranslate="settings.title" [translateValues]="{ username: settingsForm.login }">
+          Configurações para o usuário [<strong>{{ settingsForm.login }}</strong
           >]
         </h2>
       }
@@ -14,8 +14,8 @@
 
       <jhi-alert-error />
 
-      @if (settingsForm.value.login) {
-        <form name="form" (ngSubmit)="save()" [formGroup]="settingsForm" novalidate>
+      @if (settingsForm.login) {
+        <form name="form" (ngSubmit)="save()" #settingsFormRef="ngForm" novalidate>
           <div class="mb-3">
             <label class="form-label" for="firstName" jhiTranslate="settings.form.firstname">Nome</label>
             <input
@@ -24,11 +24,14 @@
               id="firstName"
               name="firstName"
               placeholder="{{ 'settings.form.firstname.placeholder' | translate }}"
-              formControlName="firstName"
+              [(ngModel)]="settingsForm.firstName"
+              required
+              minlength="1"
+              maxlength="50"
+              #firstNameRef="ngModel"
               data-cy="firstname"
             />
 
-            @let firstNameRef = settingsForm.get('firstName')!;
             @if (firstNameRef.invalid && (firstNameRef.dirty || firstNameRef.touched)) {
               <div>
                 @if (firstNameRef?.errors?.required) {
@@ -60,11 +63,14 @@
               id="lastName"
               name="lastName"
               placeholder="{{ 'settings.form.lastname.placeholder' | translate }}"
-              formControlName="lastName"
+              [(ngModel)]="settingsForm.lastName"
+              required
+              minlength="1"
+              maxlength="50"
+              #lastNameRef="ngModel"
               data-cy="lastname"
             />
 
-            @let lastNameRef = settingsForm.get('lastName')!;
             @if (lastNameRef.invalid && (lastNameRef.dirty || lastNameRef.touched)) {
               <div>
                 @if (lastNameRef?.errors?.required) {
@@ -96,11 +102,15 @@
               id="email"
               name="email"
               placeholder="{{ 'global.form.email.placeholder' | translate }}"
-              formControlName="email"
+              [(ngModel)]="settingsForm.email"
+              required
+              email
+              minlength="5"
+              maxlength="50"
+              #emailRef="ngModel"
               data-cy="email"
             />
 
-            @let emailRef = settingsForm.get('email')!;
             @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
               <div>
                 @if (emailRef?.errors?.required) {
@@ -131,7 +141,7 @@
           @if (languages && languages.length > 0) {
             <div class="mb-3">
               <label for="langKey" jhiTranslate="settings.form.language">Idioma</label>
-              <select class="form-control" id="langKey" name="langKey" formControlName="langKey" data-cy="langKey">
+              <select class="form-control" id="langKey" name="langKey" [(ngModel)]="settingsForm.langKey" data-cy="langKey">
                 @for (language of languages; track $index) {
                   <option [value]="language">{{ language | findLanguageFromKey }}</option>
                 }
@@ -141,7 +151,7 @@
 
           <button
             type="submit"
-            [disabled]="settingsForm.invalid"
+            [disabled]="settingsFormRef.invalid"
             class="btn btn-primary"
             data-cy="submit"
             jhiTranslate="settings.form.button"

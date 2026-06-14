@@ -24,6 +24,7 @@
               class="form-control"
               name="saleDate"
               [(ngModel)]="sale.saleDate"
+              #saleDateRef="ngModel"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
@@ -50,6 +51,7 @@
             id="field_saleNumber"
             data-cy="saleNumber"
             [(ngModel)]="sale.saleNumber"
+            #saleNumberRef="ngModel"
           />
           @if (saleNumberRef.invalid && (saleNumberRef.dirty || saleNumberRef.touched)) {
             <div>
@@ -71,7 +73,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_status" jhiTranslate="superErpApp.sale.status">Status</label>
-          <select class="form-control" name="status" [(ngModel)]="sale.status" id="field_status" data-cy="status">
+          <select class="form-control" name="status" [(ngModel)]="sale.status" #statusRef="ngModel" id="field_status" data-cy="status">
             <option [ngValue]="null">{{ 'superErpApp.SaleStatus.null' | translate }}</option>
             @for (saleStatus of saleStatusValues; track $index) {
               <option [value]="saleStatus">{{ 'superErpApp.SaleStatus.' + saleStatus | translate }}</option>
@@ -94,6 +96,7 @@
             id="field_grossAmount"
             data-cy="grossAmount"
             [(ngModel)]="sale.grossAmount"
+            #grossAmountRef="ngModel"
           />
           @if (grossAmountRef.invalid && (grossAmountRef.dirty || grossAmountRef.touched)) {
             <div>
@@ -120,6 +123,7 @@
             id="field_discountAmount"
             data-cy="discountAmount"
             [(ngModel)]="sale.discountAmount"
+            #discountAmountRef="ngModel"
           />
           @if (discountAmountRef.invalid && (discountAmountRef.dirty || discountAmountRef.touched)) {
             <div>
@@ -143,6 +147,7 @@
             id="field_netAmount"
             data-cy="netAmount"
             [(ngModel)]="sale.netAmount"
+            #netAmountRef="ngModel"
           />
           @if (netAmountRef.invalid && (netAmountRef.dirty || netAmountRef.touched)) {
             <div>
@@ -162,7 +167,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_notes" jhiTranslate="superErpApp.sale.notes">Notes</label>
-          <input type="text" class="form-control" name="notes" id="field_notes" data-cy="notes" [(ngModel)]="sale.notes" />
+          <input
+            type="text"
+            class="form-control"
+            name="notes"
+            id="field_notes"
+            data-cy="notes"
+            [(ngModel)]="sale.notes"
+            #notesRef="ngModel"
+          />
           @if (notesRef.invalid && (notesRef.dirty || notesRef.touched)) {
             <div>
               @if (notesRef.errors?.maxlength) {

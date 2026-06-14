@@ -67,7 +67,13 @@ Essa composicao reduz duplicacao de informacao e permite que os processos conver
 ### Backend
 
 ```bash
-./gradlew
+npm run backend:start
+```
+
+Ou
+
+```bash
+./gradlew -x webapp -x webapp_test
 ```
 
 ### Frontend em modo desenvolvimento

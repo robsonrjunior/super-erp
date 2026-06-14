@@ -36,6 +36,7 @@
               class="form-control"
               name="movementDate"
               [(ngModel)]="stockMovement.movementDate"
+              #movementDateRef="ngModel"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
@@ -59,6 +60,7 @@
             class="form-control"
             name="movementType"
             [(ngModel)]="stockMovement.movementType"
+            #movementTypeRef="ngModel"
             id="field_movementType"
             data-cy="movementType"
           >
@@ -84,6 +86,7 @@
             id="field_quantity"
             data-cy="quantity"
             [(ngModel)]="stockMovement.quantity"
+            #quantityRef="ngModel"
           />
           @if (quantityRef.invalid && (quantityRef.dirty || quantityRef.touched)) {
             <div>
@@ -110,6 +113,7 @@
             id="field_unitCost"
             data-cy="unitCost"
             [(ngModel)]="stockMovement.unitCost"
+            #unitCostRef="ngModel"
           />
           @if (unitCostRef.invalid && (unitCostRef.dirty || unitCostRef.touched)) {
             <div>
@@ -135,6 +139,7 @@
             id="field_referenceNumber"
             data-cy="referenceNumber"
             [(ngModel)]="stockMovement.referenceNumber"
+            #referenceNumberRef="ngModel"
           />
           @if (referenceNumberRef.invalid && (referenceNumberRef.dirty || referenceNumberRef.touched)) {
             <div>
@@ -148,7 +153,15 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="field_notes" jhiTranslate="superErpApp.stockMovement.notes">Notes</label>
-          <input type="text" class="form-control" name="notes" id="field_notes" data-cy="notes" [(ngModel)]="stockMovement.notes" />
+          <input
+            type="text"
+            class="form-control"
+            name="notes"
+            id="field_notes"
+            data-cy="notes"
+            [(ngModel)]="stockMovement.notes"
+            #notesRef="ngModel"
+          />
           @if (notesRef.invalid && (notesRef.dirty || notesRef.touched)) {
             <div>
               @if (notesRef.errors?.maxlength) {
