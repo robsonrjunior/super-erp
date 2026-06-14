@@ -1,15 +1,15 @@
 <jhi-page-ribbon />
 
-<div class="app-layout">
-  <div>
-    <router-outlet name="navbar" />
-  </div>
-
-  <main class="app-content container-fluid">
-    <div class="card jh-card">
-      <router-outlet />
+<p-card>
+  <div class="card-layout">
+    <div>
+      <router-outlet name="navbar" />
     </div>
-  </main>
 
-  <app-footer />
-</div>
+    <main class="card-content">
+      <router-outlet />
+    </main>
+
+    <app-footer />
+  </div>
+</p-card>

@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import dayjs from 'dayjs/esm';
+import { CardModule } from 'primeng/card';
 
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import { AccountService } from 'app/core/auth/account.service';
@@ -14,7 +15,7 @@ import PageRibbon from '../profiles/page-ribbon';
   templateUrl: './main.html',
   styleUrls: ['./main.scss'],
   providers: [AppPageTitleStrategy],
-  imports: [RouterOutlet, Footer, PageRibbon],
+  imports: [RouterOutlet, CardModule, Footer, PageRibbon],
 })
 export default class Main implements OnInit {
   private readonly renderer: Renderer2;
