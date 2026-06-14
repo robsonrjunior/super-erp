@@ -47,7 +47,7 @@ rules:
     - Mention Gradle profile flags (`-Pprod`, `-Pe2e`, etc.) when relevant to the design.
 
   specs:
-    - Use Gherkin-style scenarios: **WHEN** precondition **THEN** expected outcome.
+    - "Use Gherkin-style scenarios: **WHEN** precondition **THEN** expected outcome."
     - Reference openspec/specs/entity-method-conventions when touching entity classes.
     - Reference openspec/specs/soft-deletable-entity when touching deletable entities.
     - Ensure specs cover both backend behavior and frontend UI expectations when full-stack.
