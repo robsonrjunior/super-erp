@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,19 +18,21 @@ import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 
 import { SupplierService } from '../service/supplier.service';
-import { ISupplier } from '../supplier.model';
+import { ISupplier, NewSupplier } from '../supplier.model';
 
-import { SupplierFormGroup, SupplierFormService } from './supplier-form.service';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
 import { RawMaterialService } from 'app/entities/raw-material/service/raw-material.service';
 
 @Component({
   selector: 'jhi-supplier-update',
   templateUrl: './supplier-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class SupplierUpdate implements OnInit {
   readonly isSaving = signal(false);
-  supplier: ISupplier | null = null;
+  supplier: any = { id: null, active: false, deletedAt: null };
   partyTypeValues = Object.keys(PartyType);
 
   peopleCollection = signal<IPerson[]>([]);
@@ -38,14 +40,10 @@ export class SupplierUpdate implements OnInit {
   rawMaterialsSharedCollection = signal<IRawMaterial[]>([]);
 
   protected supplierService = inject(SupplierService);
-  protected supplierFormService = inject(SupplierFormService);
   protected personService = inject(PersonService);
   protected companyService = inject(CompanyService);
   protected rawMaterialService = inject(RawMaterialService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: SupplierFormGroup = this.supplierFormService.createSupplierFormGroup();
 
   comparePerson = (o1: IPerson | null, o2: IPerson | null): boolean => this.personService.comparePerson(o1, o2);
 
@@ -55,9 +53,8 @@ export class SupplierUpdate implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ supplier }) => {
-      this.supplier = supplier;
       if (supplier) {
-        this.updateForm(supplier);
+        this.supplier = { ...supplier, deletedAt: supplier.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
 
       this.loadRelationshipsOptions();
@@ -70,11 +67,11 @@ export class SupplierUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const supplier = this.supplierFormService.getSupplier(this.editForm);
-    if (supplier.id === null) {
-      this.subscribeToSaveResponse(this.supplierService.create(supplier));
+    const payload = { ...this.supplier, deletedAt: this.supplier.deletedAt ? dayjs(this.supplier.deletedAt, DATE_TIME_FORMAT) : null };
+    if (this.supplier.id === null) {
+      this.subscribeToSaveResponse(this.supplierService.create(payload as NewSupplier));
     } else {
-      this.subscribeToSaveResponse(this.supplierService.update(supplier));
+      this.subscribeToSaveResponse(this.supplierService.update(payload as ISupplier));
     }
   }
 
@@ -95,19 +92,6 @@ export class SupplierUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(supplier: ISupplier): void {
-    this.supplier = supplier;
-    this.supplierFormService.resetForm(this.editForm, supplier);
-
-    this.peopleCollection.set(this.personService.addPersonToCollectionIfMissing<IPerson>(this.peopleCollection(), supplier.person));
-    this.companiesCollection.set(
-      this.companyService.addCompanyToCollectionIfMissing<ICompany>(this.companiesCollection(), supplier.company),
-    );
-    this.rawMaterialsSharedCollection.update(rawMaterials =>
-      this.rawMaterialService.addRawMaterialToCollectionIfMissing<IRawMaterial>(rawMaterials, supplier.rawMaterials),
-    );
   }
 
   protected loadRelationshipsOptions(): void {

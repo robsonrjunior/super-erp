@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -15,30 +15,27 @@ import { IStockMovement } from 'app/entities/stock-movement/stock-movement.model
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { WarehouseService } from '../service/warehouse.service';
-import { IWarehouse } from '../warehouse.model';
+import { IWarehouse, NewWarehouse } from '../warehouse.model';
 
-import { WarehouseFormGroup, WarehouseFormService } from './warehouse-form.service';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 @Component({
   selector: 'jhi-warehouse-update',
   templateUrl: './warehouse-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class WarehouseUpdate implements OnInit {
   readonly isSaving = signal(false);
-  warehouse: IWarehouse | null = null;
+  warehouse: any = { id: null, active: false, deletedAt: null };
 
   stockMovementsSharedCollection = signal<IStockMovement[]>([]);
   salesSharedCollection = signal<ISale[]>([]);
 
   protected warehouseService = inject(WarehouseService);
-  protected warehouseFormService = inject(WarehouseFormService);
   protected stockMovementService = inject(StockMovementService);
   protected saleService = inject(SaleService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: WarehouseFormGroup = this.warehouseFormService.createWarehouseFormGroup();
 
   compareStockMovement = (o1: IStockMovement | null, o2: IStockMovement | null): boolean =>
     this.stockMovementService.compareStockMovement(o1, o2);
@@ -47,9 +44,8 @@ export class WarehouseUpdate implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ warehouse }) => {
-      this.warehouse = warehouse;
       if (warehouse) {
-        this.updateForm(warehouse);
+        this.warehouse = { ...warehouse, deletedAt: warehouse.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
 
       this.loadRelationshipsOptions();
@@ -62,11 +58,14 @@ export class WarehouseUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const warehouse = this.warehouseFormService.getWarehouse(this.editForm);
-    if (warehouse.id === null) {
-      this.subscribeToSaveResponse(this.warehouseService.create(warehouse));
+    const payload = {
+      ...this.warehouse,
+      deletedAt: this.warehouse.deletedAt ? dayjs(this.warehouse.deletedAt, DATE_TIME_FORMAT) : null,
+    };
+    if (this.warehouse.id === null) {
+      this.subscribeToSaveResponse(this.warehouseService.create(payload as NewWarehouse));
     } else {
-      this.subscribeToSaveResponse(this.warehouseService.update(warehouse));
+      this.subscribeToSaveResponse(this.warehouseService.update(payload as IWarehouse));
     }
   }
 
@@ -87,16 +86,6 @@ export class WarehouseUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(warehouse: IWarehouse): void {
-    this.warehouse = warehouse;
-    this.warehouseFormService.resetForm(this.editForm, warehouse);
-
-    this.stockMovementsSharedCollection.update(stockMovements =>
-      this.stockMovementService.addStockMovementToCollectionIfMissing<IStockMovement>(stockMovements, warehouse.stockMovements),
-    );
-    this.salesSharedCollection.update(sales => this.saleService.addSaleToCollectionIfMissing<ISale>(sales, warehouse.sales));
   }
 
   protected loadRelationshipsOptions(): void {

@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,39 +13,34 @@ import { StockMovementService } from 'app/entities/stock-movement/service/stock-
 import { IStockMovement } from 'app/entities/stock-movement/stock-movement.model';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
-import { IRawMaterial } from '../raw-material.model';
+import { IRawMaterial, NewRawMaterial } from '../raw-material.model';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { RawMaterialService } from '../service/raw-material.service';
-
-import { RawMaterialFormGroup, RawMaterialFormService } from './raw-material-form.service';
 
 @Component({
   selector: 'jhi-raw-material-update',
   templateUrl: './raw-material-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class RawMaterialUpdate implements OnInit {
   readonly isSaving = signal(false);
-  rawMaterial: IRawMaterial | null = null;
+  rawMaterial: any = { id: null, active: false, deletedAt: null };
   unitOfMeasureValues = Object.keys(UnitOfMeasure);
 
   stockMovementsSharedCollection = signal<IStockMovement[]>([]);
 
   protected rawMaterialService = inject(RawMaterialService);
-  protected rawMaterialFormService = inject(RawMaterialFormService);
   protected stockMovementService = inject(StockMovementService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: RawMaterialFormGroup = this.rawMaterialFormService.createRawMaterialFormGroup();
 
   compareStockMovement = (o1: IStockMovement | null, o2: IStockMovement | null): boolean =>
     this.stockMovementService.compareStockMovement(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ rawMaterial }) => {
-      this.rawMaterial = rawMaterial;
       if (rawMaterial) {
-        this.updateForm(rawMaterial);
+        this.rawMaterial = { ...rawMaterial, deletedAt: rawMaterial.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
 
       this.loadRelationshipsOptions();
@@ -58,11 +53,14 @@ export class RawMaterialUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const rawMaterial = this.rawMaterialFormService.getRawMaterial(this.editForm);
-    if (rawMaterial.id === null) {
-      this.subscribeToSaveResponse(this.rawMaterialService.create(rawMaterial));
+    const payload = {
+      ...this.rawMaterial,
+      deletedAt: this.rawMaterial.deletedAt ? dayjs(this.rawMaterial.deletedAt, DATE_TIME_FORMAT) : null,
+    };
+    if (this.rawMaterial.id === null) {
+      this.subscribeToSaveResponse(this.rawMaterialService.create(payload as NewRawMaterial));
     } else {
-      this.subscribeToSaveResponse(this.rawMaterialService.update(rawMaterial));
+      this.subscribeToSaveResponse(this.rawMaterialService.update(payload as IRawMaterial));
     }
   }
 
@@ -83,15 +81,6 @@ export class RawMaterialUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(rawMaterial: IRawMaterial): void {
-    this.rawMaterial = rawMaterial;
-    this.rawMaterialFormService.resetForm(this.editForm, rawMaterial);
-
-    this.stockMovementsSharedCollection.update(stockMovements =>
-      this.stockMovementService.addStockMovementToCollectionIfMissing<IStockMovement>(stockMovements, rawMaterial.stockMovements),
-    );
   }
 
   protected loadRelationshipsOptions(): void {

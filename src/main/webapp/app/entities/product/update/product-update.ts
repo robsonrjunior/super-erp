@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -15,32 +15,28 @@ import { StockMovementService } from 'app/entities/stock-movement/service/stock-
 import { IStockMovement } from 'app/entities/stock-movement/stock-movement.model';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
-import { IProduct } from '../product.model';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { IProduct, NewProduct } from '../product.model';
 import { ProductService } from '../service/product.service';
-
-import { ProductFormGroup, ProductFormService } from './product-form.service';
 
 @Component({
   selector: 'jhi-product-update',
   templateUrl: './product-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class ProductUpdate implements OnInit {
   readonly isSaving = signal(false);
-  product: IProduct | null = null;
+  product: any = { id: null, active: false, deletedAt: null };
   unitOfMeasureValues = Object.keys(UnitOfMeasure);
 
   saleItemsSharedCollection = signal<ISaleItem[]>([]);
   stockMovementsSharedCollection = signal<IStockMovement[]>([]);
 
   protected productService = inject(ProductService);
-  protected productFormService = inject(ProductFormService);
   protected saleItemService = inject(SaleItemService);
   protected stockMovementService = inject(StockMovementService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: ProductFormGroup = this.productFormService.createProductFormGroup();
 
   compareSaleItem = (o1: ISaleItem | null, o2: ISaleItem | null): boolean => this.saleItemService.compareSaleItem(o1, o2);
 
@@ -49,9 +45,8 @@ export class ProductUpdate implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ product }) => {
-      this.product = product;
       if (product) {
-        this.updateForm(product);
+        this.product = { ...product, deletedAt: product.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
 
       this.loadRelationshipsOptions();
@@ -64,11 +59,11 @@ export class ProductUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const product = this.productFormService.getProduct(this.editForm);
-    if (product.id === null) {
-      this.subscribeToSaveResponse(this.productService.create(product));
+    const payload = { ...this.product, deletedAt: this.product.deletedAt ? dayjs(this.product.deletedAt, DATE_TIME_FORMAT) : null };
+    if (this.product.id === null) {
+      this.subscribeToSaveResponse(this.productService.create(payload as NewProduct));
     } else {
-      this.subscribeToSaveResponse(this.productService.update(product));
+      this.subscribeToSaveResponse(this.productService.update(payload as IProduct));
     }
   }
 
@@ -89,18 +84,6 @@ export class ProductUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(product: IProduct): void {
-    this.product = product;
-    this.productFormService.resetForm(this.editForm, product);
-
-    this.saleItemsSharedCollection.update(saleItems =>
-      this.saleItemService.addSaleItemToCollectionIfMissing<ISaleItem>(saleItems, product.saleItems),
-    );
-    this.stockMovementsSharedCollection.update(stockMovements =>
-      this.stockMovementService.addStockMovementToCollectionIfMissing<IStockMovement>(stockMovements, product.stockMovements),
-    );
   }
 
   protected loadRelationshipsOptions(): void {

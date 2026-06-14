@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -13,7 +13,7 @@ import { RegisterService } from './register.service';
 
 @Component({
   selector: 'jhi-register',
-  imports: [TranslateDirective, TranslateModule, RouterLink, ReactiveFormsModule, PasswordStrengthBar],
+  imports: [TranslateDirective, TranslateModule, RouterLink, FormsModule, PasswordStrengthBar],
   templateUrl: './register.html',
 })
 export default class Register implements AfterViewInit {
@@ -25,29 +25,7 @@ export default class Register implements AfterViewInit {
   readonly errorUserExists = signal(false);
   readonly success = signal(false);
 
-  registerForm = new FormGroup({
-    login: new FormControl('', {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(50),
-        Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
-      ],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email],
-    }),
-    password: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(4), Validators.maxLength(50)],
-    }),
-    confirmPassword: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(4), Validators.maxLength(50)],
-    }),
-  });
+  registerForm = { login: '', email: '', password: '', confirmPassword: '' };
 
   private readonly translateService = inject(TranslateService);
   private readonly registerService = inject(RegisterService);
@@ -62,9 +40,9 @@ export default class Register implements AfterViewInit {
     this.errorEmailExists.set(false);
     this.errorUserExists.set(false);
 
-    const { password, confirmPassword } = this.registerForm.getRawValue();
+    const { password, confirmPassword } = this.registerForm;
     if (password === confirmPassword) {
-      const { login, email } = this.registerForm.getRawValue();
+      const { login, email } = this.registerForm;
       this.registerService
         .save({ login, email, password, langKey: this.translateService.getCurrentLang() })
         .subscribe({ next: () => this.success.set(true), error: response => this.processError(response) });

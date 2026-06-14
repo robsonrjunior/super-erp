@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" novalidate (ngSubmit)="save()" #editForm="ngForm">
       <h2
         id="jhi-raw-material-heading"
         data-cy="RawMaterialCreateUpdateHeading"
@@ -12,28 +12,26 @@
       <div>
         <jhi-alert-error />
 
-        @if (editForm.controls.id.value !== null) {
+        @if (raw - material.id !== null) {
           <div class="mb-3">
             <label class="form-label" for="field_id" jhiTranslate="global.field.id">Código</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" [(ngModel)]="rawMaterial.id" [readonly]="true" />
           </div>
         }
-
-        @let nameRef = editForm.get('name')!;
         <div class="mb-3">
           <label class="form-label" for="field_name" jhiTranslate="superErpApp.rawMaterial.name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" [(ngModel)]="rawMaterial.name" />
           @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
             <div>
-              @if (editForm.get('name')?.errors?.required) {
+              @if (nameRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('name')?.errors?.minlength) {
+              @if (nameRef.errors?.minlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '2' }"
                   >Este campo deve ter pelo menos 2 caracteres.</small
                 >
               }
-              @if (editForm.get('name')?.errors?.maxlength) {
+              @if (nameRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '120' }"
                   >Este campo não pode ter mais de 120 caracteres.</small
                 >
@@ -41,22 +39,20 @@
             </div>
           }
         </div>
-
-        @let skuRef = editForm.get('sku')!;
         <div class="mb-3">
           <label class="form-label" for="field_sku" jhiTranslate="superErpApp.rawMaterial.sku">Sku</label>
-          <input type="text" class="form-control" name="sku" id="field_sku" data-cy="sku" formControlName="sku" />
+          <input type="text" class="form-control" name="sku" id="field_sku" data-cy="sku" [(ngModel)]="rawMaterial.sku" />
           @if (skuRef.invalid && (skuRef.dirty || skuRef.touched)) {
             <div>
-              @if (editForm.get('sku')?.errors?.required) {
+              @if (skuRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('sku')?.errors?.minlength) {
+              @if (skuRef.errors?.minlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '2' }"
                   >Este campo deve ter pelo menos 2 caracteres.</small
                 >
               }
-              @if (editForm.get('sku')?.errors?.maxlength) {
+              @if (skuRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '40' }"
                   >Este campo não pode ter mais de 40 caracteres.</small
                 >
@@ -64,14 +60,12 @@
             </div>
           }
         </div>
-
-        @let unitOfMeasureRef = editForm.get('unitOfMeasure')!;
         <div class="mb-3">
           <label class="form-label" for="field_unitOfMeasure" jhiTranslate="superErpApp.rawMaterial.unitOfMeasure">Unit Of Measure</label>
           <select
             class="form-control"
             name="unitOfMeasure"
-            formControlName="unitOfMeasure"
+            [(ngModel)]="rawMaterial.unitOfMeasure"
             id="field_unitOfMeasure"
             data-cy="unitOfMeasure"
           >
@@ -82,14 +76,12 @@
           </select>
           @if (unitOfMeasureRef.invalid && (unitOfMeasureRef.dirty || unitOfMeasureRef.touched)) {
             <div>
-              @if (editForm.get('unitOfMeasure')?.errors?.required) {
+              @if (unitOfMeasureRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
             </div>
           }
         </div>
-
-        @let unitDecimalPlacesRef = editForm.get('unitDecimalPlaces')!;
         <div class="mb-3">
           <label class="form-label" for="field_unitDecimalPlaces" jhiTranslate="superErpApp.rawMaterial.unitDecimalPlaces"
             >Unit Decimal Places</label
@@ -100,82 +92,81 @@
             name="unitDecimalPlaces"
             id="field_unitDecimalPlaces"
             data-cy="unitDecimalPlaces"
-            formControlName="unitDecimalPlaces"
+            [(ngModel)]="rawMaterial.unitDecimalPlaces"
           />
           @if (unitDecimalPlacesRef.invalid && (unitDecimalPlacesRef.dirty || unitDecimalPlacesRef.touched)) {
             <div>
-              @if (editForm.get('unitDecimalPlaces')?.errors?.required) {
+              @if (unitDecimalPlacesRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('unitDecimalPlaces')?.errors?.min) {
+              @if (unitDecimalPlacesRef.errors?.min) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
                   >Este campo deve ser maior que 0.</small
                 >
               }
-              @if (editForm.get('unitDecimalPlaces')?.errors?.max) {
+              @if (unitDecimalPlacesRef.errors?.max) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '6' }"
                   >Este campo não pode ser maior que 6.</small
                 >
               }
-              <small
-                class="form-text text-danger"
-                [hidden]="!editForm.get('unitDecimalPlaces')?.errors?.number"
-                jhiTranslate="entity.validation.number"
+              <small class="form-text text-danger" [hidden]="!unitDecimalPlacesRef.errors?.number" jhiTranslate="entity.validation.number"
                 >Este campo é do tipo numérico.</small
               >
             </div>
           }
         </div>
-
-        @let unitCostRef = editForm.get('unitCost')!;
         <div class="mb-3">
           <label class="form-label" for="field_unitCost" jhiTranslate="superErpApp.rawMaterial.unitCost">Unit Cost</label>
-          <input type="number" class="form-control" name="unitCost" id="field_unitCost" data-cy="unitCost" formControlName="unitCost" />
+          <input
+            type="number"
+            class="form-control"
+            name="unitCost"
+            id="field_unitCost"
+            data-cy="unitCost"
+            [(ngModel)]="rawMaterial.unitCost"
+          />
           @if (unitCostRef.invalid && (unitCostRef.dirty || unitCostRef.touched)) {
             <div>
-              @if (editForm.get('unitCost')?.errors?.min) {
+              @if (unitCostRef.errors?.min) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
                   >Este campo deve ser maior que 0.</small
                 >
               }
-              <small
-                class="form-text text-danger"
-                [hidden]="!editForm.get('unitCost')?.errors?.number"
-                jhiTranslate="entity.validation.number"
+              <small class="form-text text-danger" [hidden]="!unitCostRef.errors?.number" jhiTranslate="entity.validation.number"
                 >Este campo é do tipo numérico.</small
               >
             </div>
           }
         </div>
-
-        @let minStockRef = editForm.get('minStock')!;
         <div class="mb-3">
           <label class="form-label" for="field_minStock" jhiTranslate="superErpApp.rawMaterial.minStock">Min Stock</label>
-          <input type="number" class="form-control" name="minStock" id="field_minStock" data-cy="minStock" formControlName="minStock" />
+          <input
+            type="number"
+            class="form-control"
+            name="minStock"
+            id="field_minStock"
+            data-cy="minStock"
+            [(ngModel)]="rawMaterial.minStock"
+          />
           @if (minStockRef.invalid && (minStockRef.dirty || minStockRef.touched)) {
             <div>
-              @if (editForm.get('minStock')?.errors?.min) {
+              @if (minStockRef.errors?.min) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
                   >Este campo deve ser maior que 0.</small
                 >
               }
-              <small
-                class="form-text text-danger"
-                [hidden]="!editForm.get('minStock')?.errors?.number"
-                jhiTranslate="entity.validation.number"
+              <small class="form-text text-danger" [hidden]="!minStockRef.errors?.number" jhiTranslate="entity.validation.number"
                 >Este campo é do tipo numérico.</small
               >
             </div>
           }
         </div>
-
-        @let activeRef = editForm.get('active')!;
         <div class="mb-3">
           <label class="form-label" for="field_active" jhiTranslate="superErpApp.rawMaterial.active">Active</label>
-          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" formControlName="active" />
+          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" [(ngModel)]="rawMaterial.active" />
           @if (activeRef.invalid && (activeRef.dirty || activeRef.touched)) {
             <div>
-              @if (editForm.get('active')?.errors?.required) {
+              @if (activeRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
             </div>
@@ -191,7 +182,7 @@
               type="datetime-local"
               class="form-control"
               name="deletedAt"
-              formControlName="deletedAt"
+              [(ngModel)]="rawMaterial.deletedAt"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
@@ -204,7 +195,7 @@
             id="field_stockMovements"
             data-cy="stockMovements"
             name="stockMovements"
-            formControlName="stockMovements"
+            [(ngModel)]="rawMaterial.stockMovements"
             [compareWith]="compareStockMovement"
           >
             <option [ngValue]="null"></option>

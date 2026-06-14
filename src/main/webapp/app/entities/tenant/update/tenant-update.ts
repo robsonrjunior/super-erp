@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -31,18 +31,19 @@ import { IWarehouse } from 'app/entities/warehouse/warehouse.model';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { TenantService } from '../service/tenant.service';
-import { ITenant } from '../tenant.model';
+import { ITenant, NewTenant } from '../tenant.model';
 
-import { TenantFormGroup, TenantFormService } from './tenant-form.service';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 @Component({
   selector: 'jhi-tenant-update',
   templateUrl: './tenant-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class TenantUpdate implements OnInit {
   readonly isSaving = signal(false);
-  tenant: ITenant | null = null;
+  tenant: any = { id: null, active: false, deletedAt: null };
 
   customersSharedCollection = signal<ICustomer[]>([]);
   suppliersSharedCollection = signal<ISupplier[]>([]);
@@ -56,7 +57,6 @@ export class TenantUpdate implements OnInit {
   stockMovementsSharedCollection = signal<IStockMovement[]>([]);
 
   protected tenantService = inject(TenantService);
-  protected tenantFormService = inject(TenantFormService);
   protected customerService = inject(CustomerService);
   protected supplierService = inject(SupplierService);
   protected personService = inject(PersonService);
@@ -68,9 +68,6 @@ export class TenantUpdate implements OnInit {
   protected saleItemService = inject(SaleItemService);
   protected stockMovementService = inject(StockMovementService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: TenantFormGroup = this.tenantFormService.createTenantFormGroup();
 
   compareCustomer = (o1: ICustomer | null, o2: ICustomer | null): boolean => this.customerService.compareCustomer(o1, o2);
 
@@ -95,11 +92,9 @@ export class TenantUpdate implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ tenant }) => {
-      this.tenant = tenant;
       if (tenant) {
-        this.updateForm(tenant);
+        this.tenant = { ...tenant, deletedAt: tenant.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
-
       this.loadRelationshipsOptions();
     });
   }
@@ -110,11 +105,14 @@ export class TenantUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const tenant = this.tenantFormService.getTenant(this.editForm);
-    if (tenant.id === null) {
-      this.subscribeToSaveResponse(this.tenantService.create(tenant));
+    const payload = {
+      ...this.tenant,
+      deletedAt: this.tenant.deletedAt ? dayjs(this.tenant.deletedAt, DATE_TIME_FORMAT) : null,
+    };
+    if (this.tenant.id === null) {
+      this.subscribeToSaveResponse(this.tenantService.create(payload as NewTenant));
     } else {
-      this.subscribeToSaveResponse(this.tenantService.update(tenant));
+      this.subscribeToSaveResponse(this.tenantService.update(payload as ITenant));
     }
   }
 
@@ -137,46 +135,12 @@ export class TenantUpdate implements OnInit {
     this.isSaving.set(false);
   }
 
-  protected updateForm(tenant: ITenant): void {
-    this.tenant = tenant;
-    this.tenantFormService.resetForm(this.editForm, tenant);
-
-    this.customersSharedCollection.update(customers =>
-      this.customerService.addCustomerToCollectionIfMissing<ICustomer>(customers, tenant.customers),
-    );
-    this.suppliersSharedCollection.update(suppliers =>
-      this.supplierService.addSupplierToCollectionIfMissing<ISupplier>(suppliers, tenant.suppliers),
-    );
-    this.peopleSharedCollection.update(people => this.personService.addPersonToCollectionIfMissing<IPerson>(people, tenant.people));
-    this.companiesSharedCollection.update(companies =>
-      this.companyService.addCompanyToCollectionIfMissing<ICompany>(companies, tenant.companies),
-    );
-    this.productsSharedCollection.update(products =>
-      this.productService.addProductToCollectionIfMissing<IProduct>(products, tenant.products),
-    );
-    this.rawMaterialsSharedCollection.update(rawMaterials =>
-      this.rawMaterialService.addRawMaterialToCollectionIfMissing<IRawMaterial>(rawMaterials, tenant.rawMaterials),
-    );
-    this.warehousesSharedCollection.update(warehouses =>
-      this.warehouseService.addWarehouseToCollectionIfMissing<IWarehouse>(warehouses, tenant.warehouses),
-    );
-    this.salesSharedCollection.update(sales => this.saleService.addSaleToCollectionIfMissing<ISale>(sales, tenant.sales));
-    this.saleItemsSharedCollection.update(saleItems =>
-      this.saleItemService.addSaleItemToCollectionIfMissing<ISaleItem>(saleItems, tenant.saleItems),
-    );
-    this.stockMovementsSharedCollection.update(stockMovements =>
-      this.stockMovementService.addStockMovementToCollectionIfMissing<IStockMovement>(stockMovements, tenant.stockMovements),
-    );
-  }
-
   protected loadRelationshipsOptions(): void {
     this.customerService
       .query()
       .pipe(map((res: HttpResponse<ICustomer[]>) => res.body ?? []))
       .pipe(
-        map((customers: ICustomer[]) =>
-          this.customerService.addCustomerToCollectionIfMissing<ICustomer>(customers, this.tenant?.customers),
-        ),
+        map((customers: ICustomer[]) => this.customerService.addCustomerToCollectionIfMissing<ICustomer>(customers, this.tenant.customers)),
       )
       .subscribe((customers: ICustomer[]) => this.customersSharedCollection.set(customers));
 
@@ -184,30 +148,26 @@ export class TenantUpdate implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<ISupplier[]>) => res.body ?? []))
       .pipe(
-        map((suppliers: ISupplier[]) =>
-          this.supplierService.addSupplierToCollectionIfMissing<ISupplier>(suppliers, this.tenant?.suppliers),
-        ),
+        map((suppliers: ISupplier[]) => this.supplierService.addSupplierToCollectionIfMissing<ISupplier>(suppliers, this.tenant.suppliers)),
       )
       .subscribe((suppliers: ISupplier[]) => this.suppliersSharedCollection.set(suppliers));
 
     this.personService
       .query()
       .pipe(map((res: HttpResponse<IPerson[]>) => res.body ?? []))
-      .pipe(map((people: IPerson[]) => this.personService.addPersonToCollectionIfMissing<IPerson>(people, this.tenant?.people)))
+      .pipe(map((people: IPerson[]) => this.personService.addPersonToCollectionIfMissing<IPerson>(people, this.tenant.people)))
       .subscribe((people: IPerson[]) => this.peopleSharedCollection.set(people));
 
     this.companyService
       .query()
       .pipe(map((res: HttpResponse<ICompany[]>) => res.body ?? []))
-      .pipe(
-        map((companies: ICompany[]) => this.companyService.addCompanyToCollectionIfMissing<ICompany>(companies, this.tenant?.companies)),
-      )
+      .pipe(map((companies: ICompany[]) => this.companyService.addCompanyToCollectionIfMissing<ICompany>(companies, this.tenant.companies)))
       .subscribe((companies: ICompany[]) => this.companiesSharedCollection.set(companies));
 
     this.productService
       .query()
       .pipe(map((res: HttpResponse<IProduct[]>) => res.body ?? []))
-      .pipe(map((products: IProduct[]) => this.productService.addProductToCollectionIfMissing<IProduct>(products, this.tenant?.products)))
+      .pipe(map((products: IProduct[]) => this.productService.addProductToCollectionIfMissing<IProduct>(products, this.tenant.products)))
       .subscribe((products: IProduct[]) => this.productsSharedCollection.set(products));
 
     this.rawMaterialService
@@ -215,7 +175,7 @@ export class TenantUpdate implements OnInit {
       .pipe(map((res: HttpResponse<IRawMaterial[]>) => res.body ?? []))
       .pipe(
         map((rawMaterials: IRawMaterial[]) =>
-          this.rawMaterialService.addRawMaterialToCollectionIfMissing<IRawMaterial>(rawMaterials, this.tenant?.rawMaterials),
+          this.rawMaterialService.addRawMaterialToCollectionIfMissing<IRawMaterial>(rawMaterials, this.tenant.rawMaterials),
         ),
       )
       .subscribe((rawMaterials: IRawMaterial[]) => this.rawMaterialsSharedCollection.set(rawMaterials));
@@ -225,7 +185,7 @@ export class TenantUpdate implements OnInit {
       .pipe(map((res: HttpResponse<IWarehouse[]>) => res.body ?? []))
       .pipe(
         map((warehouses: IWarehouse[]) =>
-          this.warehouseService.addWarehouseToCollectionIfMissing<IWarehouse>(warehouses, this.tenant?.warehouses),
+          this.warehouseService.addWarehouseToCollectionIfMissing<IWarehouse>(warehouses, this.tenant.warehouses),
         ),
       )
       .subscribe((warehouses: IWarehouse[]) => this.warehousesSharedCollection.set(warehouses));
@@ -233,16 +193,14 @@ export class TenantUpdate implements OnInit {
     this.saleService
       .query()
       .pipe(map((res: HttpResponse<ISale[]>) => res.body ?? []))
-      .pipe(map((sales: ISale[]) => this.saleService.addSaleToCollectionIfMissing<ISale>(sales, this.tenant?.sales)))
+      .pipe(map((sales: ISale[]) => this.saleService.addSaleToCollectionIfMissing<ISale>(sales, this.tenant.sales)))
       .subscribe((sales: ISale[]) => this.salesSharedCollection.set(sales));
 
     this.saleItemService
       .query()
       .pipe(map((res: HttpResponse<ISaleItem[]>) => res.body ?? []))
       .pipe(
-        map((saleItems: ISaleItem[]) =>
-          this.saleItemService.addSaleItemToCollectionIfMissing<ISaleItem>(saleItems, this.tenant?.saleItems),
-        ),
+        map((saleItems: ISaleItem[]) => this.saleItemService.addSaleItemToCollectionIfMissing<ISaleItem>(saleItems, this.tenant.saleItems)),
       )
       .subscribe((saleItems: ISaleItem[]) => this.saleItemsSharedCollection.set(saleItems));
 
@@ -251,7 +209,7 @@ export class TenantUpdate implements OnInit {
       .pipe(map((res: HttpResponse<IStockMovement[]>) => res.body ?? []))
       .pipe(
         map((stockMovements: IStockMovement[]) =>
-          this.stockMovementService.addStockMovementToCollectionIfMissing<IStockMovement>(stockMovements, this.tenant?.stockMovements),
+          this.stockMovementService.addStockMovementToCollectionIfMissing<IStockMovement>(stockMovements, this.tenant.stockMovements),
         ),
       )
       .subscribe((stockMovements: IStockMovement[]) => this.stockMovementsSharedCollection.set(stockMovements));

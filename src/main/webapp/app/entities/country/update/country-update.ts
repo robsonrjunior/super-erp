@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -9,32 +9,25 @@ import { finalize } from 'rxjs/operators';
 
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
-import { ICountry } from '../country.model';
+import { ICountry, NewCountry } from '../country.model';
 import { CountryService } from '../service/country.service';
-
-import { CountryFormGroup, CountryFormService } from './country-form.service';
 
 @Component({
   selector: 'jhi-country-update',
   templateUrl: './country-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class CountryUpdate implements OnInit {
   readonly isSaving = signal(false);
-  country: ICountry | null = null;
+  country: ICountry | NewCountry = { id: null };
 
   protected countryService = inject(CountryService);
-  protected countryFormService = inject(CountryFormService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: CountryFormGroup = this.countryFormService.createCountryFormGroup();
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ country }) => {
-      this.country = country;
       if (country) {
-        this.updateForm(country);
+        this.country = country;
       }
     });
   }
@@ -45,11 +38,10 @@ export class CountryUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const country = this.countryFormService.getCountry(this.editForm);
-    if (country.id === null) {
-      this.subscribeToSaveResponse(this.countryService.create(country));
+    if (this.country.id === null) {
+      this.subscribeToSaveResponse(this.countryService.create(this.country));
     } else {
-      this.subscribeToSaveResponse(this.countryService.update(country));
+      this.subscribeToSaveResponse(this.countryService.update(this.country));
     }
   }
 
@@ -70,10 +62,5 @@ export class CountryUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(country: ICountry): void {
-    this.country = country;
-    this.countryFormService.resetForm(this.editForm, country);
   }
 }

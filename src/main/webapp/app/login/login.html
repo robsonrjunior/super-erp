@@ -7,7 +7,7 @@
           <strong>Erro de autenticação!</strong> Por favor verifique suas credenciais e tente novamente.
         </div>
       }
-      <form class="form" (ngSubmit)="login()" [formGroup]="loginForm">
+      <form class="form" (ngSubmit)="login()" #loginRef="ngForm">
         <div class="mb-3">
           <label class="username-label" for="username" jhiTranslate="global.form.username.label">Usuário</label>
           <input
@@ -16,7 +16,7 @@
             name="username"
             id="username"
             placeholder="{{ 'global.form.username.placeholder' | translate }}"
-            formControlName="username"
+            [(ngModel)]="loginForm.username"
             data-cy="username"
           />
         </div>
@@ -29,14 +29,14 @@
             name="password"
             id="password"
             placeholder="{{ 'login.form.password.placeholder' | translate }}"
-            formControlName="password"
+            [(ngModel)]="loginForm.password"
             data-cy="password"
           />
         </div>
 
         <div class="form-check">
           <label class="form-check-label" for="rememberMe">
-            <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" formControlName="rememberMe" />
+            <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" [(ngModel)]="loginForm.rememberMe" />
             <span jhiTranslate="login.form.rememberme">Manter-me logado</span>
           </label>
         </div>

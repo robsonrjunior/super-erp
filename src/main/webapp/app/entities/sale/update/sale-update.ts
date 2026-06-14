@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,38 +13,33 @@ import { ISaleItem } from 'app/entities/sale-item/sale-item.model';
 import { SaleItemService } from 'app/entities/sale-item/service/sale-item.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
-import { ISale } from '../sale.model';
+import { ISale, NewSale } from '../sale.model';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { SaleService } from '../service/sale.service';
-
-import { SaleFormGroup, SaleFormService } from './sale-form.service';
 
 @Component({
   selector: 'jhi-sale-update',
   templateUrl: './sale-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class SaleUpdate implements OnInit {
   readonly isSaving = signal(false);
-  sale: ISale | null = null;
+  sale: any = { id: null, deletedAt: null };
   saleStatusValues = Object.keys(SaleStatus);
 
   saleItemsSharedCollection = signal<ISaleItem[]>([]);
 
   protected saleService = inject(SaleService);
-  protected saleFormService = inject(SaleFormService);
   protected saleItemService = inject(SaleItemService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: SaleFormGroup = this.saleFormService.createSaleFormGroup();
 
   compareSaleItem = (o1: ISaleItem | null, o2: ISaleItem | null): boolean => this.saleItemService.compareSaleItem(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ sale }) => {
-      this.sale = sale;
       if (sale) {
-        this.updateForm(sale);
+        this.sale = { ...sale, deletedAt: sale.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
 
       this.loadRelationshipsOptions();
@@ -57,11 +52,11 @@ export class SaleUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const sale = this.saleFormService.getSale(this.editForm);
-    if (sale.id === null) {
-      this.subscribeToSaveResponse(this.saleService.create(sale));
+    const payload = { ...this.sale, deletedAt: this.sale.deletedAt ? dayjs(this.sale.deletedAt, DATE_TIME_FORMAT) : null };
+    if (this.sale.id === null) {
+      this.subscribeToSaveResponse(this.saleService.create(payload as NewSale));
     } else {
-      this.subscribeToSaveResponse(this.saleService.update(sale));
+      this.subscribeToSaveResponse(this.saleService.update(payload as ISale));
     }
   }
 
@@ -82,15 +77,6 @@ export class SaleUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(sale: ISale): void {
-    this.sale = sale;
-    this.saleFormService.resetForm(this.editForm, sale);
-
-    this.saleItemsSharedCollection.update(saleItems =>
-      this.saleItemService.addSaleItemToCollectionIfMissing<ISaleItem>(saleItems, sale.items),
-    );
   }
 
   protected loadRelationshipsOptions(): void {

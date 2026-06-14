@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" novalidate (ngSubmit)="save()" #editForm="ngForm">
       <h2
         id="jhi-stock-movement-heading"
         data-cy="StockMovementCreateUpdateHeading"
@@ -12,14 +12,20 @@
       <div>
         <jhi-alert-error />
 
-        @if (editForm.controls.id.value !== null) {
+        @if (stockMovement.id !== null) {
           <div class="mb-3">
             <label class="form-label" for="field_id" jhiTranslate="global.field.id">Código</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+            <input
+              type="number"
+              class="form-control"
+              name="id"
+              id="field_id"
+              data-cy="id"
+              [(ngModel)]="stockMovement.id"
+              [readonly]="true"
+            />
           </div>
         }
-
-        @let movementDateRef = editForm.get('movementDate')!;
         <div class="mb-3">
           <label class="form-label" for="field_movementDate" jhiTranslate="superErpApp.stockMovement.movementDate">Movement Date</label>
           <div class="d-flex">
@@ -29,29 +35,33 @@
               type="datetime-local"
               class="form-control"
               name="movementDate"
-              formControlName="movementDate"
+              [(ngModel)]="stockMovement.movementDate"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
           @if (movementDateRef.invalid && (movementDateRef.dirty || movementDateRef.touched)) {
             <div>
-              @if (editForm.get('movementDate')?.errors?.required) {
+              @if (movementDateRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
               <small
                 class="form-text text-danger"
-                [hidden]="!editForm.get('movementDate')?.errors?.datetimelocal"
+                [hidden]="!movementDateRef.errors?.datetimelocal"
                 jhiTranslate="entity.validation.datetimelocal"
                 >Este campo é do tipo data/hora.</small
               >
             </div>
           }
         </div>
-
-        @let movementTypeRef = editForm.get('movementType')!;
         <div class="mb-3">
           <label class="form-label" for="field_movementType" jhiTranslate="superErpApp.stockMovement.movementType">Movement Type</label>
-          <select class="form-control" name="movementType" formControlName="movementType" id="field_movementType" data-cy="movementType">
+          <select
+            class="form-control"
+            name="movementType"
+            [(ngModel)]="stockMovement.movementType"
+            id="field_movementType"
+            data-cy="movementType"
+          >
             <option [ngValue]="null">{{ 'superErpApp.MovementType.null' | translate }}</option>
             @for (movementType of movementTypeValues; track $index) {
               <option [value]="movementType">{{ 'superErpApp.MovementType.' + movementType | translate }}</option>
@@ -59,59 +69,61 @@
           </select>
           @if (movementTypeRef.invalid && (movementTypeRef.dirty || movementTypeRef.touched)) {
             <div>
-              @if (editForm.get('movementType')?.errors?.required) {
+              @if (movementTypeRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
             </div>
           }
         </div>
-
-        @let quantityRef = editForm.get('quantity')!;
         <div class="mb-3">
           <label class="form-label" for="field_quantity" jhiTranslate="superErpApp.stockMovement.quantity">Quantity</label>
-          <input type="number" class="form-control" name="quantity" id="field_quantity" data-cy="quantity" formControlName="quantity" />
+          <input
+            type="number"
+            class="form-control"
+            name="quantity"
+            id="field_quantity"
+            data-cy="quantity"
+            [(ngModel)]="stockMovement.quantity"
+          />
           @if (quantityRef.invalid && (quantityRef.dirty || quantityRef.touched)) {
             <div>
-              @if (editForm.get('quantity')?.errors?.required) {
+              @if (quantityRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('quantity')?.errors?.min) {
+              @if (quantityRef.errors?.min) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
                   >Este campo deve ser maior que 0.</small
                 >
               }
-              <small
-                class="form-text text-danger"
-                [hidden]="!editForm.get('quantity')?.errors?.number"
-                jhiTranslate="entity.validation.number"
+              <small class="form-text text-danger" [hidden]="!quantityRef.errors?.number" jhiTranslate="entity.validation.number"
                 >Este campo é do tipo numérico.</small
               >
             </div>
           }
         </div>
-
-        @let unitCostRef = editForm.get('unitCost')!;
         <div class="mb-3">
           <label class="form-label" for="field_unitCost" jhiTranslate="superErpApp.stockMovement.unitCost">Unit Cost</label>
-          <input type="number" class="form-control" name="unitCost" id="field_unitCost" data-cy="unitCost" formControlName="unitCost" />
+          <input
+            type="number"
+            class="form-control"
+            name="unitCost"
+            id="field_unitCost"
+            data-cy="unitCost"
+            [(ngModel)]="stockMovement.unitCost"
+          />
           @if (unitCostRef.invalid && (unitCostRef.dirty || unitCostRef.touched)) {
             <div>
-              @if (editForm.get('unitCost')?.errors?.min) {
+              @if (unitCostRef.errors?.min) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
                   >Este campo deve ser maior que 0.</small
                 >
               }
-              <small
-                class="form-text text-danger"
-                [hidden]="!editForm.get('unitCost')?.errors?.number"
-                jhiTranslate="entity.validation.number"
+              <small class="form-text text-danger" [hidden]="!unitCostRef.errors?.number" jhiTranslate="entity.validation.number"
                 >Este campo é do tipo numérico.</small
               >
             </div>
           }
         </div>
-
-        @let referenceNumberRef = editForm.get('referenceNumber')!;
         <div class="mb-3">
           <label class="form-label" for="field_referenceNumber" jhiTranslate="superErpApp.stockMovement.referenceNumber"
             >Reference Number</label
@@ -122,11 +134,11 @@
             name="referenceNumber"
             id="field_referenceNumber"
             data-cy="referenceNumber"
-            formControlName="referenceNumber"
+            [(ngModel)]="stockMovement.referenceNumber"
           />
           @if (referenceNumberRef.invalid && (referenceNumberRef.dirty || referenceNumberRef.touched)) {
             <div>
-              @if (editForm.get('referenceNumber')?.errors?.maxlength) {
+              @if (referenceNumberRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '60' }"
                   >Este campo não pode ter mais de 60 caracteres.</small
                 >
@@ -134,14 +146,12 @@
             </div>
           }
         </div>
-
-        @let notesRef = editForm.get('notes')!;
         <div class="mb-3">
           <label class="form-label" for="field_notes" jhiTranslate="superErpApp.stockMovement.notes">Notes</label>
-          <input type="text" class="form-control" name="notes" id="field_notes" data-cy="notes" formControlName="notes" />
+          <input type="text" class="form-control" name="notes" id="field_notes" data-cy="notes" [(ngModel)]="stockMovement.notes" />
           @if (notesRef.invalid && (notesRef.dirty || notesRef.touched)) {
             <div>
-              @if (editForm.get('notes')?.errors?.maxlength) {
+              @if (notesRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '500' }"
                   >Este campo não pode ter mais de 500 caracteres.</small
                 >
@@ -159,7 +169,7 @@
               type="datetime-local"
               class="form-control"
               name="deletedAt"
-              formControlName="deletedAt"
+              [(ngModel)]="stockMovement.deletedAt"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>

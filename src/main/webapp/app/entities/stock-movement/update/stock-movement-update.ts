@@ -1,42 +1,41 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
+import dayjs from 'dayjs/esm';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { MovementType } from 'app/entities/enumerations/movement-type.model';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { StockMovementService } from '../service/stock-movement.service';
-import { IStockMovement } from '../stock-movement.model';
-
-import { StockMovementFormGroup, StockMovementFormService } from './stock-movement-form.service';
+import { IStockMovement, NewStockMovement } from '../stock-movement.model';
 
 @Component({
   selector: 'jhi-stock-movement-update',
   templateUrl: './stock-movement-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class StockMovementUpdate implements OnInit {
   readonly isSaving = signal(false);
-  stockMovement: IStockMovement | null = null;
+  stockMovement: any = { id: null, movementDate: null, deletedAt: null };
   movementTypeValues = Object.keys(MovementType);
 
   protected stockMovementService = inject(StockMovementService);
-  protected stockMovementFormService = inject(StockMovementFormService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: StockMovementFormGroup = this.stockMovementFormService.createStockMovementFormGroup();
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ stockMovement }) => {
-      this.stockMovement = stockMovement;
       if (stockMovement) {
-        this.updateForm(stockMovement);
+        this.stockMovement = {
+          ...stockMovement,
+          deletedAt: stockMovement.deletedAt?.format(DATE_TIME_FORMAT) ?? null,
+          movementDate: stockMovement.movementDate?.format(DATE_TIME_FORMAT) ?? null,
+        };
       }
     });
   }
@@ -47,11 +46,15 @@ export class StockMovementUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const stockMovement = this.stockMovementFormService.getStockMovement(this.editForm);
-    if (stockMovement.id === null) {
-      this.subscribeToSaveResponse(this.stockMovementService.create(stockMovement));
+    const payload = {
+      ...this.stockMovement,
+      deletedAt: this.stockMovement.deletedAt ? dayjs(this.stockMovement.deletedAt, DATE_TIME_FORMAT) : null,
+      movementDate: this.stockMovement.movementDate ? dayjs(this.stockMovement.movementDate, DATE_TIME_FORMAT) : null,
+    };
+    if (this.stockMovement.id === null) {
+      this.subscribeToSaveResponse(this.stockMovementService.create(payload as NewStockMovement));
     } else {
-      this.subscribeToSaveResponse(this.stockMovementService.update(stockMovement));
+      this.subscribeToSaveResponse(this.stockMovementService.update(payload as IStockMovement));
     }
   }
 
@@ -72,10 +75,5 @@ export class StockMovementUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(stockMovement: IStockMovement): void {
-    this.stockMovement = stockMovement;
-    this.stockMovementFormService.resetForm(this.editForm, stockMovement);
   }
 }

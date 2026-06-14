@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -8,34 +8,29 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
-import { IPerson } from '../person.model';
+import { IPerson, NewPerson } from '../person.model';
 import { PersonService } from '../service/person.service';
-
-import { PersonFormGroup, PersonFormService } from './person-form.service';
 
 @Component({
   selector: 'jhi-person-update',
   templateUrl: './person-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, NgbInputDatepicker],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule, NgbInputDatepicker],
 })
 export class PersonUpdate implements OnInit {
   readonly isSaving = signal(false);
-  person: IPerson | null = null;
+  person: any = { id: null, active: false, deletedAt: null };
 
   protected personService = inject(PersonService);
-  protected personFormService = inject(PersonFormService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: PersonFormGroup = this.personFormService.createPersonFormGroup();
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ person }) => {
-      this.person = person;
       if (person) {
-        this.updateForm(person);
+        this.person = { ...person, deletedAt: person.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
     });
   }
@@ -46,11 +41,11 @@ export class PersonUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const person = this.personFormService.getPerson(this.editForm);
-    if (person.id === null) {
-      this.subscribeToSaveResponse(this.personService.create(person));
+    const payload = { ...this.person, deletedAt: this.person.deletedAt ? dayjs(this.person.deletedAt, DATE_TIME_FORMAT) : null };
+    if (this.person.id === null) {
+      this.subscribeToSaveResponse(this.personService.create(payload as NewPerson));
     } else {
-      this.subscribeToSaveResponse(this.personService.update(person));
+      this.subscribeToSaveResponse(this.personService.update(payload as IPerson));
     }
   }
 
@@ -71,10 +66,5 @@ export class PersonUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(person: IPerson): void {
-    this.person = person;
-    this.personFormService.resetForm(this.editForm, person);
   }
 }

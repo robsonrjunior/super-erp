@@ -1,22 +1,32 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" novalidate (ngSubmit)="save()" #editForm="ngForm">
       <h2 id="myUserLabel" data-cy="UserManagementCreateUpdateHeading" jhiTranslate="userManagement.home.createOrEditLabel">
         Criar ou editar usuário
       </h2>
 
       <jhi-alert-error />
 
-      <div class="mb-3" [hidden]="!editForm.value.id">
+      <div class="mb-3" [hidden]="!userManagement.id">
         <label class="form-label" for="field_id" jhiTranslate="global.field.id">Código</label>
-        <input type="text" id="field_id" class="form-control" name="id" formControlName="id" readonly />
+        <input type="text" id="field_id" class="form-control" name="id" [(ngModel)]="userManagement.id" readonly />
       </div>
 
       <div class="mb-3">
         <label class="form-label" for="field_login" jhiTranslate="userManagement.login">Login</label>
-        <input type="text" id="field_login" class="form-control" name="login" formControlName="login" data-cy="login" />
-
-        @let loginRef = editForm.get('login')!;
+        <input
+          type="text"
+          id="field_login"
+          class="form-control"
+          name="login"
+          [(ngModel)]="userManagement.login"
+          required
+          minlength="1"
+          maxlength="50"
+          pattern="^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$"
+          #loginRef="ngModel"
+          data-cy="login"
+        />
         @if (loginRef.invalid && (loginRef.dirty || loginRef.touched)) {
           <div>
             @if (loginRef?.errors?.required) {
@@ -40,9 +50,16 @@
 
       <div class="mb-3">
         <label class="form-label" for="field_firstName" jhiTranslate="userManagement.firstName">Nome</label>
-        <input type="text" id="field_firstName" class="form-control" name="firstName" formControlName="firstName" data-cy="firstName" />
-
-        @let firstNameRef = editForm.get('firstName')!;
+        <input
+          type="text"
+          id="field_firstName"
+          class="form-control"
+          name="firstName"
+          [(ngModel)]="userManagement.firstName"
+          maxlength="50"
+          #firstNameRef="ngModel"
+          data-cy="firstName"
+        />
         @if (firstNameRef.invalid && (firstNameRef.dirty || firstNameRef.touched)) {
           <div>
             @if (firstNameRef?.errors?.maxlength) {
@@ -56,9 +73,16 @@
 
       <div class="mb-3">
         <label class="form-label" for="field_lastName" jhiTranslate="userManagement.lastName">Sobrenome</label>
-        <input type="text" id="field_lastName" class="form-control" name="lastName" formControlName="lastName" data-cy="lastName" />
-
-        @let lastNameRef = editForm.get('lastName')!;
+        <input
+          type="text"
+          id="field_lastName"
+          class="form-control"
+          name="lastName"
+          [(ngModel)]="userManagement.lastName"
+          maxlength="50"
+          #lastNameRef="ngModel"
+          data-cy="lastName"
+        />
         @if (lastNameRef.invalid && (lastNameRef.dirty || lastNameRef.touched)) {
           <div>
             @if (lastNameRef?.errors?.maxlength) {
@@ -72,9 +96,18 @@
 
       <div class="mb-3">
         <label class="form-label" for="field_email" jhiTranslate="userManagement.email">E-mail</label>
-        <input type="email" id="field_email" class="form-control" name="email" formControlName="email" data-cy="email" />
-
-        @let emailRef = editForm.get('email')!;
+        <input
+          type="email"
+          id="field_email"
+          class="form-control"
+          name="email"
+          [(ngModel)]="userManagement.email"
+          required
+          minlength="5"
+          maxlength="254"
+          #emailRef="ngModel"
+          data-cy="email"
+        />
         @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
           <div>
             @if (emailRef?.errors?.required) {
@@ -104,11 +137,11 @@
         <label class="form-check-label" for="activated">
           <input
             class="form-check-input"
-            [attr.disabled]="editForm.value.id === undefined ? 'disabled' : null"
+            [attr.disabled]="userManagement.id === null || userManagement.id === undefined ? 'disabled' : null"
             type="checkbox"
             id="activated"
             name="activated"
-            formControlName="activated"
+            [(ngModel)]="userManagement.activated"
             data-cy="activated"
           />
           <span jhiTranslate="userManagement.activated">Ativo</span>
@@ -118,7 +151,7 @@
       @if (languages && languages.length > 0) {
         <div class="mb-3">
           <label class="form-label" for="langKey" jhiTranslate="userManagement.langKey">Idioma</label>
-          <select class="form-control" id="langKey" name="langKey" formControlName="langKey" data-cy="langKey">
+          <select class="form-control" id="langKey" name="langKey" [(ngModel)]="userManagement.langKey" data-cy="langKey">
             @for (language of languages; track $index) {
               <option [value]="language">{{ language | findLanguageFromKey }}</option>
             }
@@ -128,7 +161,7 @@
 
       <div class="mb-3">
         <label class="form-label" for="field_authority" jhiTranslate="userManagement.profiles">Perfis</label>
-        <select class="form-control" id="field_authority" multiple name="authority" formControlName="authorities">
+        <select class="form-control" id="field_authority" multiple name="authority" [(ngModel)]="userManagement.authorities">
           @for (authority of authorities(); track $index) {
             <option [value]="authority">{{ authority }}</option>
           }

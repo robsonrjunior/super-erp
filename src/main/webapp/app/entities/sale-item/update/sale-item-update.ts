@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -9,32 +9,27 @@ import { finalize } from 'rxjs/operators';
 
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
-import { ISaleItem } from '../sale-item.model';
+import { ISaleItem, NewSaleItem } from '../sale-item.model';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { SaleItemService } from '../service/sale-item.service';
-
-import { SaleItemFormGroup, SaleItemFormService } from './sale-item-form.service';
 
 @Component({
   selector: 'jhi-sale-item-update',
   templateUrl: './sale-item-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class SaleItemUpdate implements OnInit {
   readonly isSaving = signal(false);
-  saleItem: ISaleItem | null = null;
+  saleItem: any = { id: null, deletedAt: null };
 
   protected saleItemService = inject(SaleItemService);
-  protected saleItemFormService = inject(SaleItemFormService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: SaleItemFormGroup = this.saleItemFormService.createSaleItemFormGroup();
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ saleItem }) => {
-      this.saleItem = saleItem;
       if (saleItem) {
-        this.updateForm(saleItem);
+        this.saleItem = { ...saleItem, deletedAt: saleItem.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
     });
   }
@@ -45,11 +40,14 @@ export class SaleItemUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const saleItem = this.saleItemFormService.getSaleItem(this.editForm);
-    if (saleItem.id === null) {
-      this.subscribeToSaveResponse(this.saleItemService.create(saleItem));
+    const payload = {
+      ...this.saleItem,
+      deletedAt: this.saleItem.deletedAt ? dayjs(this.saleItem.deletedAt, DATE_TIME_FORMAT) : null,
+    };
+    if (this.saleItem.id === null) {
+      this.subscribeToSaveResponse(this.saleItemService.create(payload as NewSaleItem));
     } else {
-      this.subscribeToSaveResponse(this.saleItemService.update(saleItem));
+      this.subscribeToSaveResponse(this.saleItemService.update(payload as ISaleItem));
     }
   }
 
@@ -70,10 +68,5 @@ export class SaleItemUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(saleItem: ISaleItem): void {
-    this.saleItem = saleItem;
-    this.saleItemFormService.resetForm(this.editForm, saleItem);
   }
 }

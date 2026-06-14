@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" novalidate (ngSubmit)="save()" #editForm="ngForm">
       <h2
         id="jhi-authority-heading"
         data-cy="AuthorityCreateUpdateHeading"
@@ -11,8 +11,6 @@
 
       <div>
         <jhi-alert-error />
-
-        @let nameRef = editForm.get('name')!;
         <div class="mb-3">
           <label class="form-label" for="field_name" jhiTranslate="superErpApp.adminAuthority.name">Name</label>
           <input
@@ -21,15 +19,15 @@
             name="name"
             id="field_name"
             data-cy="name"
-            formControlName="name"
+            [(ngModel)]="authority.name"
             [readonly]="editForm.get('name')!.disabled"
           />
           @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
             <div>
-              @if (editForm.get('name')?.errors?.required) {
+              @if (nameRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('name')?.errors?.maxlength) {
+              @if (nameRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
                   >Este campo não pode ter mais de 50 caracteres.</small
                 >

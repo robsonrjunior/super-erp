@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -17,20 +17,22 @@ import { ISale } from 'app/entities/sale/sale.model';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 
-import { ICustomer } from '../customer.model';
+import { ICustomer, NewCustomer } from '../customer.model';
+
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { CustomerService } from '../service/customer.service';
 
-import { CustomerFormGroup, CustomerFormService } from './customer-form.service';
 import { SaleService } from 'app/entities/sale/service/sale.service';
 
 @Component({
   selector: 'jhi-customer-update',
   templateUrl: './customer-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class CustomerUpdate implements OnInit {
   readonly isSaving = signal(false);
-  customer: ICustomer | null = null;
+  customer: any = { id: null, active: false, deletedAt: null };
   partyTypeValues = Object.keys(PartyType);
 
   peopleCollection = signal<IPerson[]>([]);
@@ -38,14 +40,10 @@ export class CustomerUpdate implements OnInit {
   salesSharedCollection = signal<ISale[]>([]);
 
   protected customerService = inject(CustomerService);
-  protected customerFormService = inject(CustomerFormService);
   protected personService = inject(PersonService);
   protected companyService = inject(CompanyService);
   protected saleService = inject(SaleService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: CustomerFormGroup = this.customerFormService.createCustomerFormGroup();
 
   comparePerson = (o1: IPerson | null, o2: IPerson | null): boolean => this.personService.comparePerson(o1, o2);
 
@@ -55,9 +53,8 @@ export class CustomerUpdate implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ customer }) => {
-      this.customer = customer;
       if (customer) {
-        this.updateForm(customer);
+        this.customer = { ...customer, deletedAt: customer.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
 
       this.loadRelationshipsOptions();
@@ -70,11 +67,11 @@ export class CustomerUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const customer = this.customerFormService.getCustomer(this.editForm);
-    if (customer.id === null) {
-      this.subscribeToSaveResponse(this.customerService.create(customer));
+    const payload = { ...this.customer, deletedAt: this.customer.deletedAt ? dayjs(this.customer.deletedAt, DATE_TIME_FORMAT) : null };
+    if (this.customer.id === null) {
+      this.subscribeToSaveResponse(this.customerService.create(payload as NewCustomer));
     } else {
-      this.subscribeToSaveResponse(this.customerService.update(customer));
+      this.subscribeToSaveResponse(this.customerService.update(payload as ICustomer));
     }
   }
 
@@ -95,17 +92,6 @@ export class CustomerUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(customer: ICustomer): void {
-    this.customer = customer;
-    this.customerFormService.resetForm(this.editForm, customer);
-
-    this.peopleCollection.set(this.personService.addPersonToCollectionIfMissing<IPerson>(this.peopleCollection(), customer.person));
-    this.companiesCollection.set(
-      this.companyService.addCompanyToCollectionIfMissing<ICompany>(this.companiesCollection(), customer.company),
-    );
-    this.salesSharedCollection.update(sales => this.saleService.addSaleToCollectionIfMissing<ISale>(sales, customer.sales));
   }
 
   protected loadRelationshipsOptions(): void {

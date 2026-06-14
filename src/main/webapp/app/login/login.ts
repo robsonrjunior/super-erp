@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, inject, signal, viewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,7 +10,7 @@ import { TranslateDirective } from 'app/shared/language';
 
 @Component({
   selector: 'jhi-login',
-  imports: [TranslateDirective, TranslateModule, ReactiveFormsModule, RouterLink],
+  imports: [TranslateDirective, TranslateModule, FormsModule, RouterLink],
   templateUrl: './login.html',
 })
 export default class Login implements OnInit, AfterViewInit {
@@ -18,11 +18,7 @@ export default class Login implements OnInit, AfterViewInit {
 
   readonly authenticationError = signal(false);
 
-  loginForm = new FormGroup({
-    username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    rememberMe: new FormControl(false, { nonNullable: true, validators: [Validators.required] }),
-  });
+  loginForm = { username: '', password: '', rememberMe: false };
 
   private readonly accountService = inject(AccountService);
   private readonly loginService = inject(LoginService);
@@ -42,7 +38,7 @@ export default class Login implements OnInit, AfterViewInit {
   }
 
   login(): void {
-    this.loginService.login(this.loginForm.getRawValue()).subscribe({
+    this.loginService.login(this.loginForm).subscribe({
       next: () => {
         this.authenticationError.set(false);
         if (!this.router.currentNavigation()) {

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 
 import { Observable, Observer } from 'rxjs';
 
@@ -39,13 +38,13 @@ export class DataUtils {
    * and returns an observable.
    *
    * @param event the object containing the file (at event.target.files[0])
-   * @param editForm the form group where the input field is located
+   * @param model the entity object to set the file's data on
    * @param field the field name to set the file's 'base 64 data' on
    * @param isImage boolean representing if the file represented by the event is an image
-   * @returns an observable that loads file to form field and completes if successful
+   * @returns an observable that loads file to model and completes if successful
    *      or returns error as FileLoadError on failure
    */
-  loadFileToForm(event: Event, editForm: FormGroup, field: string, isImage: boolean): Observable<void> {
+  loadFileToModel(event: Event, model: Record<string, any>, field: string, isImage: boolean): Observable<void> {
     return new Observable((observer: Observer<void>) => {
       const eventTarget: HTMLInputElement | null = event.target as HTMLInputElement | null;
       if (eventTarget?.files?.[0]) {
@@ -60,10 +59,8 @@ export class DataUtils {
         } else {
           const fieldContentType = `${field}ContentType`;
           toBase64(file, (base64Data: string) => {
-            editForm.patchValue({
-              [field]: base64Data,
-              [fieldContentType]: file.type,
-            });
+            model[field] = base64Data;
+            model[fieldContentType] = file.type;
             observer.next();
             observer.complete();
           });

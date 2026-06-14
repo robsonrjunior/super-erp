@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" novalidate (ngSubmit)="save()" #editForm="ngForm">
       <h2 id="jhi-tenant-heading" data-cy="TenantCreateUpdateHeading" jhiTranslate="superErpApp.tenant.home.createOrEditLabel">
         Criar ou editar Tenant
       </h2>
@@ -8,28 +8,38 @@
       <div>
         <jhi-alert-error />
 
-        @if (editForm.controls.id.value !== null) {
+        @if (tenant.id !== null) {
           <div class="mb-3">
             <label class="form-label" for="field_id" jhiTranslate="global.field.id">Código</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" [(ngModel)]="tenant.id" [readonly]="true" />
           </div>
         }
 
-        @let nameRef = editForm.get('name')!;
         <div class="mb-3">
           <label class="form-label" for="field_name" jhiTranslate="superErpApp.tenant.name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="field_name"
+            data-cy="name"
+            [(ngModel)]="tenant.name"
+            required
+            minlength="2"
+            maxlength="100"
+            #nameRef="ngModel"
+          />
           @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
             <div>
-              @if (editForm.get('name')?.errors?.required) {
+              @if (nameRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('name')?.errors?.minlength) {
+              @if (nameRef.errors?.minlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '2' }"
                   >Este campo deve ter pelo menos 2 caracteres.</small
                 >
               }
-              @if (editForm.get('name')?.errors?.maxlength) {
+              @if (nameRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
                   >Este campo não pode ter mais de 100 caracteres.</small
                 >
@@ -38,21 +48,31 @@
           }
         </div>
 
-        @let codeRef = editForm.get('code')!;
         <div class="mb-3">
           <label class="form-label" for="field_code" jhiTranslate="superErpApp.tenant.code">Code</label>
-          <input type="text" class="form-control" name="code" id="field_code" data-cy="code" formControlName="code" />
+          <input
+            type="text"
+            class="form-control"
+            name="code"
+            id="field_code"
+            data-cy="code"
+            [(ngModel)]="tenant.code"
+            required
+            minlength="2"
+            maxlength="30"
+            #codeRef="ngModel"
+          />
           @if (codeRef.invalid && (codeRef.dirty || codeRef.touched)) {
             <div>
-              @if (editForm.get('code')?.errors?.required) {
+              @if (codeRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('code')?.errors?.minlength) {
+              @if (codeRef.errors?.minlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '2' }"
                   >Este campo deve ter pelo menos 2 caracteres.</small
                 >
               }
-              @if (editForm.get('code')?.errors?.maxlength) {
+              @if (codeRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '30' }"
                   >Este campo não pode ter mais de 30 caracteres.</small
                 >
@@ -61,13 +81,20 @@
           }
         </div>
 
-        @let activeRef = editForm.get('active')!;
         <div class="mb-3">
           <label class="form-label" for="field_active" jhiTranslate="superErpApp.tenant.active">Active</label>
-          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" formControlName="active" />
+          <input
+            type="checkbox"
+            class="form-check"
+            name="active"
+            id="field_active"
+            data-cy="active"
+            [(ngModel)]="tenant.active"
+            #activeRef="ngModel"
+          />
           @if (activeRef.invalid && (activeRef.dirty || activeRef.touched)) {
             <div>
-              @if (editForm.get('active')?.errors?.required) {
+              @if (activeRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
             </div>
@@ -83,7 +110,7 @@
               type="datetime-local"
               class="form-control"
               name="deletedAt"
-              formControlName="deletedAt"
+              [(ngModel)]="tenant.deletedAt"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
@@ -96,7 +123,7 @@
             id="field_customers"
             data-cy="customers"
             name="customers"
-            formControlName="customers"
+            [(ngModel)]="tenant.customers"
             [compareWith]="compareCustomer"
           >
             <option [ngValue]="null"></option>
@@ -113,7 +140,7 @@
             id="field_suppliers"
             data-cy="suppliers"
             name="suppliers"
-            formControlName="suppliers"
+            [(ngModel)]="tenant.suppliers"
             [compareWith]="compareSupplier"
           >
             <option [ngValue]="null"></option>
@@ -130,7 +157,7 @@
             id="field_people"
             data-cy="people"
             name="people"
-            formControlName="people"
+            [(ngModel)]="tenant.people"
             [compareWith]="comparePerson"
           >
             <option [ngValue]="null"></option>
@@ -147,7 +174,7 @@
             id="field_companies"
             data-cy="companies"
             name="companies"
-            formControlName="companies"
+            [(ngModel)]="tenant.companies"
             [compareWith]="compareCompany"
           >
             <option [ngValue]="null"></option>
@@ -164,7 +191,7 @@
             id="field_products"
             data-cy="products"
             name="products"
-            formControlName="products"
+            [(ngModel)]="tenant.products"
             [compareWith]="compareProduct"
           >
             <option [ngValue]="null"></option>
@@ -181,7 +208,7 @@
             id="field_rawMaterials"
             data-cy="rawMaterials"
             name="rawMaterials"
-            formControlName="rawMaterials"
+            [(ngModel)]="tenant.rawMaterials"
             [compareWith]="compareRawMaterial"
           >
             <option [ngValue]="null"></option>
@@ -198,7 +225,7 @@
             id="field_warehouses"
             data-cy="warehouses"
             name="warehouses"
-            formControlName="warehouses"
+            [(ngModel)]="tenant.warehouses"
             [compareWith]="compareWarehouse"
           >
             <option [ngValue]="null"></option>
@@ -210,7 +237,7 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_sales" jhiTranslate="superErpApp.tenant.sales">Sales</label>
-          <select class="form-control" id="field_sales" data-cy="sales" name="sales" formControlName="sales" [compareWith]="compareSale">
+          <select class="form-control" id="field_sales" data-cy="sales" name="sales" [(ngModel)]="tenant.sales" [compareWith]="compareSale">
             <option [ngValue]="null"></option>
             @for (saleOption of salesSharedCollection(); track $index) {
               <option [ngValue]="saleOption">{{ saleOption.id }}</option>
@@ -225,7 +252,7 @@
             id="field_saleItems"
             data-cy="saleItems"
             name="saleItems"
-            formControlName="saleItems"
+            [(ngModel)]="tenant.saleItems"
             [compareWith]="compareSaleItem"
           >
             <option [ngValue]="null"></option>
@@ -242,7 +269,7 @@
             id="field_stockMovements"
             data-cy="stockMovements"
             name="stockMovements"
-            formControlName="stockMovements"
+            [(ngModel)]="tenant.stockMovements"
             [compareWith]="compareStockMovement"
           >
             <option [ngValue]="null"></option>

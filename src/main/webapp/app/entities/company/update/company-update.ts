@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -9,32 +9,28 @@ import { finalize } from 'rxjs/operators';
 
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
-import { ICompany } from '../company.model';
-import { CompanyService } from '../service/company.service';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
-import { CompanyFormGroup, CompanyFormService } from './company-form.service';
+import { ICompany, NewCompany } from '../company.model';
+import { CompanyService } from '../service/company.service';
 
 @Component({
   selector: 'jhi-company-update',
   templateUrl: './company-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class CompanyUpdate implements OnInit {
   readonly isSaving = signal(false);
-  company: ICompany | null = null;
+  company: any = { id: null, active: false, deletedAt: null };
 
   protected companyService = inject(CompanyService);
-  protected companyFormService = inject(CompanyFormService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: CompanyFormGroup = this.companyFormService.createCompanyFormGroup();
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ company }) => {
-      this.company = company;
       if (company) {
-        this.updateForm(company);
+        this.company = { ...company, deletedAt: company.deletedAt?.format(DATE_TIME_FORMAT) ?? null };
       }
     });
   }
@@ -45,11 +41,11 @@ export class CompanyUpdate implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const company = this.companyFormService.getCompany(this.editForm);
-    if (company.id === null) {
-      this.subscribeToSaveResponse(this.companyService.create(company));
+    const payload = { ...this.company, deletedAt: this.company.deletedAt ? dayjs(this.company.deletedAt, DATE_TIME_FORMAT) : null };
+    if (this.company.id === null) {
+      this.subscribeToSaveResponse(this.companyService.create(payload as NewCompany));
     } else {
-      this.subscribeToSaveResponse(this.companyService.update(company));
+      this.subscribeToSaveResponse(this.companyService.update(payload as ICompany));
     }
   }
 
@@ -70,10 +66,5 @@ export class CompanyUpdate implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving.set(false);
-  }
-
-  protected updateForm(company: ICompany): void {
-    this.company = company;
-    this.companyFormService.resetForm(this.editForm, company);
   }
 }

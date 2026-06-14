@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" novalidate (ngSubmit)="save()" #editForm="ngForm">
       <h2 id="jhi-person-heading" data-cy="PersonCreateUpdateHeading" jhiTranslate="superErpApp.person.home.createOrEditLabel">
         Criar ou editar Person
       </h2>
@@ -8,28 +8,26 @@
       <div>
         <jhi-alert-error />
 
-        @if (editForm.controls.id.value !== null) {
+        @if (person.id !== null) {
           <div class="mb-3">
             <label class="form-label" for="field_id" jhiTranslate="global.field.id">Código</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" [(ngModel)]="person.id" [readonly]="true" />
           </div>
         }
-
-        @let fullNameRef = editForm.get('fullName')!;
         <div class="mb-3">
           <label class="form-label" for="field_fullName" jhiTranslate="superErpApp.person.fullName">Full Name</label>
-          <input type="text" class="form-control" name="fullName" id="field_fullName" data-cy="fullName" formControlName="fullName" />
+          <input type="text" class="form-control" name="fullName" id="field_fullName" data-cy="fullName" [(ngModel)]="person.fullName" />
           @if (fullNameRef.invalid && (fullNameRef.dirty || fullNameRef.touched)) {
             <div>
-              @if (editForm.get('fullName')?.errors?.required) {
+              @if (fullNameRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('fullName')?.errors?.minlength) {
+              @if (fullNameRef.errors?.minlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '2' }"
                   >Este campo deve ter pelo menos 2 caracteres.</small
                 >
               }
-              @if (editForm.get('fullName')?.errors?.maxlength) {
+              @if (fullNameRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '120' }"
                   >Este campo não pode ter mais de 120 caracteres.</small
                 >
@@ -37,22 +35,20 @@
             </div>
           }
         </div>
-
-        @let cpfRef = editForm.get('cpf')!;
         <div class="mb-3">
           <label class="form-label" for="field_cpf" jhiTranslate="superErpApp.person.cpf">Cpf</label>
-          <input type="text" class="form-control" name="cpf" id="field_cpf" data-cy="cpf" formControlName="cpf" />
+          <input type="text" class="form-control" name="cpf" id="field_cpf" data-cy="cpf" [(ngModel)]="person.cpf" />
           @if (cpfRef.invalid && (cpfRef.dirty || cpfRef.touched)) {
             <div>
-              @if (editForm.get('cpf')?.errors?.required) {
+              @if (cpfRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
-              @if (editForm.get('cpf')?.errors?.minlength) {
+              @if (cpfRef.errors?.minlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '11' }"
                   >Este campo deve ter pelo menos 11 caracteres.</small
                 >
               }
-              @if (editForm.get('cpf')?.errors?.maxlength) {
+              @if (cpfRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '14' }"
                   >Este campo não pode ter mais de 14 caracteres.</small
                 >
@@ -72,24 +68,22 @@
               name="birthDate"
               ngbDatepicker
               #birthDateDp="ngbDatepicker"
-              formControlName="birthDate"
+              [(ngModel)]="person.birthDate"
             />
             <button type="button" class="btn btn-secondary" (click)="birthDateDp.toggle()"><fa-icon icon="calendar-alt" /></button>
           </div>
         </div>
-
-        @let emailRef = editForm.get('email')!;
         <div class="mb-3">
           <label class="form-label" for="field_email" jhiTranslate="superErpApp.person.email">Email</label>
-          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
+          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" [(ngModel)]="person.email" />
           @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
             <div>
-              @if (editForm.get('email')?.errors?.maxlength) {
+              @if (emailRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '120' }"
                   >Este campo não pode ter mais de 120 caracteres.</small
                 >
               }
-              @if (editForm.get('email')?.errors?.pattern) {
+              @if (emailRef.errors?.pattern) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.pattern" [translateValues]="{ pattern: 'Email' }"
                   >Este campo deve estar dentro do seguinte padrão Email.</small
                 >
@@ -97,14 +91,12 @@
             </div>
           }
         </div>
-
-        @let phoneRef = editForm.get('phone')!;
         <div class="mb-3">
           <label class="form-label" for="field_phone" jhiTranslate="superErpApp.person.phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="field_phone" data-cy="phone" formControlName="phone" />
+          <input type="text" class="form-control" name="phone" id="field_phone" data-cy="phone" [(ngModel)]="person.phone" />
           @if (phoneRef.invalid && (phoneRef.dirty || phoneRef.touched)) {
             <div>
-              @if (editForm.get('phone')?.errors?.maxlength) {
+              @if (phoneRef.errors?.maxlength) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '30' }"
                   >Este campo não pode ter mais de 30 caracteres.</small
                 >
@@ -112,14 +104,12 @@
             </div>
           }
         </div>
-
-        @let activeRef = editForm.get('active')!;
         <div class="mb-3">
           <label class="form-label" for="field_active" jhiTranslate="superErpApp.person.active">Active</label>
-          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" formControlName="active" />
+          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" [(ngModel)]="person.active" />
           @if (activeRef.invalid && (activeRef.dirty || activeRef.touched)) {
             <div>
-              @if (editForm.get('active')?.errors?.required) {
+              @if (activeRef.errors?.required) {
                 <small class="form-text text-danger" jhiTranslate="entity.validation.required">O campo é obrigatório.</small>
               }
             </div>
@@ -135,7 +125,7 @@
               type="datetime-local"
               class="form-control"
               name="deletedAt"
-              formControlName="deletedAt"
+              [(ngModel)]="person.deletedAt"
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>

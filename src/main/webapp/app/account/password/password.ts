@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -11,7 +11,7 @@ import { PasswordService } from './password.service';
 
 @Component({
   selector: 'jhi-password',
-  imports: [TranslateDirective, TranslateModule, ReactiveFormsModule, PasswordStrengthBar],
+  imports: [TranslateDirective, TranslateModule, FormsModule, PasswordStrengthBar],
   templateUrl: './password.html',
 })
 export default class Password {
@@ -19,17 +19,7 @@ export default class Password {
   readonly error = signal(false);
   readonly success = signal(false);
   readonly account = inject(AccountService).account;
-  passwordForm = new FormGroup({
-    currentPassword: new FormControl('', { nonNullable: true, validators: Validators.required }),
-    newPassword: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(4), Validators.maxLength(50)],
-    }),
-    confirmPassword: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(4), Validators.maxLength(50)],
-    }),
-  });
+  passwordForm = { currentPassword: '', newPassword: '', confirmPassword: '' };
 
   private readonly passwordService = inject(PasswordService);
 
@@ -38,7 +28,7 @@ export default class Password {
     this.success.set(false);
     this.doNotMatch.set(false);
 
-    const { newPassword, confirmPassword, currentPassword } = this.passwordForm.getRawValue();
+    const { newPassword, confirmPassword, currentPassword } = this.passwordForm;
     if (newPassword === confirmPassword) {
       this.passwordService.save(newPassword, currentPassword).subscribe({
         next: () => this.success.set(true),
