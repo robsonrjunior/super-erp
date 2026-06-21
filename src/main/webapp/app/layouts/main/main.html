@@ -1,14 +1,14 @@
 <jhi-page-ribbon />
 
-<div class="card-layout">
-  <p-card>
+<div class="app-shell">
+  @if (!isLoginRoute()) {
     <div>
       <router-outlet name="navbar" />
     </div>
+  }
 
-    <main class="card-content">
-      <router-outlet />
-    </main>
-    <jhi-footer />
-  </p-card>
+  <main class="app-content">
+    <router-outlet />
+  </main>
+  <jhi-footer />
 </div>

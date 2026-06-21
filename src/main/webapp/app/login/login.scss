@@ -1,0 +1,50 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field input {
+  width: 100%;
+}
+
+.field-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.field-checkbox label {
+  margin-bottom: 0;
+}
+
+.forgot-password {
+  margin-bottom: 1rem;
+}
+
+.forgot-password a {
+  font-weight: 600;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.register-link {
+  font-weight: 600;
+}

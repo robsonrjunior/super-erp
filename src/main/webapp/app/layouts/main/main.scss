@@ -17,51 +17,21 @@ body {
   overflow-x: hidden;
 }
 
-p-card {
-  flex: 1;
-}
-
-:host ::ng-deep .p-card {
-  height: 100%;
+.app-shell {
   display: flex;
   flex-direction: column;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-:host ::ng-deep .p-card-body {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
+  min-height: 0;
+  background: var(--p-surface-950);
 }
 
-:host ::ng-deep .p-card-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-}
-
-.card-layout {
+.app-content {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
 }
 
-.card-layout > p-card {
-  margin: 0;
-  flex: 1;
-  display: flex;
-}
-
-.card-content {
-  flex: 1;
-  min-height: 0;
-}
-
-.card-layout jhi-footer {
+.app-shell jhi-footer {
   margin-top: auto;
 }
