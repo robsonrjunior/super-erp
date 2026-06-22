@@ -2,6 +2,12 @@
   background: var(--p-togglebutton-background);
 }
 
+.footer-content {
+  max-width: var(--app-content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
 .footer-toggles {
   --p-togglebutton-background: transparent;
   --p-togglebutton-border-color: transparent;

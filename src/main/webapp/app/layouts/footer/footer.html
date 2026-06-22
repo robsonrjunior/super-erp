@@ -1,29 +1,31 @@
-<footer class="footer d-flex justify-content-between align-items-center px-4 py-3">
-  <div><strong>Super ERP</strong> © {{ currentYear }}</div>
+<footer class="footer py-3">
+  <div class="footer-content d-flex justify-content-between align-items-center px-4">
+    <div><strong>Super ERP</strong> © {{ currentYear }}</div>
 
-  <div class="footer-toggles d-flex align-items-center gap-3">
-    <p-selectButton [options]="themeOptions" [ngModel]="selectedTheme" optionValue="value" (onChange)="setDarkMode($event.value)">
-      <ng-template let-item pTemplate="item">
-        <div class="d-flex align-items-center gap-2">
-          <i [class]="item.icon"></i>
-          <span>{{ item.label | translate }}</span>
-        </div>
-      </ng-template>
-    </p-selectButton>
+    <div class="footer-toggles d-flex align-items-center gap-3">
+      <p-selectButton [options]="themeOptions" [ngModel]="selectedTheme" optionValue="value" (onChange)="setDarkMode($event.value)">
+        <ng-template let-item pTemplate="item">
+          <div class="d-flex align-items-center gap-2">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label | translate }}</span>
+          </div>
+        </ng-template>
+      </p-selectButton>
 
-    <p-selectButton
-      [options]="languageOptions"
-      [(ngModel)]="selectedLanguage"
-      optionValue="value"
-      (onChange)="changeLanguage($event.value)"
-    >
-      <ng-template let-item pTemplate="item">
-        <div class="d-flex align-items-center gap-2">
-          <span>{{ item.label }}</span>
+      <p-selectButton
+        [options]="languageOptions"
+        [(ngModel)]="selectedLanguage"
+        optionValue="value"
+        (onChange)="changeLanguage($event.value)"
+      >
+        <ng-template let-item pTemplate="item">
+          <div class="d-flex align-items-center gap-2">
+            <span>{{ item.label }}</span>
 
-          <img [src]="item.flag" width="20" height="15" alt="flag" />
-        </div>
-      </ng-template>
-    </p-selectButton>
+            <img [src]="item.flag" width="20" height="15" alt="flag" />
+          </div>
+        </ng-template>
+      </p-selectButton>
+    </div>
   </div>
 </footer>

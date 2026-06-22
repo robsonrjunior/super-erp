@@ -19,6 +19,10 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  max-width: var(--app-content-max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
 }
 
 .app-shell jhi-footer {

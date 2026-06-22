@@ -9,10 +9,17 @@ Navbar
   color: var(--p-primary-contrast-color);
 }
 
+.navbar-content {
+  max-width: var(--app-content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
 .navbar-container {
   display: flex;
   align-items: center;
   gap: 1rem;
+  justify-content: space-between;
 }
 
 /* ==========================================================================
@@ -58,11 +65,9 @@ Search section
 ========================================================================== */
 
 .navbar-search-section {
-  flex: 1;
+  flex: 0 1 480px;
   display: flex;
   justify-content: center;
-  max-width: 480px;
-  margin: 0 auto;
 }
 
 .search-input {
@@ -115,7 +120,6 @@ Account section (right corner, always visible)
 .navbar-account-section {
   display: flex;
   align-items: center;
-  margin-left: auto;
   flex-shrink: 0;
 }
 
