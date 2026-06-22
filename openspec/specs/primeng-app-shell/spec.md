@@ -36,3 +36,15 @@ The existing page ribbon component (`jhi-page-ribbon`) SHALL remain functional a
 #### Scenario: Dev ribbon visible in development
 - **WHEN** running in development mode
 - **THEN** the page ribbon is displayed in its original position above the card layout
+
+### Requirement: Navbar hidden on login route
+The navbar SHALL NOT be displayed when the user is on the login route (`/login`).
+
+#### Scenario: Navbar hidden on login page
+- **WHEN** an unauthenticated user navigates to `/login`
+- **THEN** the navbar is not rendered in the viewport
+- **AND** the page ribbon, app shell, and footer remain visible
+
+#### Scenario: Navbar visible on non-login routes
+- **WHEN** the user navigates to any route other than `/login`
+- **THEN** the navbar is rendered at the top of the page inside the app shell

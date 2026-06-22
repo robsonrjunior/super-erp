@@ -100,7 +100,11 @@
     "ribbon": {
       "dev": "Development"
     },
-    "item-count": "Showing {{first}} - {{second}} of {{total}} items."
+    "item-count": "Showing {{first}} - {{second}} of {{total}} items.",
+    "footer": {
+      "darkMode": "Dark mode",
+      "lightMode": "Light mode"
+    }
   },
   "entity": {
     "action": {
@@ -157,6 +161,5 @@
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
-  },
-  "footer": "This is your footer"
+  }
 }

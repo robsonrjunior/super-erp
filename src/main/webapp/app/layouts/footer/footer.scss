@@ -1,0 +1,11 @@
+.footer {
+  background: var(--p-togglebutton-background);
+}
+
+.footer-toggles {
+  --p-togglebutton-background: transparent;
+  --p-togglebutton-border-color: transparent;
+  --p-togglebutton-hover-background: transparent;
+  --p-togglebutton-checked-background: transparent;
+  --p-togglebutton-checked-border-color: transparent;
+}

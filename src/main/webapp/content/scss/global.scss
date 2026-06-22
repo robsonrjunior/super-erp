@@ -103,7 +103,35 @@ Generic styles
 }
 
 .footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
+  border-top: 1px solid var(--p-surface-border);
+}
+
+/* ==========================================================================
+CSS custom properties for theme switching
+========================================================================== */
+:root {
+  --app-body-bg: #fff;
+  --app-shell-bg: #fff;
+}
+
+.dark-mode {
+  --app-body-bg: #212529;
+  --app-shell-bg: #212529;
+}
+
+/* ==========================================================================
+Dark mode overrides
+========================================================================== */
+body {
+  background: var(--app-body-bg);
+}
+
+.dark-mode a {
+  color: var(--p-primary-300);
+}
+
+.dark-mode a:hover {
+  color: var(--p-primary-200);
 }
 
 .hand,

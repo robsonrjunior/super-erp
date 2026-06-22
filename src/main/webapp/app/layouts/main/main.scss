@@ -1,19 +1,8 @@
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  min-height: 100vh;
-  background: #fff;
-}
-
 :host {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--app-shell-bg);
   overflow-x: hidden;
 }
 
@@ -22,7 +11,7 @@ body {
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  background: var(--p-surface-950);
+  background: var(--app-shell-bg);
 }
 
 .app-content {

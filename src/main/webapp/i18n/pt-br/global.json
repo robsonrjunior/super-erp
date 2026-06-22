@@ -100,7 +100,11 @@
     "ribbon": {
       "dev": "Desenvolvimento"
     },
-    "item-count": "Mostrando {{first}} - {{second}} de {{total}} resultados."
+    "item-count": "Mostrando {{first}} - {{second}} de {{total}} resultados.",
+    "footer": {
+      "darkMode": "Modo escuro",
+      "lightMode": "Modo claro"
+    }
   },
   "entity": {
     "action": {
@@ -157,6 +161,5 @@
       "could.not.extract": "Não foi possível extrair o arquivo",
       "not.image": "Esperava-se que o arquivo fosse uma imagem, mas foi encontrado \"{{ fileType }}\""
     }
-  },
-  "footer": "Este é o rodapé da página"
+  }
 }

@@ -100,7 +100,11 @@
     "ribbon": {
       "dev": "Desarrollo"
     },
-    "item-count": "Mostrando {{first}} - {{second}} de {{total}} elementos."
+    "item-count": "Mostrando {{first}} - {{second}} de {{total}} elementos.",
+    "footer": {
+      "darkMode": "Modo oscuro",
+      "lightMode": "Modo claro"
+    }
   },
   "entity": {
     "action": {
@@ -157,6 +161,5 @@
       "could.not.extract": "No se pudo extraer el fichero",
       "not.image": "Se esperaba que el fichero fuera una imagen pero se encontro \"{{ fileType }}\""
     }
-  },
-  "footer": "Pie de página"
+  }
 }
