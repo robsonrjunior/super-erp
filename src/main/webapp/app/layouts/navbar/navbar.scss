@@ -2,28 +2,43 @@
 Navbar
 ========================================================================== */
 
-.navbar-version {
-  font-size: 0.65em;
-  color: var(--p-text-muted-color);
-}
-
-.profile-image {
-  height: 1.75em;
-  width: 1.75em;
-}
-
 .navbar {
   padding: 0.2rem 1rem;
-  background: var(--p-surface-card);
+  background: var(--p-primary-color);
+  border-bottom: 1px solid var(--p-primary-color);
+  color: var(--p-primary-contrast-color);
+}
 
-  a.nav-link {
-    font-weight: 400;
-  }
+.navbar-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 /* ==========================================================================
-Logo styles
+Logo / Brand styles
 ========================================================================== */
+
+.navbar-brand-section {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--p-primary-contrast-color);
+}
+
+.navbar-version {
+  font-size: 0.65em;
+  color: var(--p-primary-contrast-color);
+  opacity: 0.7;
+}
+
 .logo-img {
   height: 45px;
   width: 45px;
@@ -31,4 +46,126 @@ Logo styles
   vertical-align: middle;
   background: url('/content/images/logo-jhipster.png') no-repeat center center;
   background-size: contain;
+}
+
+.profile-image {
+  height: 1.75em;
+  width: 1.75em;
+}
+
+/* ==========================================================================
+Search section
+========================================================================== */
+
+.navbar-search-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
+  min-width: 200px;
+}
+
+/* ==========================================================================
+Menu buttons
+========================================================================== */
+
+.navbar-menu-section {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--p-primary-contrast-color);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: var(--p-border-radius);
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+/* ==========================================================================
+Account section (right corner, always visible)
+========================================================================== */
+
+.navbar-account-section {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+Mobile toggle
+========================================================================== */
+
+.navbar-toggler {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--p-primary-contrast-color);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+/* ==========================================================================
+Responsive breakpoints
+========================================================================== */
+
+@media (max-width: 767px) {
+  .navbar-toggler {
+    display: block;
+  }
+
+  .navbar-search-section {
+    display: none;
+  }
+
+  .navbar-menu-section {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--p-primary-color);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--p-primary-color);
+    z-index: 1000;
+
+    &.show {
+      display: flex;
+    }
+  }
+
+  .nav-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+  }
 }
