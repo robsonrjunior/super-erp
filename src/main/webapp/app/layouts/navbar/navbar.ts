@@ -111,7 +111,7 @@ export default class Navbar implements OnInit {
       },
       {
         label: t('global.menu.entities.stockMovement'),
-        icon: 'pi pi-exchange',
+        icon: 'pi pi-arrow-right-arrow-left',
         routerLink: '/stock-movement',
         command: () => this.collapseNavbar(),
       },
