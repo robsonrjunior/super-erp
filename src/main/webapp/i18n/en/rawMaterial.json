@@ -26,7 +26,7 @@
       "minStock": "Min Stock",
       "active": "Active",
       "deletedAt": "Deleted At",
-      "stockMovements": "Stock Movements",
+      "stockMovements": "Stock Mov.",
       "tenant": "Tenant",
       "primarySupplier": "Primary Supplier"
     }

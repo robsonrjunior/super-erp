@@ -20,7 +20,7 @@
         "product": "Produto",
         "rawMaterial": "Matéria-Prima",
         "warehouse": "Armazém",
-        "stockMovement": "Movimentação de Estoque",
+        "stockMovement": "Mov. Estoque",
         "sale": "Venda",
         "saleItem": "Item de Venda"
       },

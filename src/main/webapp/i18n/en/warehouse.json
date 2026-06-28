@@ -22,7 +22,7 @@
       "code": "Code",
       "active": "Active",
       "deletedAt": "Deleted At",
-      "stockMovements": "Stock Movements",
+      "stockMovements": "Stock Mov.",
       "sales": "Sales",
       "tenant": "Tenant",
       "city": "City"

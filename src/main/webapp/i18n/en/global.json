@@ -20,7 +20,7 @@
         "product": "Product",
         "rawMaterial": "Raw Material",
         "warehouse": "Warehouse",
-        "stockMovement": "Stock Movement",
+        "stockMovement": "Stock Mov.",
         "sale": "Sale",
         "saleItem": "Sale Item"
       },

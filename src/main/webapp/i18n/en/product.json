@@ -28,7 +28,7 @@
       "active": "Active",
       "deletedAt": "Deleted At",
       "saleItems": "Sale Items",
-      "stockMovements": "Stock Movements",
+      "stockMovements": "Stock Mov.",
       "tenant": "Tenant"
     }
   }

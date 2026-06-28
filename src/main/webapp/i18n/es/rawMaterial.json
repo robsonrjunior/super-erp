@@ -26,7 +26,7 @@
       "minStock": "Stock Mínimo",
       "active": "Activo",
       "deletedAt": "Eliminado en",
-      "stockMovements": "Movimientos de Stock",
+      "stockMovements": "Mov. Stock",
       "tenant": "Cuenta",
       "primarySupplier": "Proveedor Principal"
     }

@@ -20,7 +20,7 @@
         "product": "Producto",
         "rawMaterial": "Materia Prima",
         "warehouse": "Almacén",
-        "stockMovement": "Movimiento de Stock",
+        "stockMovement": "Mov. Stock",
         "sale": "Venta",
         "saleItem": "Ítem de Venta"
       },
