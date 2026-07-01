@@ -1,6 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import locale from '@angular/common/locales/pt';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap/datepicker';
@@ -14,6 +14,7 @@ import Main from './layouts/main/main';
 @Component({
   selector: 'jhi-app',
   template: '<jhi-main />',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [Main],
 })
 export default class App {

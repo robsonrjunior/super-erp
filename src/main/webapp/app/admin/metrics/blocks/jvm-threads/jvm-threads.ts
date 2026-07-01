@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap/progressbar';
@@ -12,6 +12,7 @@ import { MetricsModalThreads } from '../metrics-modal-threads/metrics-modal-thre
 @Component({
   selector: 'jhi-jvm-threads',
   templateUrl: './jvm-threads.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgbProgressbar, DecimalPipe, TranslateDirective, TranslateModule],
 })
 export class JvmThreads {

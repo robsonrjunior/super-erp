@@ -1,4 +1,4 @@
-import { Component, Renderer2, inject } from '@angular/core';
+import { Component, Renderer2, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'jhi-footer',
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, TranslateModule, MatButtonToggleModule, MatIconModule],
 })
 export default class Footer {

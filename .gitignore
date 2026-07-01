@@ -157,3 +157,5 @@ nul
 
 # Openspec
 openspec/changes/*
+!openspec/changes/archive/
+!openspec/changes/archive/**

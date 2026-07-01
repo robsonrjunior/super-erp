@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { IAuthority } from '../authority.model';
 @Component({
   selector: 'jhi-authority-detail',
   templateUrl: './authority-detail.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FontAwesomeModule, Alert, AlertError, TranslateDirective, TranslateModule],
 })
 export class AuthorityDetail {

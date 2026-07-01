@@ -1,6 +1,6 @@
 import { KeyValuePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
@@ -15,6 +15,7 @@ import HealthModal from './modal/health-modal';
 @Component({
   selector: 'jhi-health',
   templateUrl: './health.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule, FontAwesomeModule, KeyValuePipe],
 })
 export default class Health implements OnInit {

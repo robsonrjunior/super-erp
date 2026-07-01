@@ -53,7 +53,9 @@
           <dd>
             @if (rawMaterial()!.stockMovements) {
               <div>
-                <a [routerLink]="['/stock-movement', rawMaterial()!.stockMovements?.id, 'view']">{{ rawMaterialRef.stockMovements?.id }}</a>
+                <a [routerLink]="['/stock-movement', $safeNavigationMigration(rawMaterial()!.stockMovements?.id), 'view']">{{
+                  rawMaterialRef.stockMovements?.id
+                }}</a>
               </div>
             }
           </dd>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { PasswordResetInitService } from './password-reset-init.service';
 @Component({
   selector: 'jhi-password-reset-init',
   imports: [TranslateDirective, TranslateModule, AlertError, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './password-reset-init.html',
 })
 export default class PasswordResetInit implements AfterViewInit {

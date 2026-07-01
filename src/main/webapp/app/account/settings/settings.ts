@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { FindLanguageFromKeyPipe, TranslateDirective } from 'app/shared/language
 @Component({
   selector: 'jhi-settings',
   imports: [TranslateDirective, TranslateModule, FindLanguageFromKeyPipe, AlertError, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './settings.html',
 })
 export default class Settings implements OnInit {

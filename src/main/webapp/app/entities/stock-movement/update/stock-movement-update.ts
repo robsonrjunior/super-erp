@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -18,6 +18,7 @@ import { IStockMovement, NewStockMovement } from '../stock-movement.model';
 @Component({
   selector: 'jhi-stock-movement-update',
   templateUrl: './stock-movement-update.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class StockMovementUpdate implements OnInit {

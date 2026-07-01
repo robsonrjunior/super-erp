@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,6 +15,7 @@ import { AuthorityService } from '../service/authority.service';
 @Component({
   selector: 'jhi-authority-update',
   templateUrl: './authority-update.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class AuthorityUpdate implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import { TranslateDirective } from 'app/shared/language';
 @Component({
   selector: 'jhi-error',
   imports: [TranslateDirective, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './error.html',
 })
 export default class Error implements OnInit, OnDestroy {

@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -29,6 +29,7 @@ import { StateService } from 'app/entities/state/service/state.service';
 @Component({
   selector: 'jhi-city-update',
   templateUrl: './city-update.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class CityUpdate implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'jhi-home',
   templateUrl: './home.html',
   styleUrl: './home.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule, RouterLink, MatButtonModule],
 })
 export default class Home {

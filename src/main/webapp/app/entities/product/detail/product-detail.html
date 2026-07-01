@@ -57,7 +57,9 @@
           <dd>
             @if (product()!.saleItems) {
               <div>
-                <a [routerLink]="['/sale-item', product()!.saleItems?.id, 'view']">{{ productRef.saleItems?.id }}</a>
+                <a [routerLink]="['/sale-item', $safeNavigationMigration(product()!.saleItems?.id), 'view']">{{
+                  productRef.saleItems?.id
+                }}</a>
               </div>
             }
           </dd>
@@ -65,7 +67,9 @@
           <dd>
             @if (product()!.stockMovements) {
               <div>
-                <a [routerLink]="['/stock-movement', product()!.stockMovements?.id, 'view']">{{ productRef.stockMovements?.id }}</a>
+                <a [routerLink]="['/stock-movement', $safeNavigationMigration(product()!.stockMovements?.id), 'view']">{{
+                  productRef.stockMovements?.id
+                }}</a>
               </div>
             }
           </dd>

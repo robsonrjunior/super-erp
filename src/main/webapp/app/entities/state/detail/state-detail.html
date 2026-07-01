@@ -27,7 +27,7 @@
           <dd>
             @if (state()!.country) {
               <div>
-                <a [routerLink]="['/country', state()!.country?.id, 'view']">{{ stateRef.country?.id }}</a>
+                <a [routerLink]="['/country', $safeNavigationMigration(state()!.country?.id), 'view']">{{ stateRef.country?.id }}</a>
               </div>
             }
           </dd>

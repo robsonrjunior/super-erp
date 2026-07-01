@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 
 import TranslateDirective from '../language/translate.directive';
 
@@ -8,6 +8,7 @@ import TranslateDirective from '../language/translate.directive';
 @Component({
   selector: 'jhi-item-count',
   template: ` <div jhiTranslate="global.item-count" [translateValues]="{ first: first(), second: second(), total: total() }"></div> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective],
 })
 export default class ItemCount {

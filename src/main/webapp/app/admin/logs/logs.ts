@@ -1,5 +1,5 @@
 import { SlicePipe } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -15,6 +15,7 @@ import { LogsService } from './logs.service';
 @Component({
   selector: 'jhi-logs',
   templateUrl: './logs.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule, FontAwesomeModule, FormsModule, SortDirective, SortByDirective, SlicePipe],
 })
 export default class Logs implements OnInit {

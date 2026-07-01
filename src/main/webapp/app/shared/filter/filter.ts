@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,6 +10,7 @@ import { IFilterOptions } from './filter.model';
 @Component({
   selector: 'jhi-filter',
   imports: [TranslateDirective, TranslateModule, FontAwesomeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './filter.html',
 })
 export default class Filter {

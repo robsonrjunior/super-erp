@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,6 +17,7 @@ import { SaleItemService } from '../service/sale-item.service';
 @Component({
   selector: 'jhi-sale-item-update',
   templateUrl: './sale-item-update.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, FormsModule],
 })
 export class SaleItemUpdate implements OnInit {

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -24,6 +24,7 @@ import { IUserManagement } from '../user-management.model';
 @Component({
   selector: 'jhi-user-mgmt',
   templateUrl: './user-management.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterLink,
     FontAwesomeModule,

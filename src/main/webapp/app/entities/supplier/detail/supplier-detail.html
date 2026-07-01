@@ -53,7 +53,7 @@
           <dd>
             @if (supplier()!.person) {
               <div>
-                <a [routerLink]="['/person', supplier()!.person?.id, 'view']">{{ supplierRef.person?.id }}</a>
+                <a [routerLink]="['/person', $safeNavigationMigration(supplier()!.person?.id), 'view']">{{ supplierRef.person?.id }}</a>
               </div>
             }
           </dd>
@@ -61,7 +61,7 @@
           <dd>
             @if (supplier()!.company) {
               <div>
-                <a [routerLink]="['/company', supplier()!.company?.id, 'view']">{{ supplierRef.company?.id }}</a>
+                <a [routerLink]="['/company', $safeNavigationMigration(supplier()!.company?.id), 'view']">{{ supplierRef.company?.id }}</a>
               </div>
             }
           </dd>
@@ -69,7 +69,9 @@
           <dd>
             @if (supplier()!.rawMaterials) {
               <div>
-                <a [routerLink]="['/raw-material', supplier()!.rawMaterials?.id, 'view']">{{ supplierRef.rawMaterials?.id }}</a>
+                <a [routerLink]="['/raw-material', $safeNavigationMigration(supplier()!.rawMaterials?.id), 'view']">{{
+                  supplierRef.rawMaterials?.id
+                }}</a>
               </div>
             }
           </dd>

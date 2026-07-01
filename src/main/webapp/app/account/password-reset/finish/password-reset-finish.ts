@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, inject, signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -12,6 +12,7 @@ import { PasswordResetFinishService } from './password-reset-finish.service';
 @Component({
   selector: 'jhi-password-reset-finish',
   imports: [TranslateDirective, TranslateModule, RouterLink, FormsModule, PasswordStrengthBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './password-reset-finish.html',
 })
 export default class PasswordResetFinish implements OnInit, AfterViewInit {

@@ -35,7 +35,7 @@
           <dd>
             @if (tenant()!.customers) {
               <div>
-                <a [routerLink]="['/customer', tenant()!.customers?.id, 'view']">{{ tenantRef.customers?.id }}</a>
+                <a [routerLink]="['/customer', $safeNavigationMigration(tenant()!.customers?.id), 'view']">{{ tenantRef.customers?.id }}</a>
               </div>
             }
           </dd>
@@ -43,7 +43,7 @@
           <dd>
             @if (tenant()!.suppliers) {
               <div>
-                <a [routerLink]="['/supplier', tenant()!.suppliers?.id, 'view']">{{ tenantRef.suppliers?.id }}</a>
+                <a [routerLink]="['/supplier', $safeNavigationMigration(tenant()!.suppliers?.id), 'view']">{{ tenantRef.suppliers?.id }}</a>
               </div>
             }
           </dd>
@@ -51,7 +51,7 @@
           <dd>
             @if (tenant()!.people) {
               <div>
-                <a [routerLink]="['/person', tenant()!.people?.id, 'view']">{{ tenantRef.people?.id }}</a>
+                <a [routerLink]="['/person', $safeNavigationMigration(tenant()!.people?.id), 'view']">{{ tenantRef.people?.id }}</a>
               </div>
             }
           </dd>
@@ -59,7 +59,7 @@
           <dd>
             @if (tenant()!.companies) {
               <div>
-                <a [routerLink]="['/company', tenant()!.companies?.id, 'view']">{{ tenantRef.companies?.id }}</a>
+                <a [routerLink]="['/company', $safeNavigationMigration(tenant()!.companies?.id), 'view']">{{ tenantRef.companies?.id }}</a>
               </div>
             }
           </dd>
@@ -67,7 +67,7 @@
           <dd>
             @if (tenant()!.products) {
               <div>
-                <a [routerLink]="['/product', tenant()!.products?.id, 'view']">{{ tenantRef.products?.id }}</a>
+                <a [routerLink]="['/product', $safeNavigationMigration(tenant()!.products?.id), 'view']">{{ tenantRef.products?.id }}</a>
               </div>
             }
           </dd>
@@ -75,7 +75,9 @@
           <dd>
             @if (tenant()!.rawMaterials) {
               <div>
-                <a [routerLink]="['/raw-material', tenant()!.rawMaterials?.id, 'view']">{{ tenantRef.rawMaterials?.id }}</a>
+                <a [routerLink]="['/raw-material', $safeNavigationMigration(tenant()!.rawMaterials?.id), 'view']">{{
+                  tenantRef.rawMaterials?.id
+                }}</a>
               </div>
             }
           </dd>
@@ -83,7 +85,9 @@
           <dd>
             @if (tenant()!.warehouses) {
               <div>
-                <a [routerLink]="['/warehouse', tenant()!.warehouses?.id, 'view']">{{ tenantRef.warehouses?.id }}</a>
+                <a [routerLink]="['/warehouse', $safeNavigationMigration(tenant()!.warehouses?.id), 'view']">{{
+                  tenantRef.warehouses?.id
+                }}</a>
               </div>
             }
           </dd>
@@ -91,7 +95,7 @@
           <dd>
             @if (tenant()!.sales) {
               <div>
-                <a [routerLink]="['/sale', tenant()!.sales?.id, 'view']">{{ tenantRef.sales?.id }}</a>
+                <a [routerLink]="['/sale', $safeNavigationMigration(tenant()!.sales?.id), 'view']">{{ tenantRef.sales?.id }}</a>
               </div>
             }
           </dd>
@@ -99,7 +103,9 @@
           <dd>
             @if (tenant()!.saleItems) {
               <div>
-                <a [routerLink]="['/sale-item', tenant()!.saleItems?.id, 'view']">{{ tenantRef.saleItems?.id }}</a>
+                <a [routerLink]="['/sale-item', $safeNavigationMigration(tenant()!.saleItems?.id), 'view']">{{
+                  tenantRef.saleItems?.id
+                }}</a>
               </div>
             }
           </dd>
@@ -107,7 +113,9 @@
           <dd>
             @if (tenant()!.stockMovements) {
               <div>
-                <a [routerLink]="['/stock-movement', tenant()!.stockMovements?.id, 'view']">{{ tenantRef.stockMovements?.id }}</a>
+                <a [routerLink]="['/stock-movement', $safeNavigationMigration(tenant()!.stockMovements?.id), 'view']">{{
+                  tenantRef.stockMovements?.id
+                }}</a>
               </div>
             }
           </dd>

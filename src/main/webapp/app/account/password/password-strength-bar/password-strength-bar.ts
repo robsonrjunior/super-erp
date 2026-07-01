@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, effect, inject, input } from '@angular/core';
+import { Component, ElementRef, Renderer2, effect, inject, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -8,6 +8,7 @@ import { TranslateDirective } from 'app/shared/language';
   selector: 'jhi-password-strength-bar',
   imports: [TranslateDirective, TranslateModule],
   templateUrl: './password-strength-bar.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './password-strength-bar.scss',
 })
 export default class PasswordStrengthBar {

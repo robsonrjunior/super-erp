@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,6 +12,7 @@ import { ICity } from '../city.model';
 @Component({
   selector: 'jhi-city-detail',
   templateUrl: './city-detail.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FontAwesomeModule, Alert, AlertError, TranslateDirective, TranslateModule, RouterLink],
 })
 export class CityDetail {

@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, Signal, inject } from '@angular/core';
+import { Component, Injector, OnInit, Signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ import { ProfileService } from './profile.service';
     }
   `,
   styleUrl: './page-ribbon.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateDirective, TranslateModule],
 })
 export default class PageRibbon implements OnInit {

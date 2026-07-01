@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/alert';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +14,7 @@ import { AlertErrorModel } from './alert-error.model';
 @Component({
   selector: 'jhi-alert-error',
   templateUrl: './alert-error.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgbAlert],
 })
 export class AlertError implements OnDestroy {

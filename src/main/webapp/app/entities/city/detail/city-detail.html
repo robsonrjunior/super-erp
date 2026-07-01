@@ -23,7 +23,7 @@
           <dd>
             @if (city()!.suppliers) {
               <div>
-                <a [routerLink]="['/supplier', city()!.suppliers?.id, 'view']">{{ cityRef.suppliers?.id }}</a>
+                <a [routerLink]="['/supplier', $safeNavigationMigration(city()!.suppliers?.id), 'view']">{{ cityRef.suppliers?.id }}</a>
               </div>
             }
           </dd>
@@ -31,7 +31,7 @@
           <dd>
             @if (city()!.customers) {
               <div>
-                <a [routerLink]="['/customer', city()!.customers?.id, 'view']">{{ cityRef.customers?.id }}</a>
+                <a [routerLink]="['/customer', $safeNavigationMigration(city()!.customers?.id), 'view']">{{ cityRef.customers?.id }}</a>
               </div>
             }
           </dd>
@@ -39,7 +39,7 @@
           <dd>
             @if (city()!.people) {
               <div>
-                <a [routerLink]="['/person', city()!.people?.id, 'view']">{{ cityRef.people?.id }}</a>
+                <a [routerLink]="['/person', $safeNavigationMigration(city()!.people?.id), 'view']">{{ cityRef.people?.id }}</a>
               </div>
             }
           </dd>
@@ -47,7 +47,7 @@
           <dd>
             @if (city()!.companies) {
               <div>
-                <a [routerLink]="['/company', city()!.companies?.id, 'view']">{{ cityRef.companies?.id }}</a>
+                <a [routerLink]="['/company', $safeNavigationMigration(city()!.companies?.id), 'view']">{{ cityRef.companies?.id }}</a>
               </div>
             }
           </dd>
@@ -55,7 +55,7 @@
           <dd>
             @if (city()!.warehouses) {
               <div>
-                <a [routerLink]="['/warehouse', city()!.warehouses?.id, 'view']">{{ cityRef.warehouses?.id }}</a>
+                <a [routerLink]="['/warehouse', $safeNavigationMigration(city()!.warehouses?.id), 'view']">{{ cityRef.warehouses?.id }}</a>
               </div>
             }
           </dd>
@@ -63,7 +63,7 @@
           <dd>
             @if (city()!.state) {
               <div>
-                <a [routerLink]="['/state', city()!.state?.id, 'view']">{{ cityRef.state?.id }}</a>
+                <a [routerLink]="['/state', $safeNavigationMigration(city()!.state?.id), 'view']">{{ cityRef.state?.id }}</a>
               </div>
             }
           </dd>

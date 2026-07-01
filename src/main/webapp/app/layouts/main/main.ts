@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, RendererFactory2, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, Renderer2, RendererFactory2, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -15,6 +15,7 @@ import PageRibbon from '../profiles/page-ribbon';
   templateUrl: './main.html',
   styleUrls: ['./main.scss'],
   providers: [AppPageTitleStrategy],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterOutlet, Footer, PageRibbon],
 })
 export default class Main implements OnInit {

@@ -53,7 +53,7 @@
           <dd>
             @if (sale()!.items) {
               <div>
-                <a [routerLink]="['/sale-item', sale()!.items?.id, 'view']">{{ saleRef.items?.id }}</a>
+                <a [routerLink]="['/sale-item', $safeNavigationMigration(sale()!.items?.id), 'view']">{{ saleRef.items?.id }}</a>
               </div>
             }
           </dd>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,6 +12,7 @@ import { PasswordService } from './password.service';
 @Component({
   selector: 'jhi-password',
   imports: [TranslateDirective, TranslateModule, FormsModule, PasswordStrengthBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './password.html',
 })
 export default class Password {

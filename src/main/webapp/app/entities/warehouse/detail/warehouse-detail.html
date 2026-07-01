@@ -35,7 +35,9 @@
           <dd>
             @if (warehouse()!.stockMovements) {
               <div>
-                <a [routerLink]="['/stock-movement', warehouse()!.stockMovements?.id, 'view']">{{ warehouseRef.stockMovements?.id }}</a>
+                <a [routerLink]="['/stock-movement', $safeNavigationMigration(warehouse()!.stockMovements?.id), 'view']">{{
+                  warehouseRef.stockMovements?.id
+                }}</a>
               </div>
             }
           </dd>
@@ -43,7 +45,7 @@
           <dd>
             @if (warehouse()!.sales) {
               <div>
-                <a [routerLink]="['/sale', warehouse()!.sales?.id, 'view']">{{ warehouseRef.sales?.id }}</a>
+                <a [routerLink]="['/sale', $safeNavigationMigration(warehouse()!.sales?.id), 'view']">{{ warehouseRef.sales?.id }}</a>
               </div>
             }
           </dd>

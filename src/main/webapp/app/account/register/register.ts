@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -14,6 +14,7 @@ import { RegisterService } from './register.service';
 @Component({
   selector: 'jhi-register',
   imports: [TranslateDirective, TranslateModule, RouterLink, FormsModule, PasswordStrengthBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './register.html',
 })
 export default class Register implements AfterViewInit {

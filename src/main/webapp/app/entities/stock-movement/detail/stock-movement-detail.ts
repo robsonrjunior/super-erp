@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,6 +13,7 @@ import { IStockMovement } from '../stock-movement.model';
 @Component({
   selector: 'jhi-stock-movement-detail',
   templateUrl: './stock-movement-detail.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FontAwesomeModule, Alert, AlertError, TranslateDirective, TranslateModule, RouterLink, FormatMediumDatetimePipe],
 })
 export class StockMovementDetail {
