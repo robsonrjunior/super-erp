@@ -2,19 +2,18 @@ import { AfterViewInit, Component, ElementRef, OnInit, inject, signal, viewChild
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
-
 import { TranslateModule } from '@ngx-translate/core';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { TranslateDirective } from 'app/shared/language';
-import { CardModule } from 'primeng/card';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'jhi-login',
@@ -23,13 +22,12 @@ import { CardModule } from 'primeng/card';
     TranslateModule,
     FormsModule,
     RouterLink,
-    InputTextModule,
-    ButtonModule,
-    CheckboxModule,
-    IconFieldModule,
-    InputIconModule,
-    MessageModule,
-    CardModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -46,7 +44,6 @@ export default class Login implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
 
   ngOnInit(): void {
-    // if already authenticated then navigate to home page
     this.accountService.identity().subscribe(() => {
       if (this.accountService.isAuthenticated()) {
         this.router.navigate(['']);
@@ -63,7 +60,6 @@ export default class Login implements OnInit, AfterViewInit {
       next: () => {
         this.authenticationError.set(false);
         if (!this.router.currentNavigation()) {
-          // There were no routing during login (eg from navigationToStoredUrl)
           this.router.navigate(['']);
         }
       },

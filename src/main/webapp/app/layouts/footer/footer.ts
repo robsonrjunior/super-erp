@@ -6,39 +6,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 
-import { SelectButtonModule } from 'primeng/selectbutton';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'jhi-footer',
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
-  imports: [FormsModule, TranslateModule, SelectButtonModule],
+  imports: [FormsModule, TranslateModule, MatButtonToggleModule, MatIconModule],
 })
 export default class Footer {
   currentYear = new Date().getFullYear();
-
-  readonly languageOptions = [
-    {
-      label: 'Português',
-      value: 'pt-br',
-      flag: 'content/images/flags/4x3/br.svg',
-    },
-    {
-      label: 'English',
-      value: 'en',
-      flag: 'content/images/flags/4x3/us.svg',
-    },
-    {
-      label: 'Español',
-      value: 'es',
-      flag: 'content/images/flags/4x3/es.svg',
-    },
-  ];
-
-  readonly themeOptions = [
-    { icon: 'pi pi-sun', value: false, label: 'global.footer.lightMode' },
-    { icon: 'pi pi-moon', value: true, label: 'global.footer.darkMode' },
-  ];
 
   selectedLanguage = 'pt-br';
   selectedTheme = false;

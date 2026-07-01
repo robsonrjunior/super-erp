@@ -12,49 +12,74 @@
       </div>
 
       <div class="navbar-search-section">
-        <p-iconfield>
-          <p-inputicon>
-            <i class="pi pi-search"></i>
-          </p-inputicon>
-          <input pInputText [placeholder]="'global.menu.search' | translate" class="search-input" />
-        </p-iconfield>
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matSuffix>search</mat-icon>
+          <input matInput [placeholder]="'global.menu.search' | translate" />
+        </mat-form-field>
       </div>
 
       <button class="navbar-toggler" (click)="isNavbarCollapsed.update(c => !c)" aria-label="Toggle navigation">
-        <i class="pi pi-bars"></i>
+        <mat-icon>menu</mat-icon>
       </button>
 
       <div class="navbar-menu-section" [class.show]="!isNavbarCollapsed()">
         @if (account() !== null) {
-          <button class="nav-btn" (click)="entityMenuRef.toggle($event)" data-cy="entity">
-            <i class="pi pi-th-large"></i>
+          <button class="nav-btn" [matMenuTriggerFor]="entityMenu" data-cy="entity" (click)="collapseNavbar()">
+            <mat-icon>apps</mat-icon>
             <span jhiTranslate="global.menu.entities.main">Entidades</span>
           </button>
-          <p-menu #entityMenuRef [model]="entityMenuItems" [popup]="true" />
+          <mat-menu #entityMenu="matMenu">
+            @for (item of entityMenuItems; track item.label) {
+              <button mat-menu-item [routerLink]="item.routerLink" (click)="collapseNavbar()">
+                <mat-icon matMenuItemIcon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+              </button>
+            }
+          </mat-menu>
           <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
         }
 
         <ng-container *jhiHasAnyAuthority="'ROLE_ADMIN'">
-          <button class="nav-btn" (click)="adminMenuRef.toggle($event)" data-cy="adminMenu">
-            <i class="pi pi-sliders-h"></i>
+          <button class="nav-btn" [matMenuTriggerFor]="adminMenu" data-cy="adminMenu" (click)="collapseNavbar()">
+            <mat-icon>tune</mat-icon>
             <span jhiTranslate="global.menu.admin.main">Administração</span>
           </button>
-          <p-menu #adminMenuRef [model]="adminMenuItems" [popup]="true" />
+          <mat-menu #adminMenu="matMenu">
+            @for (item of adminMenuItems; track item.label) {
+              <button mat-menu-item [routerLink]="item.routerLink" (click)="collapseNavbar()">
+                <mat-icon matMenuItemIcon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+              </button>
+            }
+          </mat-menu>
           <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
         </ng-container>
       </div>
 
       <div class="navbar-account-section">
-        <button class="nav-btn" (click)="accountMenuRef.toggle($event)" data-cy="accountMenu">
-          @let accountRef = account();
-          @if (!accountRef?.imageUrl) {
-            <i class="pi pi-user"></i>
+        <button class="nav-btn" [matMenuTriggerFor]="accountMenu" data-cy="accountMenu">
+          @if (!account()?.imageUrl) {
+            <mat-icon>person</mat-icon>
             <span jhiTranslate="global.menu.account.main">Conta</span>
           } @else {
-            <img [src]="accountRef!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
+            <img [src]="account()!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
           }
         </button>
-        <p-menu #accountMenuRef [model]="account() !== null ? loggedInMenuItems : loggedOutMenuItems" [popup]="true" />
+        <mat-menu #accountMenu="matMenu">
+          @for (item of account() !== null ? loggedInMenuItems : loggedOutMenuItems; track item.label) {
+            @if (item.routerLink) {
+              <button mat-menu-item [routerLink]="item.routerLink" (click)="collapseNavbar()">
+                <mat-icon matMenuItemIcon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+              </button>
+            } @else {
+              <button mat-menu-item (click)="handleAccountMenuItem(item)">
+                <mat-icon matMenuItemIcon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+              </button>
+            }
+          }
+        </mat-menu>
       </div>
     </div>
   </div>

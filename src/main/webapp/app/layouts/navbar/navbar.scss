@@ -4,9 +4,9 @@ Navbar
 
 .navbar {
   padding: 0.2rem 1rem;
-  background: var(--p-primary-color);
-  border-bottom: 1px solid var(--p-primary-color);
-  color: var(--p-primary-contrast-color);
+  background: var(--mat-sys-primary);
+  border-bottom: 1px solid var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
 }
 
 .navbar-content {
@@ -37,12 +37,12 @@ Logo / Brand styles
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
-  color: var(--p-primary-contrast-color);
+  color: var(--mat-sys-on-primary);
 }
 
 .navbar-version {
   font-size: 0.65em;
-  color: var(--p-primary-contrast-color);
+  color: var(--mat-sys-on-primary);
   opacity: 0.7;
 }
 
@@ -70,7 +70,7 @@ Search section
   justify-content: center;
 }
 
-.search-input {
+.search-field {
   width: 100%;
   min-width: 200px;
 }
@@ -93,11 +93,11 @@ Menu buttons
   padding: 0.5rem 0.75rem;
   background: transparent;
   border: none;
-  color: var(--p-primary-contrast-color);
+  color: var(--mat-sys-on-primary);
   font-size: 0.875rem;
   cursor: pointer;
   text-decoration: none;
-  border-radius: var(--p-border-radius);
+  border-radius: 4px;
   transition: background-color 0.2s;
 
   &:hover {
@@ -108,8 +108,10 @@ Menu buttons
     background: rgba(255, 255, 255, 0.15);
   }
 
-  i {
+  mat-icon {
     font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
   }
 }
 
@@ -131,7 +133,7 @@ Mobile toggle
   display: none;
   background: transparent;
   border: none;
-  color: var(--p-primary-contrast-color);
+  color: var(--mat-sys-on-primary);
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.5rem;
@@ -157,9 +159,9 @@ Responsive breakpoints
     left: 0;
     right: 0;
     flex-direction: column;
-    background: var(--p-primary-color);
+    background: var(--mat-sys-primary);
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid var(--p-primary-color);
+    border-bottom: 1px solid var(--mat-sys-primary);
     z-index: 1000;
 
     &.show {

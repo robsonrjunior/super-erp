@@ -1,43 +1,42 @@
-<p-card class="login-card">
+<mat-card class="login-card">
   <h1 data-cy="loginTitle" jhiTranslate="login.title">Autenticação</h1>
 
   @if (authenticationError()) {
-    <p-message severity="error" data-cy="loginError" [text]="'login.messages.error.authentication' | translate" />
+    <div class="login-error" data-cy="loginError">
+      <mat-icon>error</mat-icon>
+      <span>{{ 'login.messages.error.authentication' | translate }}</span>
+    </div>
   }
 
   <form (ngSubmit)="login()" #loginRef="ngForm">
-    <div class="field">
-      <label for="username" jhiTranslate="global.form.username.label">Usuário</label>
-      <p-iconfield>
-        <p-inputicon class="pi pi-user" />
-        <input
-          #username
-          pInputText
-          type="text"
-          name="username"
-          id="username"
-          placeholder="{{ 'global.form.username.placeholder' | translate }}"
-          [(ngModel)]="loginForm.username"
-          data-cy="username"
-        />
-      </p-iconfield>
-    </div>
+    <mat-form-field appearance="outline" class="field">
+      <mat-label jhiTranslate="global.form.username.label">Usuário</mat-label>
+      <mat-icon matPrefix>person</mat-icon>
+      <input
+        #username
+        matInput
+        type="text"
+        name="username"
+        id="username"
+        placeholder="{{ 'global.form.username.placeholder' | translate }}"
+        [(ngModel)]="loginForm.username"
+        data-cy="username"
+      />
+    </mat-form-field>
 
-    <div class="field">
-      <label for="password" jhiTranslate="login.form.password">Senha</label>
-      <p-iconfield>
-        <p-inputicon class="pi pi-lock" />
-        <input
-          pInputText
-          type="password"
-          name="password"
-          id="password"
-          placeholder="{{ 'login.form.password.placeholder' | translate }}"
-          [(ngModel)]="loginForm.password"
-          data-cy="password"
-        />
-      </p-iconfield>
-    </div>
+    <mat-form-field appearance="outline" class="field">
+      <mat-label jhiTranslate="login.form.password">Senha</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input
+        matInput
+        type="password"
+        name="password"
+        id="password"
+        placeholder="{{ 'login.form.password.placeholder' | translate }}"
+        [(ngModel)]="loginForm.password"
+        data-cy="password"
+      />
+    </mat-form-field>
 
     <div class="forgot-password">
       <a routerLink="/account/reset/request" data-cy="forgetYourPasswordSelector" jhiTranslate="login.password.forgot"
@@ -45,14 +44,15 @@
       >
     </div>
 
-    <div class="field-checkbox">
-      <p-checkbox name="rememberMe" id="rememberMe" [(ngModel)]="loginForm.rememberMe" inputId="rememberMe" [binary]="true" />
-      <label for="rememberMe" jhiTranslate="login.form.rememberme">Manter-me logado</label>
-    </div>
+    <mat-checkbox name="rememberMe" id="rememberMe" [(ngModel)]="loginForm.rememberMe" data-cy="rememberMe">
+      <span jhiTranslate="login.form.rememberme">Manter-me logado</span>
+    </mat-checkbox>
 
     <div class="form-actions">
       <a class="register-link" routerLink="/account/register" jhiTranslate="global.messages.info.register.link">Crie uma nova conta</a>
-      <p-button type="submit" data-cy="submit" [label]="'login.form.button' | translate" />
+      <button mat-raised-button color="primary" type="submit" data-cy="submit">
+        {{ 'login.form.button' | translate }}
+      </button>
     </div>
   </form>
-</p-card>
+</mat-card>

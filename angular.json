@@ -50,9 +50,9 @@
               }
             ],
             "styles": [
-              "node_modules/primeicons/primeicons.css",
               "src/main/webapp/content/scss/vendor.scss",
-              "src/main/webapp/content/scss/global.scss"
+              "src/main/webapp/content/scss/global.scss",
+              "src/main/webapp/app/theme.scss"
             ],
             "scripts": [],
             "define": {

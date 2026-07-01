@@ -1,17 +1,9 @@
 .footer {
-  background: var(--p-togglebutton-background);
+  background: transparent;
 }
 
 .footer-content {
   max-width: var(--app-content-max-width);
   margin: 0 auto;
   width: 100%;
-}
-
-.footer-toggles {
-  --p-togglebutton-background: transparent;
-  --p-togglebutton-border-color: transparent;
-  --p-togglebutton-hover-background: transparent;
-  --p-togglebutton-checked-background: transparent;
-  --p-togglebutton-checked-border-color: transparent;
 }

@@ -2,12 +2,12 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
-import { MenuModule } from 'primeng/menu';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { environment } from 'environments/environment';
 
@@ -17,20 +17,26 @@ import { ProfileService } from 'app/layouts/profiles/profile.service';
 import HasAnyAuthorityDirective from 'app/shared/auth/has-any-authority.directive';
 import { TranslateDirective } from 'app/shared/language';
 
+interface NavMenuItem {
+  label: string;
+  icon: string;
+  routerLink?: string;
+}
+
 @Component({
   selector: 'jhi-navbar',
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
   imports: [
     RouterLink,
-    ButtonModule,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    MenuModule,
     HasAnyAuthorityDirective,
     TranslateDirective,
     TranslateModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
   ],
 })
 export default class Navbar implements OnInit {
@@ -40,10 +46,10 @@ export default class Navbar implements OnInit {
   readonly version: string;
   readonly account = inject(AccountService).account;
 
-  entityMenuItems: MenuItem[] = [];
-  adminMenuItems: MenuItem[] = [];
-  loggedOutMenuItems: MenuItem[] = [];
-  loggedInMenuItems: MenuItem[] = [];
+  entityMenuItems: NavMenuItem[] = [];
+  adminMenuItems: NavMenuItem[] = [];
+  loggedOutMenuItems: NavMenuItem[] = [];
+  loggedInMenuItems: NavMenuItem[] = [];
 
   private readonly loginService = inject(LoginService);
   private readonly translateService = inject(TranslateService);
@@ -84,77 +90,49 @@ export default class Navbar implements OnInit {
     this.router.navigate(['']);
   }
 
+  handleAccountMenuItem(item: NavMenuItem): void {
+    if (!item.routerLink) {
+      if (item.icon === 'login') {
+        this.login();
+      } else if (item.icon === 'logout') {
+        this.logout();
+      }
+    } else {
+      this.collapseNavbar();
+    }
+  }
+
   private buildMenus(): void {
     const t = (key: string): string => this.translateService.instant(key) as string;
 
     this.entityMenuItems = [
-      { label: t('global.menu.entities.tenant'), icon: 'pi pi-building', routerLink: '/tenant', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.country'), icon: 'pi pi-globe', routerLink: '/country', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.state'), icon: 'pi pi-map', routerLink: '/state', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.city'), icon: 'pi pi-map-marker', routerLink: '/city', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.supplier'), icon: 'pi pi-truck', routerLink: '/supplier', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.customer'), icon: 'pi pi-users', routerLink: '/customer', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.person'), icon: 'pi pi-user', routerLink: '/person', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.company'), icon: 'pi pi-building', routerLink: '/company', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.product'), icon: 'pi pi-box', routerLink: '/product', command: () => this.collapseNavbar() },
-      {
-        label: t('global.menu.entities.rawMaterial'),
-        icon: 'pi pi-cog',
-        routerLink: '/raw-material',
-        command: () => this.collapseNavbar(),
-      },
-      {
-        label: t('global.menu.entities.warehouse'),
-        icon: 'pi pi-building',
-        routerLink: '/warehouse',
-        command: () => this.collapseNavbar(),
-      },
-      {
-        label: t('global.menu.entities.stockMovement'),
-        icon: 'pi pi-arrow-right-arrow-left',
-        routerLink: '/stock-movement',
-        command: () => this.collapseNavbar(),
-      },
-      { label: t('global.menu.entities.sale'), icon: 'pi pi-shopping-cart', routerLink: '/sale', command: () => this.collapseNavbar() },
-      { label: t('global.menu.entities.saleItem'), icon: 'pi pi-tag', routerLink: '/sale-item', command: () => this.collapseNavbar() },
-      {
-        label: t('global.menu.entities.adminAuthority'),
-        icon: 'pi pi-shield',
-        routerLink: '/authority',
-        command: () => this.collapseNavbar(),
-      },
-      {
-        label: t('userManagement.home.title'),
-        icon: 'pi pi-user-edit',
-        routerLink: '/user-management',
-        command: () => this.collapseNavbar(),
-      },
+      { label: t('global.menu.entities.tenant'), icon: 'apartment', routerLink: '/tenant' },
+      { label: t('global.menu.entities.country'), icon: 'public', routerLink: '/country' },
+      { label: t('global.menu.entities.state'), icon: 'map', routerLink: '/state' },
+      { label: t('global.menu.entities.city'), icon: 'location_on', routerLink: '/city' },
+      { label: t('global.menu.entities.supplier'), icon: 'local_shipping', routerLink: '/supplier' },
+      { label: t('global.menu.entities.customer'), icon: 'people', routerLink: '/customer' },
+      { label: t('global.menu.entities.person'), icon: 'person', routerLink: '/person' },
+      { label: t('global.menu.entities.company'), icon: 'apartment', routerLink: '/company' },
+      { label: t('global.menu.entities.product'), icon: 'inventory_2', routerLink: '/product' },
+      { label: t('global.menu.entities.rawMaterial'), icon: 'settings', routerLink: '/raw-material' },
+      { label: t('global.menu.entities.warehouse'), icon: 'apartment', routerLink: '/warehouse' },
+      { label: t('global.menu.entities.stockMovement'), icon: 'swap_horiz', routerLink: '/stock-movement' },
+      { label: t('global.menu.entities.sale'), icon: 'shopping_cart', routerLink: '/sale' },
+      { label: t('global.menu.entities.saleItem'), icon: 'sell', routerLink: '/sale-item' },
+      { label: t('global.menu.entities.adminAuthority'), icon: 'shield', routerLink: '/authority' },
+      { label: t('userManagement.home.title'), icon: 'manage_accounts', routerLink: '/user-management' },
     ];
 
     this.loggedOutMenuItems = [
-      { label: t('global.menu.account.login'), icon: 'pi pi-sign-in', command: () => this.login() },
-      {
-        label: t('global.menu.account.register'),
-        icon: 'pi pi-user-plus',
-        routerLink: '/account/register',
-        command: () => this.collapseNavbar(),
-      },
+      { label: t('global.menu.account.login'), icon: 'login', routerLink: undefined },
+      { label: t('global.menu.account.register'), icon: 'person_add', routerLink: '/account/register' },
     ];
 
     this.loggedInMenuItems = [
-      {
-        label: t('global.menu.account.settings'),
-        icon: 'pi pi-wrench',
-        routerLink: '/account/settings',
-        command: () => this.collapseNavbar(),
-      },
-      {
-        label: t('global.menu.account.password'),
-        icon: 'pi pi-lock',
-        routerLink: '/account/password',
-        command: () => this.collapseNavbar(),
-      },
-      { label: t('global.menu.account.logout'), icon: 'pi pi-sign-out', command: () => this.logout() },
+      { label: t('global.menu.account.settings'), icon: 'build', routerLink: '/account/settings' },
+      { label: t('global.menu.account.password'), icon: 'lock', routerLink: '/account/password' },
+      { label: t('global.menu.account.logout'), icon: 'logout', routerLink: undefined },
     ];
 
     this.buildAdminMenu();
@@ -163,35 +141,15 @@ export default class Navbar implements OnInit {
   private buildAdminMenu(): void {
     const t = (key: string): string => this.translateService.instant(key) as string;
 
-    const items: MenuItem[] = [
-      {
-        label: t('global.menu.admin.metrics'),
-        icon: 'pi pi-chart-bar',
-        routerLink: '/admin/metrics',
-        command: () => this.collapseNavbar(),
-      },
-      {
-        label: t('global.menu.admin.health'),
-        icon: 'pi pi-heart',
-        routerLink: '/admin/health',
-        command: () => this.collapseNavbar(),
-      },
-      {
-        label: t('global.menu.admin.configuration'),
-        icon: 'pi pi-cog',
-        routerLink: '/admin/configuration',
-        command: () => this.collapseNavbar(),
-      },
-      { label: t('global.menu.admin.logs'), icon: 'pi pi-list', routerLink: '/admin/logs', command: () => this.collapseNavbar() },
+    const items: NavMenuItem[] = [
+      { label: t('global.menu.admin.metrics'), icon: 'bar_chart', routerLink: '/admin/metrics' },
+      { label: t('global.menu.admin.health'), icon: 'favorite', routerLink: '/admin/health' },
+      { label: t('global.menu.admin.configuration'), icon: 'settings', routerLink: '/admin/configuration' },
+      { label: t('global.menu.admin.logs'), icon: 'list', routerLink: '/admin/logs' },
     ];
 
     if (this.openAPIEnabled()) {
-      items.push({
-        label: t('global.menu.admin.apidocs'),
-        icon: 'pi pi-book',
-        routerLink: '/admin/docs',
-        command: () => this.collapseNavbar(),
-      });
+      items.push({ label: t('global.menu.admin.apidocs'), icon: 'book', routerLink: '/admin/docs' });
     }
 
     this.adminMenuItems = items;
