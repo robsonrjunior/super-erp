@@ -24,6 +24,7 @@ import { notificationInterceptor } from 'app/core/interceptor/notification.inter
 import 'app/config/dayjs';
 import { TranslationModule } from 'app/shared/language/translation.module';
 
+import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import routes from 'app/app.routes';
@@ -62,6 +63,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'pt' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     { provide: TitleStrategy, useClass: AppPageTitleStrategy },
+    { provide: MAT_ICON_DEFAULT_OPTIONS, useValue: { fontSet: 'material-symbols-outlined' } },
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     provideAnimations(),
   ],
