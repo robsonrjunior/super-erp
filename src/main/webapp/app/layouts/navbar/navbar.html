@@ -12,7 +12,7 @@
       </div>
 
       <div class="navbar-search-section">
-        <mat-form-field appearance="outline" class="search-field">
+        <mat-form-field appearance="fill" class="search-field">
           <mat-icon matSuffix>search</mat-icon>
           <input matInput [placeholder]="'global.menu.search' | translate" />
         </mat-form-field>
@@ -28,7 +28,7 @@
             <mat-icon>apps</mat-icon>
             <span jhiTranslate="global.menu.entities.main">Entidades</span>
           </button>
-          <mat-menu #entityMenu="matMenu">
+          <mat-menu #entityMenu="matMenu" class="navbar-menu entities-menu">
             @for (item of entityMenuItems; track item.label) {
               <button mat-menu-item [routerLink]="item.routerLink" (click)="collapseNavbar()">
                 <mat-icon matMenuItemIcon>{{ item.icon }}</mat-icon>
@@ -44,7 +44,7 @@
             <mat-icon>tune</mat-icon>
             <span jhiTranslate="global.menu.admin.main">Administração</span>
           </button>
-          <mat-menu #adminMenu="matMenu">
+          <mat-menu #adminMenu="matMenu" class="navbar-menu">
             @for (item of adminMenuItems; track item.label) {
               <button mat-menu-item [routerLink]="item.routerLink" (click)="collapseNavbar()">
                 <mat-icon matMenuItemIcon>{{ item.icon }}</mat-icon>
@@ -65,7 +65,7 @@
             <img [src]="account()!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
           }
         </button>
-        <mat-menu #accountMenu="matMenu">
+        <mat-menu #accountMenu="matMenu" class="navbar-menu">
           @for (item of account() !== null ? loggedInMenuItems : loggedOutMenuItems; track item.label) {
             @if (item.routerLink) {
               <button mat-menu-item [routerLink]="item.routerLink" (click)="collapseNavbar()">

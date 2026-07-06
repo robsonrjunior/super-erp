@@ -261,4 +261,45 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     }
   }
 }
+
+/* Navbar dropdown menu panels — must be global because menus render in CDK overlay outside component */
+.navbar-menu.mat-mdc-menu-panel {
+  --mat-menu-container-color: #c7a600;
+
+  .mat-mdc-menu-item {
+    color: #1a1a1a;
+  }
+
+  .mat-mdc-menu-item .mat-icon {
+    color: #1a1a1a;
+  }
+
+  .mat-mdc-menu-item:hover {
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+.entities-menu.mat-mdc-menu-panel {
+  max-height: 70vh;
+
+  .mat-mdc-menu-content {
+    max-height: 70vh;
+    overflow-y: auto;
+    scrollbar-color: #7a6600 transparent;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #7a6600;
+      border-radius: 4px;
+    }
+  }
+}
 /* jhipster-needle-scss-add-main JHipster will add new css style */
